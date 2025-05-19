@@ -1,0 +1,20 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/fc_court
+    username: app_user
+    password: kj5BEBMr
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+appDescription: "Food Court mngr"
+appVersion: "1.0.0"
+external:
+  api:
+    users-mngr:
+      url: "localhost:8081/api/v1/mngr/users/"
