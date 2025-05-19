@@ -25,7 +25,7 @@ ext {
 	lombokVersion = "1.18.34"
 	lombokMapstructBindingVersion = "0.2.0"
 	mySqlConnectorVersion = "8.0.33"
-	openApiVersion = "1.8.0"
+	openApiVersion = "2.8.8"
 	feignVersion = "4.2.1"
 }
 
@@ -51,7 +51,7 @@ dependencies {
 
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign:${feignVersion}")
 
-	implementation "org.springdoc:springdoc-openapi-ui:${openApiVersion}"
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${openApiVersion}")
 }
 
 tasks.named('test') {

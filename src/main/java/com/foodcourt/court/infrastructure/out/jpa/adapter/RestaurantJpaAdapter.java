@@ -6,19 +6,12 @@ import com.foodcourt.court.infrastructure.out.jpa.mapper.IRestaurantEntityMapper
 import com.foodcourt.court.infrastructure.out.jpa.repository.IRestaurantRepository;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Optional;
-
 @RequiredArgsConstructor
 public class RestaurantJpaAdapter implements IRestaurantPersistencePort {
 
     private final IRestaurantRepository restaurantRepository;
     private final IRestaurantEntityMapper restaurantEntityMapper;
 
-
-    @Override
-    public Optional<Restaurant> getByNit(String nitNumber) {
-        return Optional.empty();
-    }
 
     @Override
     public void createRestaurant(Restaurant restaurant) {

@@ -28,7 +28,7 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         RestaurantValidator.validateStringPattern(restaurant.getName(),Constants.NAME_RESTAURANT_PATTERN, Constants.INVALID_NAME);
         RestaurantValidator.validateStringPattern(restaurant.getPhoneNumber(), Constants.PHONE_NUMBER_PATTERN, Constants.INVALID_PHONE_NUMBER);
         RestaurantValidator.validateStringPattern(restaurant.getNit(), Constants.ID_NUMBER_PATTERN, Constants.INVALID_ID_NUMBER);
-        UserRole roleUser = userVerificationPort.gerRolUser(restaurant.getOwnerId())
+        UserRole roleUser = userVerificationPort.getRolUser(restaurant.getOwnerId())
                 .orElseThrow(()-> new DomainException(Constants.OWNER_NO_FOUND));
         RestaurantValidator.validateOwner(roleUser);
         restaurantPersistencePort.createRestaurant(restaurant);

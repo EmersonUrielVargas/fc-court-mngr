@@ -15,7 +15,7 @@ public class UserVerificationRestAdapter implements IUserVerificationPort {
     private final IUserRestClient userRestClient;
 
     @Override
-    public Optional<UserRole> gerRolUser(Long userId) {
+    public Optional<UserRole> getRolUser(Long userId) {
         try {
             UserRole userRole = UserRoleMapper.toDomain(userRestClient.getUserRole(userId).getUserRole());
             return Optional.of(userRole);
