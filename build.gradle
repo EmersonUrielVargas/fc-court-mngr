@@ -26,6 +26,7 @@ ext {
 	lombokMapstructBindingVersion = "0.2.0"
 	mySqlConnectorVersion = "8.0.33"
 	openApiVersion = "1.8.0"
+	feignVersion = "4.2.1"
 }
 
 dependencies {
@@ -47,6 +48,8 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
 	implementation("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
+
+	implementation("org.springframework.cloud:spring-cloud-starter-openfeign:${feignVersion}")
 
 	implementation "org.springdoc:springdoc-openapi-ui:${openApiVersion}"
 }

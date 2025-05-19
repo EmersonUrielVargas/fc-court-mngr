@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8082
 
 spring:
   datasource:
@@ -14,3 +14,7 @@ spring:
     show-sql: true
 appDescription: "Food Court mngr"
 appVersion: "1.0.0"
+external:
+  api:
+    users-mngr:
+      url: "localhost:8081/api/v1/mngr/users/"

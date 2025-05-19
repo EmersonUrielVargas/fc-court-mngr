@@ -9,14 +9,14 @@ import com.foodcourt.court.domain.spi.IRestaurantPersistencePort;
 import com.foodcourt.court.domain.spi.IUserVerificationPort;
 import com.foodcourt.court.domain.validators.RestaurantValidator;
 
-public class createRestaurantUseCase implements IRestaurantServicePort {
+public class RestaurantUseCase implements IRestaurantServicePort {
 
     private final IUserVerificationPort userVerificationPort;
     private final IRestaurantPersistencePort restaurantPersistencePort;
 
 
-    public createRestaurantUseCase(IUserVerificationPort userVerificationPort,
-                                   IRestaurantPersistencePort restaurantPersistencePort) {
+    public RestaurantUseCase(IUserVerificationPort userVerificationPort,
+                             IRestaurantPersistencePort restaurantPersistencePort) {
         this.userVerificationPort = userVerificationPort;
         this.restaurantPersistencePort = restaurantPersistencePort;
     }

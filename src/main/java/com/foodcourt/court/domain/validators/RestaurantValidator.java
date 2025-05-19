@@ -4,11 +4,11 @@ import com.foodcourt.court.domain.constants.Constants;
 import com.foodcourt.court.domain.enums.UserRole;
 import com.foodcourt.court.domain.exception.DomainException;
 
-import java.time.LocalDate;
-import java.time.Period;
-
 public class RestaurantValidator {
 
+    private RestaurantValidator() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static void validateOwner(UserRole rolFound){
         if (rolFound != UserRole.OWNER){

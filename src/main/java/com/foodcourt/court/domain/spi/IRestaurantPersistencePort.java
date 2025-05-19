@@ -1,6 +1,5 @@
 package com.foodcourt.court.domain.spi;
 
-import com.foodcourt.court.domain.enums.UserRole;
 import com.foodcourt.court.domain.model.Restaurant;
 
 import java.util.Optional;

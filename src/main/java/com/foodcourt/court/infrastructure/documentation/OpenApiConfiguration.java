@@ -17,7 +17,7 @@ public class OpenApiConfiguration {
         return new OpenAPI()
             .components(new Components())
             .info(new Info()
-                .title("Food Court Users Mngr")
+                .title("Food Court Mngr")
                 .version(appVersion)
                 .description(appDescription)
                 .termsOfService("http://swagger.io/terms/")
