@@ -1,7 +1,7 @@
 package com.foodcourt.court.infrastructure.input.rest;
 
-import com.foodcourt.court.application.dto.request.RestaurantRequestDto;
-import com.foodcourt.court.application.handler.IRestaurantHandler;
+import com.foodcourt.court.application.dto.request.CreatePlateRequestDto;
+import com.foodcourt.court.application.handler.IPlateHandler;
 import com.foodcourt.court.domain.exception.DomainException;
 import com.foodcourt.court.infrastructure.exceptionhandler.ControllerAdvisor;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,37 +23,37 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-class RestaurantRestControllerTest {
+class PlateRestControllerTest {
 
     @InjectMocks
-    private RestaurantRestController restaurantRestController;
+    private PlateRestController plateRestController;
 
     @Mock
-    private IRestaurantHandler restaurantHandler;
+    private IPlateHandler plateHandler;
     private MockMvc mockMvc;
 
     @BeforeEach
     void setup(){
-        mockMvc = MockMvcBuilders.standaloneSetup(restaurantRestController)
+        mockMvc = MockMvcBuilders.standaloneSetup(plateRestController)
                 .setControllerAdvice(new ControllerAdvisor())
                 .build();
     }
 
     @Test
-    void createRestaurantSuccessful() throws Exception {
+    void createPlateSuccessful() throws Exception {
         String jsonBody = """
             {
-               "name": "El Gran Sabor",
-               "address": "Calle Falsa 123, Ciudad Ejemplo",
-               "ownerId": 10,
-               "phoneNumber": "+573001234567",
-               "urlLogo": "https://ejemplo.com/logos/elgransabor.png",
-               "nit": "9001234567"
+               "name": "Pizza Margarita Especial",
+                "price": 25000,
+                "categoryId": 10,
+                "description": "Deliciosa pizza con base de tomate fresco.",
+                "urlImage": "https://ejemplo.com/imagenes/pizza_margarita.jpg",
+                "restaurantId": 1
              }
         """;
 
-        doNothing().when(restaurantHandler).create(any(RestaurantRequestDto.class));
-        MockHttpServletRequestBuilder request = post("/api/v1/mngr/court/restaurant")
+        doNothing().when(plateHandler).create(any(CreatePlateRequestDto.class));
+        MockHttpServletRequestBuilder request = post("/api/v1/mngr/court/plate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonBody);
         mockMvc.perform(request)
@@ -65,16 +65,16 @@ class RestaurantRestControllerTest {
     void createRestaurantFail() throws Exception {
         String jsonBody = """
             {
-               "name": "400",
-               "address": "Calle Falsa 123, Ciudad Ejemplo",
-               "ownerId": 10,
-               "phoneNumber": "+573001234567",
-               "urlLogo": "https://ejemplo.com/logos/elgransabor.png",
-               "nit": "9001234567"
+                "name": "Pizza Margarita Especial",
+                "price": 25000,
+                "categoryId": 10,
+                "description": "Deliciosa pizza con base de tomate fresco.",
+                "urlImage": "https://ejemplo.com/imagenes/pizza_margarita.jpg",
+                "restaurantId": 1
              }
         """;
-        doThrow(new DomainException("fail domain validation data")).when(restaurantHandler).create(any(RestaurantRequestDto.class));
-        MockHttpServletRequestBuilder request = post("/api/v1/mngr/court/restaurant")
+        doThrow(new DomainException("fail domain validation data")).when(plateHandler).create(any(CreatePlateRequestDto.class));
+        MockHttpServletRequestBuilder request = post("/api/v1/mngr/court/plate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonBody);
         mockMvc.perform(request)
