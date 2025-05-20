@@ -7,7 +7,7 @@ import com.foodcourt.court.domain.exception.DomainException;
 import com.foodcourt.court.domain.model.Restaurant;
 import com.foodcourt.court.domain.spi.IRestaurantPersistencePort;
 import com.foodcourt.court.domain.spi.IUserVerificationPort;
-import com.foodcourt.court.domain.validators.RestaurantValidator;
+import com.foodcourt.court.domain.validators.UtilitiesValidator;
 
 public class RestaurantUseCase implements IRestaurantServicePort {
 
@@ -25,12 +25,12 @@ public class RestaurantUseCase implements IRestaurantServicePort {
     @Override
     public void create(Restaurant restaurant) {
 
-        RestaurantValidator.validateStringPattern(restaurant.getName(),Constants.NAME_RESTAURANT_PATTERN, Constants.INVALID_NAME);
-        RestaurantValidator.validateStringPattern(restaurant.getPhoneNumber(), Constants.PHONE_NUMBER_PATTERN, Constants.INVALID_PHONE_NUMBER);
-        RestaurantValidator.validateStringPattern(restaurant.getNit(), Constants.ID_NUMBER_PATTERN, Constants.INVALID_ID_NUMBER);
+        UtilitiesValidator.validateStringPattern(restaurant.getName(),Constants.NAME_RESTAURANT_PATTERN, Constants.INVALID_NAME);
+        UtilitiesValidator.validateStringPattern(restaurant.getPhoneNumber(), Constants.PHONE_NUMBER_PATTERN, Constants.INVALID_PHONE_NUMBER);
+        UtilitiesValidator.validateStringPattern(restaurant.getNit(), Constants.ID_NUMBER_PATTERN, Constants.INVALID_ID_NUMBER);
         UserRole roleUser = userVerificationPort.getRolUser(restaurant.getOwnerId())
                 .orElseThrow(()-> new DomainException(Constants.OWNER_NO_FOUND));
-        RestaurantValidator.validateOwner(roleUser);
+        UtilitiesValidator.validateOwner(roleUser);
         restaurantPersistencePort.createRestaurant(restaurant);
     }
 }

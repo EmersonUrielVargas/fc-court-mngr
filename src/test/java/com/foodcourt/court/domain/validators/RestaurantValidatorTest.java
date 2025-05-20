@@ -14,13 +14,13 @@ class RestaurantValidatorTest {
     @Test
     void validateOwnerSuccessFul() {
         UserRole role =  UserRole.OWNER;
-        assertDoesNotThrow(()->RestaurantValidator.validateOwner(role));
+        assertDoesNotThrow(()-> UtilitiesValidator.validateOwner(role));
     }
 
     @Test
     void validateOwnerThrowsException() {
         UserRole role =  UserRole.CLIENT;
-        DomainException exception = assertThrows(DomainException.class, ()->RestaurantValidator.validateOwner(role));
+        DomainException exception = assertThrows(DomainException.class, ()-> UtilitiesValidator.validateOwner(role));
         assertEquals(Constants.USER_NO_AUTHORIZED, exception.getMessage());
     }
 
@@ -31,7 +31,7 @@ class RestaurantValidatorTest {
             "+54123456777:"+Constants.PHONE_NUMBER_PATTERN+":"+Constants.INVALID_PHONE_NUMBER
     }, delimiter = ':')
     void validateSuccessfulStringPattern(String value, String pattern, String errorMessage) {
-        assertDoesNotThrow(()->RestaurantValidator.validateStringPattern(value, pattern, errorMessage));
+        assertDoesNotThrow(()-> UtilitiesValidator.validateStringPattern(value, pattern, errorMessage));
     }
 
     @ParameterizedTest(name = "Test String Patterns throws exception {index} => stringValue={0}, errorMessage={2}")
@@ -42,7 +42,7 @@ class RestaurantValidatorTest {
     }, delimiter = ':')
     void validateThrowsExceptionStringPattern(String value, String pattern, String errorMessage) {
         DomainException exception = assertThrows(DomainException.class,
-                ()->RestaurantValidator.validateStringPattern(value, pattern, errorMessage)
+                ()-> UtilitiesValidator.validateStringPattern(value, pattern, errorMessage)
         );
         assertEquals(errorMessage, exception.getMessage());
     }
