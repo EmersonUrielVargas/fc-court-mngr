@@ -4,6 +4,8 @@ import com.foodcourt.court.domain.constants.Constants;
 import com.foodcourt.court.domain.enums.UserRole;
 import com.foodcourt.court.domain.exception.DomainException;
 
+import java.util.Optional;
+
 public class UtilitiesValidator {
 
     private UtilitiesValidator() {
@@ -26,6 +28,12 @@ public class UtilitiesValidator {
         if (value < Constants.MIN_PRICE_ALLOW){
             throw new DomainException(Constants.PRICE_NOT_ALLOWED);
         }
+    }
+
+    public static <T> T getDefaultIsNullOrEmpty(T primaryValue, T defaultValue){
+        return Optional.ofNullable(primaryValue)
+                .filter(value-> !(value instanceof String stringValue) || !stringValue.isBlank())
+                .orElse(defaultValue);
     }
 
 }

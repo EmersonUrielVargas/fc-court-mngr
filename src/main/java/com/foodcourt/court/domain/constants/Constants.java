@@ -15,6 +15,7 @@ public class Constants {
     public static final String PRICE_NOT_ALLOWED = "El precio no es valido, debe ser mayor a 0";
     public static final String CATEGORY_NO_FOUND = "No se encontro categoria con el id ingresado";
     public static final String RESTAURANT_NO_FOUND = "Ningun restaurante coincide con el id ingresado";
+    public static final String PLATE_NO_FOUND = "Ningun plato coincide con el id ingresado";
 
 
     /*Patrones propiedes*/

@@ -1,6 +1,7 @@
 package com.foodcourt.court.application.handler.impl;
 
 import com.foodcourt.court.application.dto.request.CreatePlateRequestDto;
+import com.foodcourt.court.application.dto.request.UpdatePlateRequestDto;
 import com.foodcourt.court.application.mapper.IPlateRequestMapper;
 import com.foodcourt.court.domain.api.IPlateServicePort;
 import com.foodcourt.court.domain.model.Plate;
@@ -34,6 +35,19 @@ class PlateHandlerTest {
         plateHandler.create(plateRequestDto);
 
         verify(plateRequestMapper, times(1)).toPlate(plateRequestDto);
-        verify(plateServicePort, times(1)).create(plate);
+        verify(plateServicePort, times(1)).create(any(Plate.class));
+    }
+
+    @Test
+    void updatePlateSuccessful() {
+        UpdatePlateRequestDto plateRequestDto =  new UpdatePlateRequestDto();
+
+        Plate plate = new Plate();
+
+        when(plateRequestMapper.toPlate(plateRequestDto)).thenReturn(plate);
+        plateHandler.update(plateRequestDto);
+
+        verify(plateRequestMapper, times(1)).toPlate(plateRequestDto);
+        verify(plateServicePort, times(1)).update(any(Plate.class));
     }
 }
