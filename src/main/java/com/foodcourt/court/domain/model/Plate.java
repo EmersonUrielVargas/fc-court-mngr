@@ -14,5 +14,7 @@ public class Plate {
     private Integer price;
     private Long restaurantId;
     private String urlImage;
+
+    @Builder.Default
     private Boolean isActive = true;
 }

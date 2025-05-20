@@ -8,7 +8,7 @@ import lombok.Setter;
 
 
 @Entity
-@Table(name = "Restaurantes")
+@Table(name = "Platos")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
