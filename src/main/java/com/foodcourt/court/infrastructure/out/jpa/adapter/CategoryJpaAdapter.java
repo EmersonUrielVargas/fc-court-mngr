@@ -1,13 +1,9 @@
 package com.foodcourt.court.infrastructure.out.jpa.adapter;
 
 import com.foodcourt.court.domain.model.Category;
-import com.foodcourt.court.domain.model.Restaurant;
 import com.foodcourt.court.domain.spi.ICategoryPersistencePort;
-import com.foodcourt.court.domain.spi.IRestaurantPersistencePort;
 import com.foodcourt.court.infrastructure.out.jpa.mapper.ICategoryEntityMapper;
-import com.foodcourt.court.infrastructure.out.jpa.mapper.IRestaurantEntityMapper;
 import com.foodcourt.court.infrastructure.out.jpa.repository.ICategoryRepository;
-import com.foodcourt.court.infrastructure.out.jpa.repository.IRestaurantRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;

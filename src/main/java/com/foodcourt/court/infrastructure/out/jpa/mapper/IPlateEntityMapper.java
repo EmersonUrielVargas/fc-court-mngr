@@ -1,7 +1,6 @@
 package com.foodcourt.court.infrastructure.out.jpa.mapper;
 
 import com.foodcourt.court.domain.model.Plate;
-import com.foodcourt.court.domain.model.Restaurant;
 import com.foodcourt.court.infrastructure.out.jpa.entity.CategoryEntity;
 import com.foodcourt.court.infrastructure.out.jpa.entity.PlateEntity;
 import com.foodcourt.court.infrastructure.out.jpa.entity.RestaurantEntity;

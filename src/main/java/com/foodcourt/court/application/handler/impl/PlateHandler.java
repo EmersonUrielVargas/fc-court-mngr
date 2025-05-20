@@ -1,15 +1,10 @@
 package com.foodcourt.court.application.handler.impl;
 
 import com.foodcourt.court.application.dto.request.CreatePlateRequestDto;
-import com.foodcourt.court.application.dto.request.RestaurantRequestDto;
 import com.foodcourt.court.application.handler.IPlateHandler;
-import com.foodcourt.court.application.handler.IRestaurantHandler;
 import com.foodcourt.court.application.mapper.IPlateRequestMapper;
-import com.foodcourt.court.application.mapper.IRestaurantRequestMapper;
 import com.foodcourt.court.domain.api.IPlateServicePort;
-import com.foodcourt.court.domain.api.IRestaurantServicePort;
 import com.foodcourt.court.domain.model.Plate;
-import com.foodcourt.court.domain.model.Restaurant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

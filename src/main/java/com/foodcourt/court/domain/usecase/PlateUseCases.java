@@ -1,16 +1,12 @@
 package com.foodcourt.court.domain.usecase;
 
 import com.foodcourt.court.domain.api.IPlateServicePort;
-import com.foodcourt.court.domain.api.IRestaurantServicePort;
 import com.foodcourt.court.domain.constants.Constants;
-import com.foodcourt.court.domain.enums.UserRole;
 import com.foodcourt.court.domain.exception.DomainException;
 import com.foodcourt.court.domain.model.Plate;
-import com.foodcourt.court.domain.model.Restaurant;
 import com.foodcourt.court.domain.spi.ICategoryPersistencePort;
 import com.foodcourt.court.domain.spi.IPlatePersistencePort;
 import com.foodcourt.court.domain.spi.IRestaurantPersistencePort;
-import com.foodcourt.court.domain.spi.IUserVerificationPort;
 import com.foodcourt.court.domain.validators.UtilitiesValidator;
 public class PlateUseCases implements IPlateServicePort {
 

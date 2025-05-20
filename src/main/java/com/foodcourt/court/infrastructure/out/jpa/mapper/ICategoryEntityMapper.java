@@ -1,9 +1,7 @@
 package com.foodcourt.court.infrastructure.out.jpa.mapper;
 
 import com.foodcourt.court.domain.model.Category;
-import com.foodcourt.court.domain.model.Restaurant;
 import com.foodcourt.court.infrastructure.out.jpa.entity.CategoryEntity;
-import com.foodcourt.court.infrastructure.out.jpa.entity.RestaurantEntity;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

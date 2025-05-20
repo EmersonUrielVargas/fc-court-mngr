@@ -6,6 +6,7 @@ import lombok.*;
 @Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Plate {
     private Long id;
     private String name;

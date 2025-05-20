@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RestaurantValidatorTest {
+class UtilitiesValidatorTest {
 
     @Test
     void validateOwnerSuccessFul() {
@@ -45,5 +45,23 @@ class RestaurantValidatorTest {
                 ()-> UtilitiesValidator.validateStringPattern(value, pattern, errorMessage)
         );
         assertEquals(errorMessage, exception.getMessage());
+    }
+
+    @ParameterizedTest(name = "Test rule price allowed {index} => Price={0}")
+    @CsvSource(value = {
+            "0",
+            "20000000",
+            "12",
+            ""+Integer.MAX_VALUE
+    })
+    void validatePriceSuccessFul(Integer price) {
+        assertDoesNotThrow(()-> UtilitiesValidator.validatePrice(price));
+    }
+
+    @Test
+    void validatePriceThrowsException() {
+        Integer price = -1;
+        DomainException exception = assertThrows(DomainException.class, ()-> UtilitiesValidator.validatePrice(price));
+        assertEquals(Constants.PRICE_NOT_ALLOWED, exception.getMessage());
     }
 }

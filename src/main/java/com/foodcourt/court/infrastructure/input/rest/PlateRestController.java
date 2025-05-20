@@ -1,9 +1,7 @@
 package com.foodcourt.court.infrastructure.input.rest;
 
 import com.foodcourt.court.application.dto.request.CreatePlateRequestDto;
-import com.foodcourt.court.application.dto.request.RestaurantRequestDto;
 import com.foodcourt.court.application.handler.IPlateHandler;
-import com.foodcourt.court.application.handler.IRestaurantHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
