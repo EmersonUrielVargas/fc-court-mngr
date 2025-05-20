@@ -9,18 +9,18 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RestaurantValidatorTest {
+class UtilitiesValidatorTest {
 
     @Test
     void validateOwnerSuccessFul() {
         UserRole role =  UserRole.OWNER;
-        assertDoesNotThrow(()->RestaurantValidator.validateOwner(role));
+        assertDoesNotThrow(()-> UtilitiesValidator.validateOwner(role));
     }
 
     @Test
     void validateOwnerThrowsException() {
         UserRole role =  UserRole.CLIENT;
-        DomainException exception = assertThrows(DomainException.class, ()->RestaurantValidator.validateOwner(role));
+        DomainException exception = assertThrows(DomainException.class, ()-> UtilitiesValidator.validateOwner(role));
         assertEquals(Constants.USER_NO_AUTHORIZED, exception.getMessage());
     }
 
@@ -31,7 +31,7 @@ class RestaurantValidatorTest {
             "+54123456777:"+Constants.PHONE_NUMBER_PATTERN+":"+Constants.INVALID_PHONE_NUMBER
     }, delimiter = ':')
     void validateSuccessfulStringPattern(String value, String pattern, String errorMessage) {
-        assertDoesNotThrow(()->RestaurantValidator.validateStringPattern(value, pattern, errorMessage));
+        assertDoesNotThrow(()-> UtilitiesValidator.validateStringPattern(value, pattern, errorMessage));
     }
 
     @ParameterizedTest(name = "Test String Patterns throws exception {index} => stringValue={0}, errorMessage={2}")
@@ -42,8 +42,26 @@ class RestaurantValidatorTest {
     }, delimiter = ':')
     void validateThrowsExceptionStringPattern(String value, String pattern, String errorMessage) {
         DomainException exception = assertThrows(DomainException.class,
-                ()->RestaurantValidator.validateStringPattern(value, pattern, errorMessage)
+                ()-> UtilitiesValidator.validateStringPattern(value, pattern, errorMessage)
         );
         assertEquals(errorMessage, exception.getMessage());
+    }
+
+    @ParameterizedTest(name = "Test rule price allowed {index} => Price={0}")
+    @CsvSource(value = {
+            "0",
+            "20000000",
+            "12",
+            ""+Integer.MAX_VALUE
+    })
+    void validatePriceSuccessFul(Integer price) {
+        assertDoesNotThrow(()-> UtilitiesValidator.validatePrice(price));
+    }
+
+    @Test
+    void validatePriceThrowsException() {
+        Integer price = -1;
+        DomainException exception = assertThrows(DomainException.class, ()-> UtilitiesValidator.validatePrice(price));
+        assertEquals(Constants.PRICE_NOT_ALLOWED, exception.getMessage());
     }
 }

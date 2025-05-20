@@ -4,9 +4,9 @@ import com.foodcourt.court.domain.constants.Constants;
 import com.foodcourt.court.domain.enums.UserRole;
 import com.foodcourt.court.domain.exception.DomainException;
 
-public class RestaurantValidator {
+public class UtilitiesValidator {
 
-    private RestaurantValidator() {
+    private UtilitiesValidator() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -21,4 +21,11 @@ public class RestaurantValidator {
             throw new DomainException(errorMessage);
         }
     }
+
+    public static void validatePrice(Integer value){
+        if (value < Constants.MIN_PRICE_ALLOW){
+            throw new DomainException(Constants.PRICE_NOT_ALLOWED);
+        }
+    }
+
 }
