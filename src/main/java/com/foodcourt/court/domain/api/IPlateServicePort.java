@@ -4,4 +4,6 @@ import com.foodcourt.court.domain.model.Plate;
 
 public interface IPlateServicePort {
     void create(Plate plate);
+
+    void update(Plate plate);
 }

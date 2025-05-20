@@ -10,6 +10,8 @@ import com.foodcourt.court.domain.spi.IPlatePersistencePort;
 import com.foodcourt.court.domain.spi.IRestaurantPersistencePort;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -32,6 +34,9 @@ class PlateUseCaseTest {
 
     @Mock
     private ICategoryPersistencePort categoryPersistencePort;
+
+    @Captor
+    private ArgumentCaptor<Plate> plateArgumentCaptor;
 
     @InjectMocks
     private PlateUseCases plateUseCases;
@@ -112,5 +117,77 @@ class PlateUseCaseTest {
 
         DomainException exception = assertThrows(DomainException.class, ()-> plateUseCases.create(plate));
         assertEquals(Constants.PRICE_NOT_ALLOWED, exception.getMessage());
+    }
+
+    @Test
+    void updatePlateAllFieldsSuccessful() {
+        Long plateId = 5L;
+        Plate plate = Plate.builder()
+                .id(plateId)
+                .price(12560)
+                .description("Esta no es una pizza!!")
+                .build();
+
+        Plate existingPlate = Plate.builder()
+                .id(plateId)
+                .price(10990)
+                .description("Pizza vegetariana con pepinillos")
+                .build();
+
+        when(platePersistencePort.getByID(plateId))
+                .thenReturn(Optional.of(existingPlate));
+
+        plateUseCases.update(plate);
+        verify(platePersistencePort).updatePlate(plateArgumentCaptor.capture());
+        Plate plateUpdated = plateArgumentCaptor.getValue();
+        assertEquals(plate.getPrice(), plateUpdated.getPrice());
+        assertEquals(plate.getDescription(), plateUpdated.getDescription());
+    }
+
+    @Test
+    void updatePlateOneFieldSuccessful() {
+        Long plateId = 5L;
+        Plate plate = Plate.builder()
+                .id(plateId)
+                .price(12560)
+                .build();
+
+        Plate existingPlate = Plate.builder()
+                .id(plateId)
+                .price(10990)
+                .description("Pizza vegetariana con pepinillos")
+                .build();
+
+        when(platePersistencePort.getByID(plateId))
+                .thenReturn(Optional.of(existingPlate));
+
+        plateUseCases.update(plate);
+
+        verify(platePersistencePort).updatePlate(plateArgumentCaptor.capture());
+        Plate plateUpdated = plateArgumentCaptor.getValue();
+        assertEquals(plate.getPrice(), plateUpdated.getPrice());
+        assertEquals(existingPlate.getDescription(), plateUpdated.getDescription());
+    }
+
+    @Test
+    void updatePlatePriceFail() {
+        Long plateId = 5L;
+        Plate plate = Plate.builder()
+                .id(plateId)
+                .price(-1000)
+                .build();
+
+        Plate existingPlate = Plate.builder()
+                .id(plateId)
+                .price(10990)
+                .description("Pizza vegetariana con pepinillos")
+                .build();
+
+        when(platePersistencePort.getByID(plateId))
+                .thenReturn(Optional.of(existingPlate));
+
+        DomainException exception = assertThrows(DomainException.class, ()-> plateUseCases.update(plate));
+        assertEquals(Constants.PRICE_NOT_ALLOWED, exception.getMessage());
+
     }
 }

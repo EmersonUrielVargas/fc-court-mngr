@@ -64,4 +64,17 @@ class UtilitiesValidatorTest {
         DomainException exception = assertThrows(DomainException.class, ()-> UtilitiesValidator.validatePrice(price));
         assertEquals(Constants.PRICE_NOT_ALLOWED, exception.getMessage());
     }
+
+    @ParameterizedTest(name = "Test default values when primary value is null o empty {index} => value={0} expected={1}")
+    @CsvSource(value = {
+            "0, 12, 0",
+            "el gran Tazon, Restaurante1, el gran Tazon",
+            "true, false, true",
+            ", test1, test1",
+            " ,test2, test2"
+    })
+    void validatePriceSuccessFul(Object primaryValue, Object defaultValue, Object expectedValue) {
+        Object result = UtilitiesValidator.getDefaultIsNullOrEmpty(primaryValue, defaultValue);
+        assertEquals(expectedValue, result);
+    }
 }

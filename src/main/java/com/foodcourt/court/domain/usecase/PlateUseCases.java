@@ -31,4 +31,15 @@ public class PlateUseCases implements IPlateServicePort {
                 .orElseThrow(()->new DomainException(Constants.RESTAURANT_NO_FOUND));
         platePersistencePort.createPlate(plate);
     }
+
+    @Override
+    public void update(Plate plate) {
+        Plate existPlate = platePersistencePort.getByID(plate.getId())
+                .orElseThrow(()->new DomainException(Constants.PLATE_NO_FOUND));
+        existPlate.setDescription(UtilitiesValidator.getDefaultIsNullOrEmpty(plate.getDescription(), existPlate.getDescription()));
+        Integer newPrice = UtilitiesValidator.getDefaultIsNullOrEmpty(plate.getPrice(), existPlate.getPrice());
+        UtilitiesValidator.validatePrice(newPrice);
+        existPlate.setPrice(newPrice);
+        platePersistencePort.updatePlate(existPlate);
+    }
 }

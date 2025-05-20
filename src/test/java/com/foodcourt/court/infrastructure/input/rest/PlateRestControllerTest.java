@@ -1,10 +1,13 @@
 package com.foodcourt.court.infrastructure.input.rest;
 
 import com.foodcourt.court.application.dto.request.CreatePlateRequestDto;
+import com.foodcourt.court.application.dto.request.UpdatePlateRequestDto;
 import com.foodcourt.court.application.handler.IPlateHandler;
 import com.foodcourt.court.domain.exception.DomainException;
 import com.foodcourt.court.infrastructure.exceptionhandler.ControllerAdvisor;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,9 +43,13 @@ class PlateRestControllerTest {
                 .build();
     }
 
-    @Test
-    void createPlateSuccessful() throws Exception {
-        String jsonBody = """
+    @Nested
+    @DisplayName("Tests to endpoint POST create plate")
+    class createPlateTests{
+
+        @Test
+        void createPlateSuccessful() throws Exception {
+            String jsonBody = """
             {
                "name": "Pizza Margarita Especial",
                 "price": 25000,
@@ -52,18 +60,18 @@ class PlateRestControllerTest {
              }
         """;
 
-        doNothing().when(plateHandler).create(any(CreatePlateRequestDto.class));
-        MockHttpServletRequestBuilder request = post("/api/v1/mngr/court/plate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonBody);
-        mockMvc.perform(request)
-                .andDo(print())
-                .andExpect(status().isCreated());
-    }
+            doNothing().when(plateHandler).create(any(CreatePlateRequestDto.class));
+            MockHttpServletRequestBuilder request = post("/api/v1/mngr/court/plate")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonBody);
+            mockMvc.perform(request)
+                    .andDo(print())
+                    .andExpect(status().isCreated());
+        }
 
-    @Test
-    void createRestaurantFail() throws Exception {
-        String jsonBody = """
+        @Test
+        void createRestaurantFail() throws Exception {
+            String jsonBody = """
             {
                 "name": "Pizza Margarita Especial",
                 "price": 25000,
@@ -73,12 +81,57 @@ class PlateRestControllerTest {
                 "restaurantId": 1
              }
         """;
-        doThrow(new DomainException("fail domain validation data")).when(plateHandler).create(any(CreatePlateRequestDto.class));
-        MockHttpServletRequestBuilder request = post("/api/v1/mngr/court/plate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonBody);
-        mockMvc.perform(request)
-                .andDo(print())
-                .andExpect(status().isConflict());
+            doThrow(new DomainException("fail domain validation data")).when(plateHandler).create(any(CreatePlateRequestDto.class));
+            MockHttpServletRequestBuilder request = post("/api/v1/mngr/court/plate")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonBody);
+            mockMvc.perform(request)
+                    .andDo(print())
+                    .andExpect(status().isConflict());
+        }
+
     }
+
+    @Nested
+    @DisplayName("Tests to endpoint PATCH update to exist plate")
+    class updatePlateTests{
+
+        @Test
+        void updatePlateSuccessful() throws Exception {
+            String jsonBody = """
+            {
+               "id": 12,
+                "price": 25000,
+                "description": "Deliciosa pizza con base de tomate fresco."
+             }
+        """;
+
+            doNothing().when(plateHandler).update(any(UpdatePlateRequestDto.class));
+            MockHttpServletRequestBuilder request = patch("/api/v1/mngr/court/plate")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonBody);
+            mockMvc.perform(request)
+                    .andDo(print())
+                    .andExpect(status().isOk());
+        }
+
+        @Test
+        void updateRestaurantFail() throws Exception {
+            String jsonBody = """
+            {
+                "price": 25000,
+                "id": 110
+             }
+        """;
+            doThrow(new DomainException("fail domain validation data")).when(plateHandler).update(any(UpdatePlateRequestDto.class));
+            MockHttpServletRequestBuilder request = patch("/api/v1/mngr/court/plate")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonBody);
+            mockMvc.perform(request)
+                    .andDo(print())
+                    .andExpect(status().isConflict());
+        }
+
+    }
+
 }
