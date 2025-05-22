@@ -1,6 +1,7 @@
 package com.foodcourt.court.infrastructure.security.service;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -13,7 +14,7 @@ import java.util.Date;
 import java.util.function.Function;
 
 @Service
-public class JwtService {
+public class JwtService{
 
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
@@ -24,8 +25,7 @@ public class JwtService {
     }
     
     public boolean isTokenValid(String token){
-        final String username = extractUserEmail(token);
-        return (!username.isBlank()) && !isTokenExpired(token);
+        return !isTokenExpired(token);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver){
@@ -41,7 +41,7 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    private Claims extractAllClaims(String token){
+    private Claims extractAllClaims(String token) throws JwtException, IllegalArgumentException {
         return Jwts.parser()
                 .verifyWith((SecretKey) getSigninKey())
                 .build()
