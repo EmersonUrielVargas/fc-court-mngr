@@ -45,6 +45,7 @@ class PlateUseCaseTest {
     void createPlate() {
         Long restaurantId = 10L;
         Long categoryId = 5L;
+        Long ownerId = 10L;
         Plate plate = Plate.builder()
                 .name("Pizza Margarita Especial")
                 .restaurantId(restaurantId)
@@ -54,11 +55,11 @@ class PlateUseCaseTest {
                 .build();
 
         when(restaurantPersistencePort.getById(restaurantId))
-                .thenReturn(Optional.of(Restaurant.builder().id(restaurantId).build()));
+                .thenReturn(Optional.of(Restaurant.builder().id(restaurantId).ownerId(ownerId).build()));
 
         when(categoryPersistencePort.getCategoryById(categoryId))
                 .thenReturn(Optional.of(Category.builder().id(categoryId).build()));
-        plateUseCases.create(plate);
+        plateUseCases.create(plate, ownerId);
         verify(platePersistencePort).createPlate(plate);
     }
 
@@ -66,6 +67,8 @@ class PlateUseCaseTest {
     void createRestaurantFailCategoryNotFound() {
         Long restaurantId = 10L;
         Long categoryId = 5L;
+        Long ownerId = 10L;
+
         Plate plate = Plate.builder()
                 .name("Pizza Margarita Especial")
                 .restaurantId(restaurantId)
@@ -77,7 +80,7 @@ class PlateUseCaseTest {
         when(categoryPersistencePort.getCategoryById(categoryId))
                 .thenReturn(Optional.empty());
 
-        DomainException exception = assertThrows(DomainException.class, ()-> plateUseCases.create(plate));
+        DomainException exception = assertThrows(DomainException.class, ()-> plateUseCases.create(plate, ownerId));
         assertEquals(Constants.CATEGORY_NO_FOUND, exception.getMessage());
     }
 
@@ -85,6 +88,8 @@ class PlateUseCaseTest {
     void createRestaurantFailRestaurantNotFound() {
         Long restaurantId = 10L;
         Long categoryId = 5L;
+        Long ownerId = 10L;
+
         Plate plate = Plate.builder()
                 .name("Pizza Margarita Especial")
                 .restaurantId(restaurantId)
@@ -99,14 +104,40 @@ class PlateUseCaseTest {
         when(categoryPersistencePort.getCategoryById(categoryId))
                 .thenReturn(Optional.of(Category.builder().id(categoryId).build()));
 
-        DomainException exception = assertThrows(DomainException.class, ()-> plateUseCases.create(plate));
+        DomainException exception = assertThrows(DomainException.class, ()-> plateUseCases.create(plate, ownerId));
         assertEquals(Constants.RESTAURANT_NO_FOUND, exception.getMessage());
+    }
+
+    @Test
+    void createRestaurantFailOwnerNotMatch() {
+        Long restaurantId = 10L;
+        Long categoryId = 5L;
+        Long ownerId = 10L;
+
+        Plate plate = Plate.builder()
+                .name("Pizza Margarita Especial")
+                .restaurantId(restaurantId)
+                .price(12000)
+                .categoryId(categoryId)
+                .description("Pizza vegetariana con pepinillos")
+                .build();
+
+        when(restaurantPersistencePort.getById(restaurantId))
+                .thenReturn(Optional.of(Restaurant.builder().id(restaurantId).ownerId(categoryId).build()));
+
+        when(categoryPersistencePort.getCategoryById(categoryId))
+                .thenReturn(Optional.of(Category.builder().id(categoryId).build()));
+
+        DomainException exception = assertThrows(DomainException.class, ()-> plateUseCases.create(plate, ownerId));
+        assertEquals(Constants.OWNER_NOT_ALLOWED, exception.getMessage());
     }
 
     @Test
     void createRestaurantFailInvalidPrice() {
         Long restaurantId = 10L;
         Long categoryId = 5L;
+        Long ownerId = 10L;
+
         Plate plate = Plate.builder()
                 .name("Pizza Margarita Especial")
                 .restaurantId(restaurantId)
@@ -115,13 +146,17 @@ class PlateUseCaseTest {
                 .description("Pizza vegetariana con pepinillos")
                 .build();
 
-        DomainException exception = assertThrows(DomainException.class, ()-> plateUseCases.create(plate));
+        DomainException exception = assertThrows(DomainException.class, ()-> plateUseCases.create(plate, ownerId));
         assertEquals(Constants.PRICE_NOT_ALLOWED, exception.getMessage());
     }
 
     @Test
     void updatePlateAllFieldsSuccessful() {
         Long plateId = 5L;
+        Long ownerId = 10L;
+        Long restaurantId = 10L;
+
+
         Plate plate = Plate.builder()
                 .id(plateId)
                 .price(12560)
@@ -131,13 +166,17 @@ class PlateUseCaseTest {
         Plate existingPlate = Plate.builder()
                 .id(plateId)
                 .price(10990)
+                .restaurantId(restaurantId)
                 .description("Pizza vegetariana con pepinillos")
                 .build();
 
         when(platePersistencePort.getByID(plateId))
                 .thenReturn(Optional.of(existingPlate));
 
-        plateUseCases.update(plate);
+        when(restaurantPersistencePort.getById(restaurantId))
+                .thenReturn(Optional.of(Restaurant.builder().id(restaurantId).ownerId(ownerId).build()));
+
+        plateUseCases.update(plate, ownerId);
         verify(platePersistencePort).updatePlate(plateArgumentCaptor.capture());
         Plate plateUpdated = plateArgumentCaptor.getValue();
         assertEquals(plate.getPrice(), plateUpdated.getPrice());
@@ -147,6 +186,9 @@ class PlateUseCaseTest {
     @Test
     void updatePlateOneFieldSuccessful() {
         Long plateId = 5L;
+        Long ownerId = 10L;
+        Long restaurantId = 10L;
+
         Plate plate = Plate.builder()
                 .id(plateId)
                 .price(12560)
@@ -155,13 +197,16 @@ class PlateUseCaseTest {
         Plate existingPlate = Plate.builder()
                 .id(plateId)
                 .price(10990)
+                .restaurantId(restaurantId)
                 .description("Pizza vegetariana con pepinillos")
                 .build();
 
         when(platePersistencePort.getByID(plateId))
                 .thenReturn(Optional.of(existingPlate));
+        when(restaurantPersistencePort.getById(restaurantId))
+                .thenReturn(Optional.of(Restaurant.builder().id(restaurantId).ownerId(ownerId).build()));
 
-        plateUseCases.update(plate);
+        plateUseCases.update(plate, ownerId);
 
         verify(platePersistencePort).updatePlate(plateArgumentCaptor.capture());
         Plate plateUpdated = plateArgumentCaptor.getValue();
@@ -172,6 +217,9 @@ class PlateUseCaseTest {
     @Test
     void updatePlatePriceFail() {
         Long plateId = 5L;
+        Long ownerId = 10L;
+        Long restaurantId = 10L;
+
         Plate plate = Plate.builder()
                 .id(plateId)
                 .price(-1000)
@@ -180,14 +228,76 @@ class PlateUseCaseTest {
         Plate existingPlate = Plate.builder()
                 .id(plateId)
                 .price(10990)
+                .restaurantId(restaurantId)
                 .description("Pizza vegetariana con pepinillos")
                 .build();
 
         when(platePersistencePort.getByID(plateId))
                 .thenReturn(Optional.of(existingPlate));
 
-        DomainException exception = assertThrows(DomainException.class, ()-> plateUseCases.update(plate));
+        when(restaurantPersistencePort.getById(restaurantId))
+                .thenReturn(Optional.of(Restaurant.builder().id(restaurantId).ownerId(ownerId).build()));
+
+        DomainException exception = assertThrows(DomainException.class, ()-> plateUseCases.update(plate, ownerId));
         assertEquals(Constants.PRICE_NOT_ALLOWED, exception.getMessage());
+
+    }
+
+    @Test
+    void updatePlateFailOwnerIdNotAllowed() {
+        Long plateId = 5L;
+        Long ownerId = 10L;
+        Long restaurantId = 10L;
+
+        Plate plate = Plate.builder()
+                .id(plateId)
+                .price(-1000)
+                .build();
+
+        Plate existingPlate = Plate.builder()
+                .id(plateId)
+                .price(10990)
+                .restaurantId(restaurantId)
+                .description("Pizza vegetariana con pepinillos")
+                .build();
+
+        when(platePersistencePort.getByID(plateId))
+                .thenReturn(Optional.of(existingPlate));
+
+        when(restaurantPersistencePort.getById(restaurantId))
+                .thenReturn(Optional.of(Restaurant.builder().id(restaurantId).ownerId(plateId).build()));
+
+        DomainException exception = assertThrows(DomainException.class, ()-> plateUseCases.update(plate, ownerId));
+        assertEquals(Constants.OWNER_NOT_ALLOWED, exception.getMessage());
+
+    }
+
+    @Test
+    void updatePlateFailRestaurantNotFound() {
+        Long plateId = 5L;
+        Long ownerId = 10L;
+        Long restaurantId = 10L;
+
+        Plate plate = Plate.builder()
+                .id(plateId)
+                .price(-1000)
+                .build();
+
+        Plate existingPlate = Plate.builder()
+                .id(plateId)
+                .price(10990)
+                .restaurantId(restaurantId)
+                .description("Pizza vegetariana con pepinillos")
+                .build();
+
+        when(platePersistencePort.getByID(plateId))
+                .thenReturn(Optional.of(existingPlate));
+
+        when(restaurantPersistencePort.getById(restaurantId))
+                .thenReturn(Optional.empty());
+
+        DomainException exception = assertThrows(DomainException.class, ()-> plateUseCases.update(plate, ownerId));
+        assertEquals(Constants.RESTAURANT_NO_FOUND, exception.getMessage());
 
     }
 }
