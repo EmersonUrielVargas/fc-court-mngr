@@ -4,6 +4,7 @@ import com.foodcourt.court.domain.api.IPlateServicePort;
 import com.foodcourt.court.domain.constants.Constants;
 import com.foodcourt.court.domain.exception.DomainException;
 import com.foodcourt.court.domain.model.Plate;
+import com.foodcourt.court.domain.model.Restaurant;
 import com.foodcourt.court.domain.spi.ICategoryPersistencePort;
 import com.foodcourt.court.domain.spi.IPlatePersistencePort;
 import com.foodcourt.court.domain.spi.IRestaurantPersistencePort;
@@ -23,19 +24,27 @@ public class PlateUseCases implements IPlateServicePort {
 
 
     @Override
-    public void create(Plate plate) {
+    public void create(Plate plate, Long ownerId) {
         UtilitiesValidator.validatePrice(plate.getPrice());
         categoryPersistencePort.getCategoryById(plate.getCategoryId())
                 .orElseThrow(()->new DomainException(Constants.CATEGORY_NO_FOUND));
-        restaurantPersistencePort.getById(plate.getRestaurantId())
+        Restaurant restaurant = restaurantPersistencePort.getById(plate.getRestaurantId())
                 .orElseThrow(()->new DomainException(Constants.RESTAURANT_NO_FOUND));
+        if (!restaurant.getOwnerId().equals(ownerId)){
+            throw new DomainException(Constants.OWNER_NOT_ALLOWED);
+        }
         platePersistencePort.createPlate(plate);
     }
 
     @Override
-    public void update(Plate plate) {
+    public void update(Plate plate, Long ownerId) {
         Plate existPlate = platePersistencePort.getByID(plate.getId())
                 .orElseThrow(()->new DomainException(Constants.PLATE_NO_FOUND));
+        Restaurant restaurant = restaurantPersistencePort.getById(existPlate.getRestaurantId())
+                .orElseThrow(()->new DomainException(Constants.RESTAURANT_NO_FOUND));
+        if (!restaurant.getOwnerId().equals(ownerId)){
+            throw new DomainException(Constants.OWNER_NOT_ALLOWED);
+        }
         existPlate.setDescription(UtilitiesValidator.getDefaultIsNullOrEmpty(plate.getDescription(), existPlate.getDescription()));
         Integer newPrice = UtilitiesValidator.getDefaultIsNullOrEmpty(plate.getPrice(), existPlate.getPrice());
         UtilitiesValidator.validatePrice(newPrice);

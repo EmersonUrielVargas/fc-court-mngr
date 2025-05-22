@@ -1,4 +1,6 @@
 server:
+  servlet:
+    context-path: /api/v1/mngr/court
   port: 8082
 
 spring:
@@ -12,6 +14,12 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: true
+
+application:
+  security:
+    jwt:
+      secret-key: "C2mBOVNCQY2xziZCCSSehBvzou1LIMj2h1AeUDi5sZ2UHVGHvMlO+eW1EIUPj+X92PTTJDBBLhS+6ftNMwjVeg=="
+
 appDescription: "Food Court mngr"
 appVersion: "1.0.0"
 external:
