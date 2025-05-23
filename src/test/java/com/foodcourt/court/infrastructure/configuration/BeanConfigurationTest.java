@@ -34,13 +34,20 @@ class BeanConfigurationTest {
 
     @Mock
     private IRestaurantRepository restaurantRepository;
-    @Mock private IRestaurantEntityMapper restaurantEntityMapper;
-    @Mock private IPlateRepository plateRepository;
-    @Mock private IPlateEntityMapper plateEntityMapper;
-    @Mock private ICategoryRepository categoryRepository;
-    @Mock private ICategoryEntityMapper categoryEntityMapper;
-    @Mock private IUserRestClient userRestClient;
-    @Mock private JwtService jwtService;
+    @Mock
+    private IRestaurantEntityMapper restaurantEntityMapper;
+    @Mock
+    private IPlateRepository plateRepository;
+    @Mock
+    private IPlateEntityMapper plateEntityMapper;
+    @Mock
+    private ICategoryRepository categoryRepository;
+    @Mock
+    private ICategoryEntityMapper categoryEntityMapper;
+    @Mock
+    private IUserRestClient userRestClient;
+    @Mock
+    private JwtService jwtService;
 
     @InjectMocks
     private BeanConfiguration beanConfiguration;
