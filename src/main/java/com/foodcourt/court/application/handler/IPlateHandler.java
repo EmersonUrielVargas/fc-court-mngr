@@ -5,6 +5,6 @@ import com.foodcourt.court.application.dto.request.UpdatePlateRequestDto;
 
 public interface IPlateHandler {
 
-    void create(CreatePlateRequestDto createPlateRequestDto);
-    void update(UpdatePlateRequestDto updatePlateRequestDto);
+    void create(CreatePlateRequestDto createPlateRequestDto, Long ownerId);
+    void update(UpdatePlateRequestDto updatePlateRequestDto, Long ownerId);
 }

@@ -27,6 +27,7 @@ ext {
 	mySqlConnectorVersion = "8.0.33"
 	openApiVersion = "2.8.8"
 	feignVersion = "4.2.1"
+	jjwtApiVersion = "0.12.6"
 }
 
 dependencies {
@@ -48,6 +49,11 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
 	implementation("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
+
+	implementation("io.jsonwebtoken:jjwt-api:${jjwtApiVersion}")
+
+	runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtApiVersion}"
+	runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtApiVersion}"
 
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign:${feignVersion}")
 

@@ -28,26 +28,29 @@ class PlateHandlerTest {
     @Test
     void createPlateSuccessful() {
         CreatePlateRequestDto plateRequestDto =  new CreatePlateRequestDto();
+        Long ownerId = 10L;
 
         Plate plate = new Plate();
 
         when(plateRequestMapper.toPlate(plateRequestDto)).thenReturn(plate);
-        plateHandler.create(plateRequestDto);
+        plateHandler.create(plateRequestDto,ownerId);
 
         verify(plateRequestMapper, times(1)).toPlate(plateRequestDto);
-        verify(plateServicePort, times(1)).create(any(Plate.class));
+        verify(plateServicePort, times(1)).create(any(Plate.class), anyLong());
     }
 
     @Test
     void updatePlateSuccessful() {
+        Long ownerId = 10L;
         UpdatePlateRequestDto plateRequestDto =  new UpdatePlateRequestDto();
+
 
         Plate plate = new Plate();
 
         when(plateRequestMapper.toPlate(plateRequestDto)).thenReturn(plate);
-        plateHandler.update(plateRequestDto);
+        plateHandler.update(plateRequestDto,ownerId);
 
         verify(plateRequestMapper, times(1)).toPlate(plateRequestDto);
-        verify(plateServicePort, times(1)).update(any(Plate.class));
+        verify(plateServicePort, times(1)).update(any(Plate.class), anyLong());
     }
 }
