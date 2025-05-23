@@ -1,6 +1,7 @@
 package com.foodcourt.court.application.handler.impl;
 
 import com.foodcourt.court.application.dto.request.CreatePlateRequestDto;
+import com.foodcourt.court.application.dto.request.StatusPlateRequestDto;
 import com.foodcourt.court.application.dto.request.UpdatePlateRequestDto;
 import com.foodcourt.court.application.handler.IPlateHandler;
 import com.foodcourt.court.application.mapper.IPlateRequestMapper;
@@ -27,5 +28,11 @@ public class PlateHandler implements IPlateHandler {
     public void update(UpdatePlateRequestDto updatePlateRequestDto, Long ownerId) {
         Plate plate = plateRequestMapper.toPlate(updatePlateRequestDto);
         plateServicePort.update(plate, ownerId);
+    }
+
+    @Override
+    public void setStatus(StatusPlateRequestDto statusPlateRequestDto, Long ownerId) {
+        Plate plate = plateRequestMapper.toPlate(statusPlateRequestDto);
+        plateServicePort.setActive(plate, ownerId);
     }
 }

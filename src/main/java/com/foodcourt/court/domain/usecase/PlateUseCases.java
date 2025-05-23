@@ -28,11 +28,7 @@ public class PlateUseCases implements IPlateServicePort {
         UtilitiesValidator.validatePrice(plate.getPrice());
         categoryPersistencePort.getCategoryById(plate.getCategoryId())
                 .orElseThrow(()->new DomainException(Constants.CATEGORY_NO_FOUND));
-        Restaurant restaurant = restaurantPersistencePort.getById(plate.getRestaurantId())
-                .orElseThrow(()->new DomainException(Constants.RESTAURANT_NO_FOUND));
-        if (!restaurant.getOwnerId().equals(ownerId)){
-            throw new DomainException(Constants.OWNER_NOT_ALLOWED);
-        }
+        validateOwnerRestaurant(plate.getRestaurantId(), ownerId);
         platePersistencePort.createPlate(plate);
     }
 
@@ -40,15 +36,28 @@ public class PlateUseCases implements IPlateServicePort {
     public void update(Plate plate, Long ownerId) {
         Plate existPlate = platePersistencePort.getByID(plate.getId())
                 .orElseThrow(()->new DomainException(Constants.PLATE_NO_FOUND));
-        Restaurant restaurant = restaurantPersistencePort.getById(existPlate.getRestaurantId())
-                .orElseThrow(()->new DomainException(Constants.RESTAURANT_NO_FOUND));
-        if (!restaurant.getOwnerId().equals(ownerId)){
-            throw new DomainException(Constants.OWNER_NOT_ALLOWED);
-        }
+        validateOwnerRestaurant(existPlate.getRestaurantId(), ownerId);
         existPlate.setDescription(UtilitiesValidator.getDefaultIsNullOrEmpty(plate.getDescription(), existPlate.getDescription()));
         Integer newPrice = UtilitiesValidator.getDefaultIsNullOrEmpty(plate.getPrice(), existPlate.getPrice());
         UtilitiesValidator.validatePrice(newPrice);
         existPlate.setPrice(newPrice);
         platePersistencePort.updatePlate(existPlate);
+    }
+
+    @Override
+    public void setActive(Plate plate, Long ownerId) {
+        Plate existPlate = platePersistencePort.getByID(plate.getId())
+                .orElseThrow(()->new DomainException(Constants.PLATE_NO_FOUND));
+        validateOwnerRestaurant(existPlate.getRestaurantId(), ownerId);
+        existPlate.setIsActive(plate.getIsActive());
+        platePersistencePort.updatePlate(existPlate);
+    }
+
+    private void validateOwnerRestaurant(Long restaurantId, Long ownerId){
+        Restaurant restaurant = restaurantPersistencePort.getById(restaurantId)
+                .orElseThrow(()->new DomainException(Constants.RESTAURANT_NO_FOUND));
+        if (!restaurant.getOwnerId().equals(ownerId)){
+            throw new DomainException(Constants.OWNER_NOT_ALLOWED);
+        }
     }
 }

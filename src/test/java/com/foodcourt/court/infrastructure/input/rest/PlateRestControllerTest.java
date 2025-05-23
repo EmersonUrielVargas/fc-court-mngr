@@ -1,6 +1,7 @@
 package com.foodcourt.court.infrastructure.input.rest;
 
 import com.foodcourt.court.application.dto.request.CreatePlateRequestDto;
+import com.foodcourt.court.application.dto.request.StatusPlateRequestDto;
 import com.foodcourt.court.application.dto.request.UpdatePlateRequestDto;
 import com.foodcourt.court.application.handler.IPlateHandler;
 import com.foodcourt.court.domain.exception.DomainException;
@@ -47,7 +48,7 @@ class PlateRestControllerTest {
     }
 
     @Nested
-    @DisplayName("Tests to endpoint POST create plate")
+    @DisplayName("POST /plate")
     class createPlateTests{
 
         @Test
@@ -64,7 +65,7 @@ class PlateRestControllerTest {
             """;
             Long userId = 10L;
 
-            doNothing().when(plateHandler).create(any(CreatePlateRequestDto.class), anyLong());
+            doNothing().when(plateHandler).create(any(CreatePlateRequestDto.class), eq(userId));
             when(autheticationService.getUserId()).thenReturn(userId);
             MockHttpServletRequestBuilder request = post("/plate")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -101,7 +102,7 @@ class PlateRestControllerTest {
     }
 
     @Nested
-    @DisplayName("Tests to endpoint PATCH update to exist plate")
+    @DisplayName("PATCH /plate")
     class updatePlateTests{
 
         @Test
@@ -138,6 +139,52 @@ class PlateRestControllerTest {
             when(autheticationService.getUserId()).thenReturn(userId);
             doThrow(new DomainException("fail domain validation data")).when(plateHandler).update(any(UpdatePlateRequestDto.class), anyLong());
             MockHttpServletRequestBuilder request = patch("/plate")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonBody);
+            mockMvc.perform(request)
+                    .andDo(print())
+                    .andExpect(status().isConflict());
+        }
+
+    }
+
+    @Nested
+    @DisplayName("PATCH /plate/status")
+    class setStatusPlateTests{
+
+        @Test
+        void setStatusPlateSuccessful() throws Exception {
+            String jsonBody = """
+                {
+                    "id": 12,
+                    "isActive": false
+                 }
+            """;
+            Long userId = 10L;
+
+            doNothing().when(plateHandler).setStatus(any(StatusPlateRequestDto.class), anyLong());
+            when(autheticationService.getUserId()).thenReturn(userId);
+            MockHttpServletRequestBuilder request = patch("/plate/status")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonBody);
+            mockMvc.perform(request)
+                    .andDo(print())
+                    .andExpect(status().isOk());
+        }
+
+        @Test
+        void setStatusPlateFail() throws Exception {
+            String jsonBody = """
+                {
+                    "id": 12,
+                    "isActive": false
+                 }
+            """;
+            Long userId = 10L;
+
+            when(autheticationService.getUserId()).thenReturn(userId);
+            doThrow(new DomainException("fail domain validation data")).when(plateHandler).setStatus(any(StatusPlateRequestDto.class), eq(userId));
+            MockHttpServletRequestBuilder request = patch("/plate/status")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonBody);
             mockMvc.perform(request)
