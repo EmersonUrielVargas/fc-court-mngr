@@ -300,4 +300,37 @@ class PlateUseCaseTest {
         assertEquals(Constants.RESTAURANT_NO_FOUND, exception.getMessage());
 
     }
+
+    @Test
+    void setStatusPlateSuccessful() {
+        Long plateId = 5L;
+        Long ownerId = 10L;
+        Long restaurantId = 10L;
+
+        Plate plate = Plate.builder()
+                .id(plateId)
+                .isActive(false)
+                .build();
+
+        Plate existingPlate = Plate.builder()
+                .id(plateId)
+                .isActive(true)
+                .restaurantId(restaurantId)
+                .build();
+        Restaurant existingRestaurant = Restaurant.builder().
+                id(restaurantId).
+                ownerId(ownerId)
+                .build();
+
+        when(platePersistencePort.getByID(plateId))
+                .thenReturn(Optional.of(existingPlate));
+
+        when(restaurantPersistencePort.getById(restaurantId))
+                .thenReturn(Optional.of(existingRestaurant));
+
+        plateUseCases.setActive(plate, ownerId);
+        verify(platePersistencePort).updatePlate(plateArgumentCaptor.capture());
+        Plate plateUpdated = plateArgumentCaptor.getValue();
+        assertEquals(plate.getIsActive(), plateUpdated.getIsActive());
+    }
 }
