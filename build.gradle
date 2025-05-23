@@ -73,4 +73,17 @@ jacocoTestReport {
 		xml.required.set(true)
 		html.required.set(true)
 	}
+	afterEvaluate {
+		classDirectories = files(classDirectories.files.collect {
+			fileTree(dir: it,
+					exclude: ['**/*Config.*',
+							  '**/*Configuration.*',
+							  '**/entity/**/*',
+							  '**/security/service/**/*',
+							  '**/*Application.*',
+							  '**/*Constants.*',
+							  '**/*Mapper.*',
+							  '**/*MapperImpl.*'])
+		})
+	}
 }

@@ -1,6 +1,7 @@
 package com.foodcourt.court.infrastructure.input.rest;
 
 import com.foodcourt.court.application.dto.request.CreatePlateRequestDto;
+import com.foodcourt.court.application.dto.request.StatusPlateRequestDto;
 import com.foodcourt.court.application.dto.request.UpdatePlateRequestDto;
 import com.foodcourt.court.application.handler.IPlateHandler;
 import com.foodcourt.court.infrastructure.security.service.AutheticationService;
@@ -33,6 +34,7 @@ public class PlateRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+
     @Operation(summary = "update a existand plate in a restaurant")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Plate update successful", content = @Content),
@@ -41,6 +43,18 @@ public class PlateRestController {
     @PatchMapping("")
     public ResponseEntity<Void> updatePlate(@Valid @RequestBody UpdatePlateRequestDto plateRequestDto) {
         plateHandler.update(plateRequestDto, autheticationService.getUserId());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @Operation(summary = "update status to plate in a restaurant")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Plate status update successful", content = @Content),
+            @ApiResponse(responseCode = "409", description = "Information plate invalid", content = @Content)
+    })
+    @PatchMapping("/status")
+    public ResponseEntity<Void> setStatusPlate(@Valid @RequestBody StatusPlateRequestDto plateRequestDto) {
+        plateHandler.setStatus(plateRequestDto, autheticationService.getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
