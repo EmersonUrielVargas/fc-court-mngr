@@ -19,6 +19,8 @@ import com.foodcourt.court.infrastructure.out.jpa.repository.IPlateRepository;
 import com.foodcourt.court.infrastructure.out.jpa.repository.IRestaurantRepository;
 import com.foodcourt.court.infrastructure.out.rest.adapter.UserVerificationRestAdapter;
 import com.foodcourt.court.infrastructure.out.rest.client.IUserRestClient;
+import com.foodcourt.court.infrastructure.security.JwtAuthenticationFilter;
+import com.foodcourt.court.infrastructure.security.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +35,8 @@ public class BeanConfiguration {
     private final ICategoryRepository categoryRepository;
     private final ICategoryEntityMapper categoryEntityMapper;
     private final IUserRestClient userRestClient;
+    private final JwtService jwtService;
+
 
     @Bean
     public IUserVerificationPort userPersistencePort() {
@@ -63,4 +67,10 @@ public class BeanConfiguration {
     public IPlateServicePort plateServicePort() {
         return new PlateUseCases(platePersistencePort(), restaurantPersistencePort(), categoryPersistencePort());
     }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(){
+        return new JwtAuthenticationFilter(jwtService);
+    }
+
 }

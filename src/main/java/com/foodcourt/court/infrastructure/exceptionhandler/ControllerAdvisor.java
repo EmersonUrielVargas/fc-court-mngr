@@ -8,7 +8,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Map;
 
@@ -28,12 +27,6 @@ public class ControllerAdvisor {
     public ResponseEntity<Map<String, String>> handleDomainException(DomainException domainException) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Collections.singletonMap(MESSAGE, domainException.getMessage()));
-    }
-
-    @ExceptionHandler(SQLException.class)
-    public ResponseEntity<Map<String, String>> handleSQLException(SQLException sqlException) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Collections.singletonMap(MESSAGE, ExceptionResponse.DATABASE_ERROR.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -16,7 +16,7 @@ public class Constants {
     public static final String CATEGORY_NO_FOUND = "No se encontro categoria con el id ingresado";
     public static final String RESTAURANT_NO_FOUND = "Ningun restaurante coincide con el id ingresado";
     public static final String PLATE_NO_FOUND = "Ningun plato coincide con el id ingresado";
-
+    public static final String OWNER_NOT_ALLOWED = "El propietario no corresponde al restaurante ingresado";
 
     /*Patrones propiedes*/
     public static final String NAME_RESTAURANT_PATTERN = "^(?!\\d+$)[\\p{L}\\d\\s]+$";

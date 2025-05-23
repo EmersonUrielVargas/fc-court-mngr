@@ -18,14 +18,14 @@ public class PlateHandler implements IPlateHandler {
     private final IPlateRequestMapper plateRequestMapper;
 
     @Override
-    public void create(CreatePlateRequestDto createPlateRequestDto) {
+    public void create(CreatePlateRequestDto createPlateRequestDto, Long ownerId) {
         Plate plate = plateRequestMapper.toPlate(createPlateRequestDto);
-        plateServicePort.create(plate);
+        plateServicePort.create(plate, ownerId);
     }
 
     @Override
-    public void update(UpdatePlateRequestDto updatePlateRequestDto) {
+    public void update(UpdatePlateRequestDto updatePlateRequestDto, Long ownerId) {
         Plate plate = plateRequestMapper.toPlate(updatePlateRequestDto);
-        plateServicePort.update(plate);
+        plateServicePort.update(plate, ownerId);
     }
 }
