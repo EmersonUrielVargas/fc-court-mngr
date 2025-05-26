@@ -23,7 +23,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorizeHttpRequests ->
                 authorizeHttpRequests
-                    .requestMatchers("/public/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                    .requestMatchers("/public/**", "/swagger-ui/**", "/swagger-ui.**", "/v3/api-docs/**").permitAll()
                     .requestMatchers("/plate/**").hasAuthority(UserRole.OWNER.name())
                     .requestMatchers("/restaurant/**").hasAuthority(UserRole.ADMIN.name())
                     .anyRequest()

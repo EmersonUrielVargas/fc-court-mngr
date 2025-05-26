@@ -2,6 +2,7 @@ package com.foodcourt.court.infrastructure.input.rest;
 
 import com.foodcourt.court.application.dto.request.RestaurantRequestDto;
 import com.foodcourt.court.application.handler.IRestaurantHandler;
+import com.foodcourt.court.infrastructure.shared.Constants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,10 +23,10 @@ public class RestaurantRestController {
 
     private final IRestaurantHandler restaurantHandler;
 
-    @Operation(summary = "Create a new restaurant in food court")
+    @Operation(summary = Constants.SUMMARY_CREATE_RESTAURANT)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "restaurant created", content = @Content),
-            @ApiResponse(responseCode = "409", description = "restaurant already exists or information invalid", content = @Content)
+            @ApiResponse(responseCode = Constants.STATUS_CODE_CREATED, description = Constants.SUMMARY_RESPONSE_CREATED_RESTAURANT, content = @Content),
+            @ApiResponse(responseCode = Constants.STATUS_CODE_CONFLICT, description = Constants.SUMMARY_RESPONSE_CONFLICT_RESTAURANT, content = @Content)
     })
     @PostMapping("")
     public ResponseEntity<Void> createRestaurant(@Valid @RequestBody RestaurantRequestDto restaurantRequestDto) {
