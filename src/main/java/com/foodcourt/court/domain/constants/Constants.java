@@ -3,8 +3,10 @@ package com.foodcourt.court.domain.constants;
 public class Constants {
 
     private Constants() {
-        throw new IllegalStateException("Utility class");
+        throw new IllegalStateException(ERROR_INSTANCE_UTILITY_CLASS);
     }
+
+    public static final String ERROR_INSTANCE_UTILITY_CLASS = "Utility class";
     /*Descripcion Errores*/
     public static final String INVALID_NAME = "El nombre no es valido ";
     public static final String INVALID_PHONE_NUMBER = "El numero de telefono no es valido ";
