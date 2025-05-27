@@ -5,7 +5,10 @@ import com.foodcourt.court.domain.spi.IPlatePersistencePort;
 import com.foodcourt.court.infrastructure.out.jpa.entity.PlateEntity;
 import com.foodcourt.court.infrastructure.out.jpa.mapper.IPlateEntityMapper;
 import com.foodcourt.court.infrastructure.out.jpa.repository.IPlateRepository;
+import com.foodcourt.court.infrastructure.shared.GeneralConstants;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +31,25 @@ public class PlateJpaAdapter implements IPlatePersistencePort {
     }
 
     @Override
-    public List<Plate> getPlatesByRestaurantIdByCategoryId(Long restaurantId, Integer pageSize, Integer page, Long categoryId) {
-        return List.of();
+    public List<Plate> getPlatesByRestaurantId(Long restaurantId, Integer pageSize, Integer page) {
+        return plateRepository.findByRestaurant(
+                        restaurantId,
+                        PageRequest.of(page, pageSize, Sort.by(GeneralConstants.FIELD_NAME).ascending())
+                )
+                .stream()
+                .map(plateEntityMapper::toPlate)
+                .toList();
+    }
+
+    @Override
+    public List<Plate> getPlatesByRestaurantId(Long restaurantId, Integer pageSize, Integer page, Long categoryId) {
+        return plateRepository.findByRestaurantAndCategory(
+                        restaurantId,
+                        categoryId,
+                        PageRequest.of(page, pageSize, Sort.by(GeneralConstants.FIELD_NAME).ascending())
+                )
+                .stream()
+                .map(plateEntityMapper::toPlate)
+                .toList();
     }
 }

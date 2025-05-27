@@ -33,8 +33,14 @@ public class GeneralConstants {
     public static final String SUMMARY_RESPONSE_OK_GET_RESTAURANT = "List of restaurants with filtering pagination applied";
     public static final String SUMMARY_RESPONSE_BAD_REQUEST_GET_RESTAURANT = "Invalid params value";
 
+    public static final String SUMMARY_GET_PLATES_BY_RESTAURANT = "Get a list of plates in a restaurant, filtering by pagination, category and sorting by name ascending";
+    public static final String SUMMARY_RESPONSE_OK_GET_PLATES_BY_RESTAURANT = "List of plates in a restaurant with filters applied";
+    public static final String SUMMARY_RESPONSE_BAD_REQUEST_GET_PLATES_BY_RESTAURANT = "Invalid params value";
+
     /*Repository*/
-    public static final String FIELD_NAME_GET_RESTAURANTS = "nombre";
+    public static final String FIELD_NAME = "nombre";
+    public static final String FIELD_CATEGORY_ID_IN_PLATE = "categoria";
+
 
 
 }

@@ -2,6 +2,8 @@ package com.foodcourt.court.infrastructure.input.rest;
 
 import com.foodcourt.court.application.dto.request.RestaurantRequestDto;
 import com.foodcourt.court.application.dto.response.ListRestaurantsResponseDto;
+import com.foodcourt.court.application.dto.response.PlatesByRestaurantResponseDto;
+import com.foodcourt.court.application.handler.IPlateHandler;
 import com.foodcourt.court.application.handler.IRestaurantHandler;
 import com.foodcourt.court.domain.constants.Constants;
 import com.foodcourt.court.infrastructure.shared.GeneralConstants;
@@ -18,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/restaurant")
@@ -25,12 +28,36 @@ import java.util.List;
 public class RestaurantRestController {
 
     private final IRestaurantHandler restaurantHandler;
+    private final IPlateHandler plateHandler;
+
+
+    @Operation(summary = GeneralConstants.SUMMARY_GET_PLATES_BY_RESTAURANT)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CREATED, description = GeneralConstants.SUMMARY_RESPONSE_OK_GET_PLATES_BY_RESTAURANT,
+                    content = @Content(mediaType = GeneralConstants.MEDIA_TYPE_JSON,
+                            array = @ArraySchema(
+                                    schema = @Schema(implementation = PlatesByRestaurantResponseDto.class)
+                            )
+                    )),
+            @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_BAD_REQUEST, description = GeneralConstants.SUMMARY_RESPONSE_BAD_REQUEST_GET_PLATES_BY_RESTAURANT, content = @Content)
+    })
+    @GetMapping("/{restaurantId}/plates")
+    public ResponseEntity<List<PlatesByRestaurantResponseDto>> getPlatesByRestaurant(@PathVariable Long restaurantId,
+                                                                                      @RequestParam(Constants.PAGE_SIZE_NAME) Integer pageSize,
+                                                                                      @RequestParam(Constants.PAGE_NAME) Integer page,
+                                                                                      @RequestParam(Constants.CATEGORY_ID_PARAM_NAME) Optional<Long> categoryId) {
+        List<PlatesByRestaurantResponseDto> listPlatesByRestaurant = plateHandler.getPlatesByRestaurant(restaurantId, pageSize, page, categoryId);
+        return new ResponseEntity<>(listPlatesByRestaurant, HttpStatus.OK);
+    }
+
 
     @Operation(summary = GeneralConstants.SUMMARY_CREATE_RESTAURANT)
     @ApiResponses(value = {
             @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CREATED, description = GeneralConstants.SUMMARY_RESPONSE_CREATED_RESTAURANT, content = @Content),
             @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CONFLICT, description = GeneralConstants.SUMMARY_RESPONSE_CONFLICT_RESTAURANT, content = @Content)
     })
+
+
     @PostMapping("")
     public ResponseEntity<Void> createRestaurant(@Valid @RequestBody RestaurantRequestDto restaurantRequestDto) {
         restaurantHandler.create(restaurantRequestDto);
@@ -53,7 +80,4 @@ public class RestaurantRestController {
         List<ListRestaurantsResponseDto> listRestaurantsResponseDto = restaurantHandler.getRestaurants(pageSize, page);
         return new ResponseEntity<>(listRestaurantsResponseDto, HttpStatus.OK);
     }
-
-
-
 }

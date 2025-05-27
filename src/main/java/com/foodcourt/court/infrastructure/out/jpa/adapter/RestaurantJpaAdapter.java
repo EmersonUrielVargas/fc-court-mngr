@@ -31,7 +31,7 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort {
 
     @Override
     public List<Restaurant> getRestaurants(Integer pageSize, Integer page) {
-        return restaurantRepository.findAll(PageRequest.of(page, pageSize, Sort.by(GeneralConstants.FIELD_NAME_GET_RESTAURANTS).ascending()))
+        return restaurantRepository.findAll(PageRequest.of(page, pageSize, Sort.by(GeneralConstants.FIELD_NAME).ascending()))
                 .map(restaurantEntityMapper::toRestaurant)
                 .stream().toList();
     }
