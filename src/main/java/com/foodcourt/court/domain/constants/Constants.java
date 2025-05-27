@@ -5,9 +5,9 @@ public class Constants {
     private Constants() {
         throw new IllegalStateException(ERROR_INSTANCE_UTILITY_CLASS);
     }
-
     public static final String ERROR_INSTANCE_UTILITY_CLASS = "Utility class";
-    /*Descripcion Errores*/
+
+    /*Description errors*/
     public static final String INVALID_NAME = "El nombre no es valido ";
     public static final String INVALID_PHONE_NUMBER = "El numero de telefono no es valido ";
     public static final String INVALID_ID_NUMBER = "El numero de identificacion no es valido ";
@@ -22,9 +22,18 @@ public class Constants {
 
     public static final String PARAM_REQUIRED_NOT_FOUND = "Los parametros requeridos no pueden ser nulos ";
 
-    /*Patrones propiedes*/
+
+    /*Params Name*/
+    public static final String  PAGE_NAME = "page";
+    public static final String  PAGE_SIZE_NAME = "pageSize";
+
+    /*Templates*/
+    public static final String  NEGATIVE_VALUE_PARAM_TEMPLATE = "El parametro %s no puede tener valores negativos";
+
+    /*Patterns properties*/
     public static final String NAME_RESTAURANT_PATTERN = "^(?!\\d+$)[\\p{L}\\d\\s]+$";
     public static final String PHONE_NUMBER_PATTERN = "^\\+?[0-9]{1,12}$";
     public static final String ID_NUMBER_PATTERN = "^[0-9]+$";
     public static final Integer MIN_PRICE_ALLOW = 0;
+    public static final Integer MIN_PAGE_ALLOW = 0;
 }

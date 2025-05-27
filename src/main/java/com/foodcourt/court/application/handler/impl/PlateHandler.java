@@ -19,20 +19,20 @@ public class PlateHandler implements IPlateHandler {
     private final IPlateRequestMapper plateRequestMapper;
 
     @Override
-    public void create(CreatePlateRequestDto createPlateRequestDto, Long ownerId) {
+    public void create(CreatePlateRequestDto createPlateRequestDto) {
         Plate plate = plateRequestMapper.toPlate(createPlateRequestDto);
-        plateServicePort.create(plate, ownerId);
+        plateServicePort.create(plate);
     }
 
     @Override
-    public void update(UpdatePlateRequestDto updatePlateRequestDto, Long ownerId) {
+    public void update(UpdatePlateRequestDto updatePlateRequestDto) {
         Plate plate = plateRequestMapper.toPlate(updatePlateRequestDto);
-        plateServicePort.update(plate, ownerId);
+        plateServicePort.update(plate);
     }
 
     @Override
-    public void setStatus(StatusPlateRequestDto statusPlateRequestDto, Long ownerId) {
+    public void setStatus(StatusPlateRequestDto statusPlateRequestDto) {
         Plate plate = plateRequestMapper.toPlate(statusPlateRequestDto);
-        plateServicePort.setActive(plate, ownerId);
+        plateServicePort.setActive(plate);
     }
 }

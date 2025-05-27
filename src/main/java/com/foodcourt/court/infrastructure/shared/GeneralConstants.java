@@ -2,9 +2,9 @@ package com.foodcourt.court.infrastructure.shared;
 
 import static com.foodcourt.court.domain.constants.Constants.ERROR_INSTANCE_UTILITY_CLASS;
 
-public class Constants {
+public class GeneralConstants {
 
-    private Constants() {
+    private GeneralConstants() {
         throw new IllegalStateException(ERROR_INSTANCE_UTILITY_CLASS);
     }
     public static final String STATUS_CODE_CREATED= "201";

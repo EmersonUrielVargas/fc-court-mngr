@@ -3,7 +3,8 @@ package com.foodcourt.court.infrastructure.input.rest;
 import com.foodcourt.court.application.dto.request.RestaurantRequestDto;
 import com.foodcourt.court.application.dto.response.ListRestaurantsResponseDto;
 import com.foodcourt.court.application.handler.IRestaurantHandler;
-import com.foodcourt.court.infrastructure.shared.Constants;
+import com.foodcourt.court.domain.constants.Constants;
+import com.foodcourt.court.infrastructure.shared.GeneralConstants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,10 +24,10 @@ public class RestaurantRestController {
 
     private final IRestaurantHandler restaurantHandler;
 
-    @Operation(summary = Constants.SUMMARY_CREATE_RESTAURANT)
+    @Operation(summary = GeneralConstants.SUMMARY_CREATE_RESTAURANT)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = Constants.STATUS_CODE_CREATED, description = Constants.SUMMARY_RESPONSE_CREATED_RESTAURANT, content = @Content),
-            @ApiResponse(responseCode = Constants.STATUS_CODE_CONFLICT, description = Constants.SUMMARY_RESPONSE_CONFLICT_RESTAURANT, content = @Content)
+            @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CREATED, description = GeneralConstants.SUMMARY_RESPONSE_CREATED_RESTAURANT, content = @Content),
+            @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CONFLICT, description = GeneralConstants.SUMMARY_RESPONSE_CONFLICT_RESTAURANT, content = @Content)
     })
     @PostMapping("")
     public ResponseEntity<Void> createRestaurant(@Valid @RequestBody RestaurantRequestDto restaurantRequestDto) {
@@ -34,14 +35,14 @@ public class RestaurantRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @Operation(summary = Constants.SUMMARY_CREATE_RESTAURANT)
+    @Operation(summary = GeneralConstants.SUMMARY_CREATE_RESTAURANT)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = Constants.STATUS_CODE_CREATED, description = Constants.SUMMARY_RESPONSE_CREATED_RESTAURANT, content = @Content),
-            @ApiResponse(responseCode = Constants.STATUS_CODE_CONFLICT, description = Constants.SUMMARY_RESPONSE_CONFLICT_RESTAURANT, content = @Content)
+            @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CREATED, description = GeneralConstants.SUMMARY_RESPONSE_CREATED_RESTAURANT, content = @Content),
+            @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CONFLICT, description = GeneralConstants.SUMMARY_RESPONSE_CONFLICT_RESTAURANT, content = @Content)
     })
     @GetMapping("")
-    public ResponseEntity<List<ListRestaurantsResponseDto>> getRestaurants( @RequestParam("pageSize") Integer pageSize,
-                                                                            @RequestParam("page") Integer page) {
+    public ResponseEntity<List<ListRestaurantsResponseDto>> getRestaurants( @RequestParam(Constants.PAGE_SIZE_NAME) Integer pageSize,
+                                                                            @RequestParam(Constants.PAGE_NAME) Integer page) {
         List<ListRestaurantsResponseDto> listRestaurantsResponseDto = restaurantHandler.getRestaurants(pageSize, page);
         return new ResponseEntity<>(listRestaurantsResponseDto, HttpStatus.OK);
     }

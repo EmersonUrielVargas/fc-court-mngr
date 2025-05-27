@@ -2,10 +2,7 @@ package com.foodcourt.court.infrastructure.configuration;
 
 import com.foodcourt.court.domain.api.IPlateServicePort;
 import com.foodcourt.court.domain.api.IRestaurantServicePort;
-import com.foodcourt.court.domain.spi.ICategoryPersistencePort;
-import com.foodcourt.court.domain.spi.IPlatePersistencePort;
-import com.foodcourt.court.domain.spi.IRestaurantPersistencePort;
-import com.foodcourt.court.domain.spi.IUserVerificationPort;
+import com.foodcourt.court.domain.spi.*;
 import com.foodcourt.court.domain.usecase.PlateUseCases;
 import com.foodcourt.court.domain.usecase.RestaurantUseCase;
 import com.foodcourt.court.infrastructure.out.jpa.adapter.CategoryJpaAdapter;
@@ -20,6 +17,8 @@ import com.foodcourt.court.infrastructure.out.jpa.repository.IRestaurantReposito
 import com.foodcourt.court.infrastructure.out.rest.adapter.UserVerificationRestAdapter;
 import com.foodcourt.court.infrastructure.out.rest.client.IUserRestClient;
 import com.foodcourt.court.infrastructure.security.JwtAuthenticationFilter;
+import com.foodcourt.court.infrastructure.security.adapter.AuthenticationAdapter;
+import com.foodcourt.court.infrastructure.security.service.AutheticationService;
 import com.foodcourt.court.infrastructure.security.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +31,7 @@ public class BeanConfiguration {
     private final IRestaurantEntityMapper restaurantEntityMapper;
     private final IPlateRepository plateRepository;
     private final IPlateEntityMapper plateEntityMapper;
+    private final AutheticationService autheticationService;
     private final ICategoryRepository categoryRepository;
     private final ICategoryEntityMapper categoryEntityMapper;
     private final IUserRestClient userRestClient;
@@ -64,8 +64,13 @@ public class BeanConfiguration {
     }
 
     @Bean
+    public IAuthenticationPort authenticationPort() {
+        return new AuthenticationAdapter(autheticationService);
+    }
+
+    @Bean
     public IPlateServicePort plateServicePort() {
-        return new PlateUseCases(platePersistencePort(), restaurantPersistencePort(), categoryPersistencePort());
+        return new PlateUseCases(platePersistencePort(), restaurantPersistencePort(), categoryPersistencePort(), authenticationPort());
     }
 
     @Bean

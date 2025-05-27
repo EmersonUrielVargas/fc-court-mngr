@@ -40,6 +40,8 @@ public class RestaurantUseCase implements IRestaurantServicePort {
     public List<Restaurant> getRestaurants(Integer pageSize, Integer page) {
         UtilitiesValidator.validateIsNull(pageSize);
         UtilitiesValidator.validateIsNull(page);
+        UtilitiesValidator.validateNotNegativeNumber(pageSize, Constants.PAGE_SIZE_NAME);
+        UtilitiesValidator.validateNotNegativeNumber(page, Constants.PAGE_NAME);
         return restaurantPersistencePort.getRestaurants(pageSize, page);
     }
 }

@@ -4,7 +4,7 @@ import com.foodcourt.court.domain.model.Restaurant;
 import com.foodcourt.court.domain.spi.IRestaurantPersistencePort;
 import com.foodcourt.court.infrastructure.out.jpa.mapper.IRestaurantEntityMapper;
 import com.foodcourt.court.infrastructure.out.jpa.repository.IRestaurantRepository;
-import com.foodcourt.court.infrastructure.shared.Constants;
+import com.foodcourt.court.infrastructure.shared.GeneralConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -31,7 +31,7 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort {
 
     @Override
     public List<Restaurant> getRestaurants(Integer pageSize, Integer page) {
-        return restaurantRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Constants.FIELD_NAME_GET_RESTAURANTS).ascending()))
+        return restaurantRepository.findAll(PageRequest.of(page, pageSize, Sort.by(GeneralConstants.FIELD_NAME_GET_RESTAURANTS).ascending()))
                 .map(restaurantEntityMapper::toRestaurant)
                 .stream().toList();
     }
