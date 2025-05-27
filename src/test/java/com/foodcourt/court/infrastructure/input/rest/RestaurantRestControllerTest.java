@@ -53,7 +53,7 @@ class RestaurantRestControllerTest {
         """;
 
         doNothing().when(restaurantHandler).create(any(RestaurantRequestDto.class));
-        MockHttpServletRequestBuilder request = post("/restaurant")
+        MockHttpServletRequestBuilder request = post("/v1/restaurant")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonBody);
         mockMvc.perform(request)
@@ -74,7 +74,7 @@ class RestaurantRestControllerTest {
              }
         """;
         doThrow(new DomainException("fail domain validation data")).when(restaurantHandler).create(any(RestaurantRequestDto.class));
-        MockHttpServletRequestBuilder request = post("/restaurant")
+        MockHttpServletRequestBuilder request = post("/v1/restaurant")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonBody);
         mockMvc.perform(request)

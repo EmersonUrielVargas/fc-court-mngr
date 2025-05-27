@@ -5,6 +5,7 @@ import com.foodcourt.court.infrastructure.exception.NoDataFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestValueException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -30,9 +31,15 @@ public class ControllerAdvisor {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleInvalidParamException(MethodArgumentNotValidException sqlException) {
+    public ResponseEntity<Map<String, String>> handleInvalidParamException(MethodArgumentNotValidException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Collections.singletonMap(MESSAGE, ExceptionResponse.DATABASE_ERROR.getMessage()));
+    }
+
+    @ExceptionHandler(MissingRequestValueException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidParamException(MissingRequestValueException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Collections.singletonMap(MESSAGE, ExceptionResponse.MISSING_REQUIRED_PARAMS_ERROR.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)

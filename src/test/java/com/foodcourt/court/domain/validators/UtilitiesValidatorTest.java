@@ -73,7 +73,7 @@ class UtilitiesValidatorTest {
             ", test1, test1",
             " ,test2, test2"
     })
-    void validatePriceSuccessFul(Object primaryValue, Object defaultValue, Object expectedValue) {
+    void validateDefaultIsNullOrEmpty(Object primaryValue, Object defaultValue, Object expectedValue) {
         Object result = UtilitiesValidator.getDefaultIsNullOrEmpty(primaryValue, defaultValue);
         assertEquals(expectedValue, result);
     }
