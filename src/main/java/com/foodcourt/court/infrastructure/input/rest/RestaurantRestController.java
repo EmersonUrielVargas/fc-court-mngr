@@ -6,7 +6,9 @@ import com.foodcourt.court.application.handler.IRestaurantHandler;
 import com.foodcourt.court.domain.constants.Constants;
 import com.foodcourt.court.infrastructure.shared.GeneralConstants;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -35,10 +37,15 @@ public class RestaurantRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @Operation(summary = GeneralConstants.SUMMARY_CREATE_RESTAURANT)
+    @Operation(summary = GeneralConstants.SUMMARY_GET_RESTAURANT)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CREATED, description = GeneralConstants.SUMMARY_RESPONSE_CREATED_RESTAURANT, content = @Content),
-            @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CONFLICT, description = GeneralConstants.SUMMARY_RESPONSE_CONFLICT_RESTAURANT, content = @Content)
+            @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CREATED, description = GeneralConstants.SUMMARY_RESPONSE_OK_GET_RESTAURANT,
+                    content = @Content(mediaType = GeneralConstants.MEDIA_TYPE_JSON,
+                            array = @ArraySchema(
+                                    schema = @Schema(implementation = ListRestaurantsResponseDto.class)
+                            )
+                    )),
+            @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_BAD_REQUEST, description = GeneralConstants.SUMMARY_RESPONSE_BAD_REQUEST_GET_RESTAURANT, content = @Content)
     })
     @GetMapping("")
     public ResponseEntity<List<ListRestaurantsResponseDto>> getRestaurants( @RequestParam(Constants.PAGE_SIZE_NAME) Integer pageSize,

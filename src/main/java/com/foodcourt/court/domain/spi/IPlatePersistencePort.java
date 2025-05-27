@@ -2,6 +2,7 @@ package com.foodcourt.court.domain.spi;
 
 import com.foodcourt.court.domain.model.Plate;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface IPlatePersistencePort {
@@ -10,5 +11,6 @@ public interface IPlatePersistencePort {
 
     Optional<Plate> getByID(Long plateId);
 
+    List<Plate> getPlatesByRestaurantIdByCategoryId(Long restaurantId, Integer pageSize, Integer page, Long categoryId);
 
 }

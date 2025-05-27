@@ -7,6 +7,7 @@ import com.foodcourt.court.infrastructure.out.jpa.mapper.IPlateEntityMapper;
 import com.foodcourt.court.infrastructure.out.jpa.repository.IPlateRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -24,5 +25,10 @@ public class PlateJpaAdapter implements IPlatePersistencePort {
     @Override
     public Optional<Plate> getByID(Long plateId) {
         return plateRepository.findById(plateId).map(plateEntityMapper::toPlate);
+    }
+
+    @Override
+    public List<Plate> getPlatesByRestaurantIdByCategoryId(Long restaurantId, Integer pageSize, Integer page, Long categoryId) {
+        return List.of();
     }
 }

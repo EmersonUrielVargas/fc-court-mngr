@@ -9,7 +9,11 @@ public class GeneralConstants {
     }
     public static final String STATUS_CODE_CREATED= "201";
     public static final String STATUS_CODE_CONFLICT= "409";
+    public static final String STATUS_CODE_BAD_REQUEST= "400";
     public static final String STATUS_CODE_OK= "200";
+
+    public static final String MEDIA_TYPE_JSON= "application/json";
+
 
     public static final String SUMMARY_CREATE_RESTAURANT = "Create a new restaurant in food court";
     public static final String SUMMARY_RESPONSE_CREATED_RESTAURANT = "restaurant created successful";
@@ -24,6 +28,10 @@ public class GeneralConstants {
 
     public static final String SUMMARY_SET_ACTIVE_PLATE = "update status to enable or disable a plate in a restaurant";
     public static final String SUMMARY_RESPONSE_OK_SET_ACTIVE_PLATE = "Plate status update successful";
+
+    public static final String SUMMARY_GET_RESTAURANT = "Get a list of restaurants in food court, filtering by pagination and sorting by name ascending";
+    public static final String SUMMARY_RESPONSE_OK_GET_RESTAURANT = "List of restaurants with filtering pagination applied";
+    public static final String SUMMARY_RESPONSE_BAD_REQUEST_GET_RESTAURANT = "Invalid params value";
 
     /*Repository*/
     public static final String FIELD_NAME_GET_RESTAURANTS = "nombre";

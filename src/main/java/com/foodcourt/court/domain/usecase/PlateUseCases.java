@@ -10,6 +10,9 @@ import com.foodcourt.court.domain.spi.ICategoryPersistencePort;
 import com.foodcourt.court.domain.spi.IPlatePersistencePort;
 import com.foodcourt.court.domain.spi.IRestaurantPersistencePort;
 import com.foodcourt.court.domain.validators.UtilitiesValidator;
+
+import java.util.List;
+
 public class PlateUseCases implements IPlateServicePort {
 
     private final IPlatePersistencePort platePersistencePort;
@@ -57,6 +60,11 @@ public class PlateUseCases implements IPlateServicePort {
         validateOwnerRestaurant(existPlate.getRestaurantId());
         existPlate.setIsActive(plate.getIsActive());
         platePersistencePort.upsertPlate(existPlate);
+    }
+
+    @Override
+    public List<Plate> getPlatesByRestaurantIdByCategoryId(Long restaurantId, Integer pageSize, Integer page, Long categoryId) {
+        return List.of();
     }
 
     private void validateOwnerRestaurant(Long restaurantId){
