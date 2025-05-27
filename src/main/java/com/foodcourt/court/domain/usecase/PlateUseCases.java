@@ -29,7 +29,7 @@ public class PlateUseCases implements IPlateServicePort {
         categoryPersistencePort.getCategoryById(plate.getCategoryId())
                 .orElseThrow(()->new DomainException(Constants.CATEGORY_NO_FOUND));
         validateOwnerRestaurant(plate.getRestaurantId(), ownerId);
-        platePersistencePort.createPlate(plate);
+        platePersistencePort.upsertPlate(plate);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class PlateUseCases implements IPlateServicePort {
         Integer newPrice = UtilitiesValidator.getDefaultIsNullOrEmpty(plate.getPrice(), existPlate.getPrice());
         UtilitiesValidator.validatePrice(newPrice);
         existPlate.setPrice(newPrice);
-        platePersistencePort.updatePlate(existPlate);
+        platePersistencePort.upsertPlate(existPlate);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class PlateUseCases implements IPlateServicePort {
                 .orElseThrow(()->new DomainException(Constants.PLATE_NO_FOUND));
         validateOwnerRestaurant(existPlate.getRestaurantId(), ownerId);
         existPlate.setIsActive(plate.getIsActive());
-        platePersistencePort.updatePlate(existPlate);
+        platePersistencePort.upsertPlate(existPlate);
     }
 
     private void validateOwnerRestaurant(Long restaurantId, Long ownerId){

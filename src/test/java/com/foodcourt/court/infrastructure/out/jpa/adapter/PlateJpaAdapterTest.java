@@ -43,7 +43,7 @@ class PlateJpaAdapterTest {
     }
 
     @Test
-    void updatePlateSuccessful() {
+    void upsertPlateSuccessful() {
         Long idPlate = 12L;
         Plate plate = new Plate();
         plate.setId(idPlate);
@@ -52,21 +52,21 @@ class PlateJpaAdapterTest {
 
         when(plateEntityMapper.toPlateEntity(plate)).thenReturn(plateEntity);
         when(plateRepository.findById(anyLong())).thenReturn(Optional.of(plateEntity));
-        plateJpaAdapter.updatePlate(plate);
+        plateJpaAdapter.upsertPlate(plate);
 
         verify(plateEntityMapper).toPlateEntity(plate);
         verify(plateRepository).save(plateEntity);
     }
 
     @Test
-    void updatePlateFail() {
+    void upsertPlateFail() {
         Long idPlate = 12L;
         Plate plate = new Plate();
         plate.setId(idPlate);
 
         when(plateRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(NoDataFoundException.class, ()-> plateJpaAdapter.updatePlate(plate));
+        assertThrows(NoDataFoundException.class, ()-> plateJpaAdapter.upsertPlate(plate));
 
     }
 

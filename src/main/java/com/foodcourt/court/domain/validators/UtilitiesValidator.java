@@ -3,6 +3,7 @@ package com.foodcourt.court.domain.validators;
 import com.foodcourt.court.domain.constants.Constants;
 import com.foodcourt.court.domain.enums.UserRole;
 import com.foodcourt.court.domain.exception.DomainException;
+import com.foodcourt.court.domain.exception.MissingParamRequiredException;
 
 import java.util.Optional;
 
@@ -34,6 +35,12 @@ public class UtilitiesValidator {
         return Optional.ofNullable(primaryValue)
                 .filter(value-> !(value instanceof String stringValue) || !stringValue.isBlank())
                 .orElse(defaultValue);
+    }
+
+    public static <T> void validateIsNull(T value){
+        Optional.ofNullable(value)
+                .filter(valueFiltered -> !(valueFiltered instanceof String stringValue) || !stringValue.isBlank())
+                .orElseThrow(MissingParamRequiredException::new);
     }
 
 }

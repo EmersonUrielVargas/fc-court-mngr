@@ -45,7 +45,7 @@ class RestaurantUseCaseTest {
         when(userVerificationPort.getRolUser(userId)).thenReturn(Optional.of(roleOwner));
         restaurantUseCase.create(restaurant);
 
-        verify(restaurantPersistencePort).createRestaurant(restaurant);
+        verify(restaurantPersistencePort).upsertRestaurant(restaurant);
     }
 
     @Test

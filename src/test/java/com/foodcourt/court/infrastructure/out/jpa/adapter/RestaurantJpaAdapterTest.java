@@ -25,12 +25,12 @@ class RestaurantJpaAdapterTest {
     private RestaurantJpaAdapter restaurantJpaAdapter;
 
     @Test
-    void createRestaurantSuccessful() {
+    void upsertRestaurantSuccessful() {
         Restaurant restaurant = new Restaurant();
         RestaurantEntity responseEntity = new RestaurantEntity();
 
         when(restaurantEntityMapper.toRestaurantEntity(restaurant)).thenReturn(responseEntity);
-        restaurantJpaAdapter.createRestaurant(restaurant);
+        restaurantJpaAdapter.upsertRestaurant(restaurant);
 
         verify(restaurantEntityMapper).toRestaurantEntity(restaurant);
         verify(restaurantRepository).save(responseEntity);

@@ -20,6 +20,8 @@ public class Constants {
     public static final String PLATE_NO_FOUND = "Ningun plato coincide con el id ingresado";
     public static final String OWNER_NOT_ALLOWED = "El propietario no corresponde al restaurante ingresado";
 
+    public static final String PARAM_REQUIRED_NOT_FOUND = "Los parametros requeridos no pueden ser nulos ";
+
     /*Patrones propiedes*/
     public static final String NAME_RESTAURANT_PATTERN = "^(?!\\d+$)[\\p{L}\\d\\s]+$";
     public static final String PHONE_NUMBER_PATTERN = "^\\+?[0-9]{1,12}$";

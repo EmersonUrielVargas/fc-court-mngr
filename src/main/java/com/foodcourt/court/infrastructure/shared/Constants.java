@@ -25,5 +25,8 @@ public class Constants {
     public static final String SUMMARY_SET_ACTIVE_PLATE = "update status to enable or disable a plate in a restaurant";
     public static final String SUMMARY_RESPONSE_OK_SET_ACTIVE_PLATE = "Plate status update successful";
 
+    /*Repository*/
+    public static final String FIELD_NAME_GET_RESTAURANTS = "nombre";
+
 
 }

@@ -177,7 +177,7 @@ class PlateUseCaseTest {
                 .thenReturn(Optional.of(Restaurant.builder().id(restaurantId).ownerId(ownerId).build()));
 
         plateUseCases.update(plate, ownerId);
-        verify(platePersistencePort).updatePlate(plateArgumentCaptor.capture());
+        verify(platePersistencePort).upsertPlate(plateArgumentCaptor.capture());
         Plate plateUpdated = plateArgumentCaptor.getValue();
         assertEquals(plate.getPrice(), plateUpdated.getPrice());
         assertEquals(plate.getDescription(), plateUpdated.getDescription());
@@ -208,7 +208,7 @@ class PlateUseCaseTest {
 
         plateUseCases.update(plate, ownerId);
 
-        verify(platePersistencePort).updatePlate(plateArgumentCaptor.capture());
+        verify(platePersistencePort).upsertPlate(plateArgumentCaptor.capture());
         Plate plateUpdated = plateArgumentCaptor.getValue();
         assertEquals(plate.getPrice(), plateUpdated.getPrice());
         assertEquals(existingPlate.getDescription(), plateUpdated.getDescription());
@@ -329,7 +329,7 @@ class PlateUseCaseTest {
                 .thenReturn(Optional.of(existingRestaurant));
 
         plateUseCases.setActive(plate, ownerId);
-        verify(platePersistencePort).updatePlate(plateArgumentCaptor.capture());
+        verify(platePersistencePort).upsertPlate(plateArgumentCaptor.capture());
         Plate plateUpdated = plateArgumentCaptor.getValue();
         assertEquals(plate.getIsActive(), plateUpdated.getIsActive());
     }

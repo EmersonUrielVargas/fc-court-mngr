@@ -1,6 +1,7 @@
 package com.foodcourt.court.application.mapper;
 
 import com.foodcourt.court.application.dto.request.RestaurantRequestDto;
+import com.foodcourt.court.application.dto.response.ListRestaurantsResponseDto;
 import com.foodcourt.court.domain.model.Restaurant;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -11,4 +12,6 @@ import org.mapstruct.ReportingPolicy;
 public interface IRestaurantRequestMapper {
 
     Restaurant toRestaurant(RestaurantRequestDto restaurantRq);
+    ListRestaurantsResponseDto toListRestaurantsResponseDto(Restaurant restaurant);
+
 }
