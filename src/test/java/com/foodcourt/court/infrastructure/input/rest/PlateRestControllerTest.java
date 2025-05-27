@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -48,7 +47,7 @@ class PlateRestControllerTest {
     }
 
     @Nested
-    @DisplayName("POST /plate")
+    @DisplayName("POST v1/plate")
     class createPlateTests{
 
         @Test
@@ -63,11 +62,9 @@ class PlateRestControllerTest {
                     "restaurantId": 1
                  }
             """;
-            Long userId = 10L;
 
-            doNothing().when(plateHandler).create(any(CreatePlateRequestDto.class), eq(userId));
-            when(autheticationService.getUserId()).thenReturn(userId);
-            MockHttpServletRequestBuilder request = post("/plate")
+            doNothing().when(plateHandler).create(any(CreatePlateRequestDto.class));
+            MockHttpServletRequestBuilder request = post("/v1/plate")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonBody);
             mockMvc.perform(request)
@@ -87,11 +84,9 @@ class PlateRestControllerTest {
                     "restaurantId": 1
                  }
             """;
-            Long userId = 10L;
-            when(autheticationService.getUserId()).thenReturn(userId);
 
-            doThrow(new DomainException("fail domain validation data")).when(plateHandler).create(any(CreatePlateRequestDto.class), anyLong());
-            MockHttpServletRequestBuilder request = post("/plate")
+            doThrow(new DomainException("fail domain validation data")).when(plateHandler).create(any(CreatePlateRequestDto.class));
+            MockHttpServletRequestBuilder request = post("/v1/plate")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonBody);
             mockMvc.perform(request)
@@ -102,7 +97,7 @@ class PlateRestControllerTest {
     }
 
     @Nested
-    @DisplayName("PATCH /plate")
+    @DisplayName("PATCH v1/plate")
     class updatePlateTests{
 
         @Test
@@ -114,11 +109,9 @@ class PlateRestControllerTest {
                     "description": "Deliciosa pizza con base de tomate fresco."
                  }
             """;
-            Long userId = 10L;
 
-            doNothing().when(plateHandler).update(any(UpdatePlateRequestDto.class), anyLong());
-            when(autheticationService.getUserId()).thenReturn(userId);
-            MockHttpServletRequestBuilder request = patch("/plate")
+            doNothing().when(plateHandler).update(any(UpdatePlateRequestDto.class));
+            MockHttpServletRequestBuilder request = patch("/v1/plate")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonBody);
             mockMvc.perform(request)
@@ -134,11 +127,8 @@ class PlateRestControllerTest {
                     "id": 110
                  }
             """;
-            Long userId = 10L;
-
-            when(autheticationService.getUserId()).thenReturn(userId);
-            doThrow(new DomainException("fail domain validation data")).when(plateHandler).update(any(UpdatePlateRequestDto.class), anyLong());
-            MockHttpServletRequestBuilder request = patch("/plate")
+            doThrow(new DomainException("fail domain validation data")).when(plateHandler).update(any(UpdatePlateRequestDto.class));
+            MockHttpServletRequestBuilder request = patch("/v1/plate")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonBody);
             mockMvc.perform(request)
@@ -149,7 +139,7 @@ class PlateRestControllerTest {
     }
 
     @Nested
-    @DisplayName("PATCH /plate/status")
+    @DisplayName("PATCH v1/plate/status")
     class setStatusPlateTests{
 
         @Test
@@ -160,11 +150,9 @@ class PlateRestControllerTest {
                     "isActive": false
                  }
             """;
-            Long userId = 10L;
 
-            doNothing().when(plateHandler).setStatus(any(StatusPlateRequestDto.class), anyLong());
-            when(autheticationService.getUserId()).thenReturn(userId);
-            MockHttpServletRequestBuilder request = patch("/plate/status")
+            doNothing().when(plateHandler).setStatus(any(StatusPlateRequestDto.class));
+            MockHttpServletRequestBuilder request = patch("/v1/plate/status")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonBody);
             mockMvc.perform(request)
@@ -180,11 +168,8 @@ class PlateRestControllerTest {
                     "isActive": false
                  }
             """;
-            Long userId = 10L;
-
-            when(autheticationService.getUserId()).thenReturn(userId);
-            doThrow(new DomainException("fail domain validation data")).when(plateHandler).setStatus(any(StatusPlateRequestDto.class), eq(userId));
-            MockHttpServletRequestBuilder request = patch("/plate/status")
+            doThrow(new DomainException("fail domain validation data")).when(plateHandler).setStatus(any(StatusPlateRequestDto.class));
+            MockHttpServletRequestBuilder request = patch("/v1/plate/status")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonBody);
             mockMvc.perform(request)

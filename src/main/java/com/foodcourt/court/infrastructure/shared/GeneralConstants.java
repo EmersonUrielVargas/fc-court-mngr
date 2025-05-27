@@ -2,9 +2,9 @@ package com.foodcourt.court.infrastructure.shared;
 
 import static com.foodcourt.court.domain.constants.Constants.ERROR_INSTANCE_UTILITY_CLASS;
 
-public class Constants {
+public class GeneralConstants {
 
-    private Constants() {
+    private GeneralConstants() {
         throw new IllegalStateException(ERROR_INSTANCE_UTILITY_CLASS);
     }
     public static final String STATUS_CODE_CREATED= "201";
@@ -24,6 +24,9 @@ public class Constants {
 
     public static final String SUMMARY_SET_ACTIVE_PLATE = "update status to enable or disable a plate in a restaurant";
     public static final String SUMMARY_RESPONSE_OK_SET_ACTIVE_PLATE = "Plate status update successful";
+
+    /*Repository*/
+    public static final String FIELD_NAME_GET_RESTAURANTS = "nombre";
 
 
 }

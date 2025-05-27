@@ -4,6 +4,7 @@ import com.foodcourt.court.domain.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -24,8 +25,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorizeHttpRequests ->
                 authorizeHttpRequests
                     .requestMatchers("/public/**", "/swagger-ui/**", "/swagger-ui.**", "/v3/api-docs/**").permitAll()
-                    .requestMatchers("/plate/**").hasAuthority(UserRole.OWNER.name())
-                    .requestMatchers("/restaurant/**").hasAuthority(UserRole.ADMIN.name())
+                    .requestMatchers(HttpMethod.GET, "/v1/restaurant").permitAll()
+                    .requestMatchers("/v1/plate/**").hasAuthority(UserRole.OWNER.name())
+                    .requestMatchers("/v1/restaurant/**").hasAuthority(UserRole.ADMIN.name())
                     .anyRequest()
                     .authenticated()
             ).sessionManagement(sessionManageConfig ->

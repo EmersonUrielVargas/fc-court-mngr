@@ -1,6 +1,6 @@
 server:
   servlet:
-    context-path: /api/v1/mngr/court
+    context-path: /api/mngr/court
   port: 8082
 
 spring:
