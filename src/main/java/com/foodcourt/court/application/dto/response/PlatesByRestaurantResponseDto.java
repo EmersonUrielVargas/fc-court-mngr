@@ -8,9 +8,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ListRestaurantsResponseDto {
+public class PlatesByRestaurantResponseDto {
     @NotNull
     private String name;
     @NotNull
-    private String urlLogo;
+    private Integer price;
+    @NotNull
+    private Long categoryId;
+    @NotNull
+    private String description;
+    @NotNull
+    private String urlImage;
 }
