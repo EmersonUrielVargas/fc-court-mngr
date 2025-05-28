@@ -1,6 +1,7 @@
 package com.foodcourt.court.infrastructure.exceptionhandler;
 
 import com.foodcourt.court.domain.exception.DomainException;
+import com.foodcourt.court.domain.exception.NotAllowedValueException;
 import com.foodcourt.court.infrastructure.exception.NoDataFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,12 @@ public class ControllerAdvisor {
     public ResponseEntity<Map<String, String>> handleDomainException(DomainException domainException) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Collections.singletonMap(MESSAGE, domainException.getMessage()));
+    }
+
+    @ExceptionHandler(NotAllowedValueException.class)
+    public ResponseEntity<Map<String, String>> handlerNotAllowedValueException(NotAllowedValueException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Collections.singletonMap(MESSAGE, exception.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

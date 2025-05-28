@@ -1,10 +1,17 @@
 package com.foodcourt.court.infrastructure.input.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.foodcourt.court.application.DataApplicationFactory;
 import com.foodcourt.court.application.dto.request.RestaurantRequestDto;
+import com.foodcourt.court.application.dto.response.ListRestaurantsResponseDto;
 import com.foodcourt.court.application.handler.IRestaurantHandler;
+import com.foodcourt.court.domain.constants.Constants;
 import com.foodcourt.court.domain.exception.DomainException;
+import com.foodcourt.court.domain.exception.NotAllowedValueException;
 import com.foodcourt.court.infrastructure.exceptionhandler.ControllerAdvisor;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,11 +22,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,6 +37,8 @@ class RestaurantRestControllerTest {
 
     @InjectMocks
     private RestaurantRestController restaurantRestController;
+
+    private ObjectMapper objectMapper;
 
     @Mock
     private IRestaurantHandler restaurantHandler;
@@ -37,48 +49,74 @@ class RestaurantRestControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(restaurantRestController)
                 .setControllerAdvice(new ControllerAdvisor())
                 .build();
+        objectMapper = new ObjectMapper();
     }
 
-    @Test
-    void createRestaurantSuccessful() throws Exception {
-        String jsonBody = """
-            {
-               "name": "El Gran Sabor",
-               "address": "Calle Falsa 123, Ciudad Ejemplo",
-               "ownerId": 10,
-               "phoneNumber": "+573001234567",
-               "urlLogo": "https://ejemplo.com/logos/elgransabor.png",
-               "nit": "9001234567"
-             }
-        """;
+    @Nested
+    @DisplayName("POST v1/restaurant")
+    class createRestaurantsTests {
+        private final String pathTest ="/v1/restaurant";
 
-        doNothing().when(restaurantHandler).create(any(RestaurantRequestDto.class));
-        MockHttpServletRequestBuilder request = post("/v1/restaurant")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonBody);
-        mockMvc.perform(request)
-                .andDo(print())
-                .andExpect(status().isCreated());
+        @Test
+        void createRestaurantSuccessful() throws Exception {
+            String jsonBody = objectMapper.writeValueAsString(DataApplicationFactory.createRestaurantRequestDto());
+
+            doNothing().when(restaurantHandler).create(any(RestaurantRequestDto.class));
+            MockHttpServletRequestBuilder request = post(pathTest)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonBody);
+            mockMvc.perform(request)
+                    .andDo(print())
+                    .andExpect(status().isCreated());
+        }
+
+        @Test
+        void createRestaurantFail() throws Exception {
+            RestaurantRequestDto restaurantBody = DataApplicationFactory.createRestaurantRequestDto();
+            restaurantBody.setName("40066");
+            String jsonBody = objectMapper.writeValueAsString(restaurantBody);
+            doThrow(new DomainException("fail domain validation data")).when(restaurantHandler).create(any(RestaurantRequestDto.class));
+            MockHttpServletRequestBuilder request = post(pathTest)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonBody);
+            mockMvc.perform(request)
+                    .andDo(print())
+                    .andExpect(status().isConflict());
+        }
     }
 
-    @Test
-    void createRestaurantFail() throws Exception {
-        String jsonBody = """
-            {
-               "name": "400",
-               "address": "Calle Falsa 123, Ciudad Ejemplo",
-               "ownerId": 10,
-               "phoneNumber": "+573001234567",
-               "urlLogo": "https://ejemplo.com/logos/elgransabor.png",
-               "nit": "9001234567"
-             }
-        """;
-        doThrow(new DomainException("fail domain validation data")).when(restaurantHandler).create(any(RestaurantRequestDto.class));
-        MockHttpServletRequestBuilder request = post("/v1/restaurant")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonBody);
-        mockMvc.perform(request)
-                .andDo(print())
-                .andExpect(status().isConflict());
+    @Nested
+    @DisplayName("GET v1/restaurant")
+    class getRestaurantsTests {
+        private final String pathTest ="/v1/restaurant";
+        @Test
+        void getRestaurantSuccessful() throws Exception {
+            ListRestaurantsResponseDto restaurantsResponseDto = DataApplicationFactory.createListRestaurantDtoRs();
+            List<ListRestaurantsResponseDto> listRestaurants = List.of(restaurantsResponseDto);
+            String jsonBodyResponse = objectMapper.writeValueAsString(listRestaurants);
+
+            when(restaurantHandler.getRestaurants(anyInt(), anyInt())).thenReturn(listRestaurants);
+            MockHttpServletRequestBuilder request = get(pathTest)
+                    .param(Constants.PAGE_SIZE_NAME, "1")
+                    .param(Constants.PAGE_NAME, "0")
+                    .contentType(MediaType.APPLICATION_JSON);
+            mockMvc.perform(request)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(content().json(jsonBodyResponse));
+
+        }
+
+        @Test
+        void getRestaurantFailInvalidParams() throws Exception {
+            doThrow(new NotAllowedValueException("invalid Params")).when(restaurantHandler).getRestaurants(anyInt(), anyInt());
+            MockHttpServletRequestBuilder request = get(pathTest)
+                    .param(Constants.PAGE_SIZE_NAME, "1")
+                    .param(Constants.PAGE_NAME, "0")
+                    .contentType(MediaType.APPLICATION_JSON);
+            mockMvc.perform(request)
+                    .andDo(print())
+                    .andExpect(status().isBadRequest());
+        }
     }
 }

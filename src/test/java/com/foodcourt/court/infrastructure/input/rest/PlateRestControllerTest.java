@@ -1,12 +1,13 @@
 package com.foodcourt.court.infrastructure.input.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.foodcourt.court.application.DataApplicationFactory;
 import com.foodcourt.court.application.dto.request.CreatePlateRequestDto;
 import com.foodcourt.court.application.dto.request.StatusPlateRequestDto;
 import com.foodcourt.court.application.dto.request.UpdatePlateRequestDto;
 import com.foodcourt.court.application.handler.IPlateHandler;
 import com.foodcourt.court.domain.exception.DomainException;
 import com.foodcourt.court.infrastructure.exceptionhandler.ControllerAdvisor;
-import com.foodcourt.court.infrastructure.security.service.AutheticationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -36,35 +37,29 @@ class PlateRestControllerTest {
     @Mock
     private IPlateHandler plateHandler;
     @Mock
-    private AutheticationService autheticationService;
     private MockMvc mockMvc;
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setup(){
         mockMvc = MockMvcBuilders.standaloneSetup(plateRestController)
                 .setControllerAdvice(new ControllerAdvisor())
                 .build();
+        objectMapper = new ObjectMapper();
     }
 
     @Nested
     @DisplayName("POST v1/plate")
     class createPlateTests{
+        private final String pathTest = "/v1/plate";
 
         @Test
         void createPlateSuccessful() throws Exception {
-            String jsonBody = """
-                {
-                   "name": "Pizza Margarita Especial",
-                    "price": 25000,
-                    "categoryId": 10,
-                    "description": "Deliciosa pizza con base de tomate fresco.",
-                    "urlImage": "https://ejemplo.com/imagenes/pizza_margarita.jpg",
-                    "restaurantId": 1
-                 }
-            """;
+            CreatePlateRequestDto createPlateRequestDto = DataApplicationFactory.createPlateRequestDto();
+            String jsonBody = objectMapper.writeValueAsString(createPlateRequestDto);
 
             doNothing().when(plateHandler).create(any(CreatePlateRequestDto.class));
-            MockHttpServletRequestBuilder request = post("/v1/plate")
+            MockHttpServletRequestBuilder request = post(pathTest)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonBody);
             mockMvc.perform(request)
@@ -74,19 +69,11 @@ class PlateRestControllerTest {
 
         @Test
         void createRestaurantFail() throws Exception {
-            String jsonBody = """
-                {
-                    "name": "Pizza Margarita Especial",
-                    "price": 25000,
-                    "categoryId": 10,
-                    "description": "Deliciosa pizza con base de tomate fresco.",
-                    "urlImage": "https://ejemplo.com/imagenes/pizza_margarita.jpg",
-                    "restaurantId": 1
-                 }
-            """;
+            CreatePlateRequestDto createPlateRequestDto = DataApplicationFactory.createPlateRequestDto();
+            String jsonBody = objectMapper.writeValueAsString(createPlateRequestDto);
 
             doThrow(new DomainException("fail domain validation data")).when(plateHandler).create(any(CreatePlateRequestDto.class));
-            MockHttpServletRequestBuilder request = post("/v1/plate")
+            MockHttpServletRequestBuilder request = post(pathTest)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonBody);
             mockMvc.perform(request)
@@ -100,18 +87,16 @@ class PlateRestControllerTest {
     @DisplayName("PATCH v1/plate")
     class updatePlateTests{
 
+        private final String pathTest = "/v1/plate";
+
+
         @Test
         void updatePlateSuccessful() throws Exception {
-            String jsonBody = """
-                {
-                   "id": 12,
-                    "price": 25000,
-                    "description": "Deliciosa pizza con base de tomate fresco."
-                 }
-            """;
+            UpdatePlateRequestDto updatePlateRequestDto = DataApplicationFactory.createUpdatePlateRequestDto();
+            String jsonBody = objectMapper.writeValueAsString(updatePlateRequestDto);
 
             doNothing().when(plateHandler).update(any(UpdatePlateRequestDto.class));
-            MockHttpServletRequestBuilder request = patch("/v1/plate")
+            MockHttpServletRequestBuilder request = patch(pathTest)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonBody);
             mockMvc.perform(request)
@@ -121,14 +106,10 @@ class PlateRestControllerTest {
 
         @Test
         void updatePlateFail() throws Exception {
-            String jsonBody = """
-                {
-                    "price": 25000,
-                    "id": 110
-                 }
-            """;
+            UpdatePlateRequestDto updatePlateRequestDto = DataApplicationFactory.createUpdatePlateRequestDto();
+            String jsonBody = objectMapper.writeValueAsString(updatePlateRequestDto);
             doThrow(new DomainException("fail domain validation data")).when(plateHandler).update(any(UpdatePlateRequestDto.class));
-            MockHttpServletRequestBuilder request = patch("/v1/plate")
+            MockHttpServletRequestBuilder request = patch(pathTest)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonBody);
             mockMvc.perform(request)
@@ -142,17 +123,15 @@ class PlateRestControllerTest {
     @DisplayName("PATCH v1/plate/status")
     class setStatusPlateTests{
 
+        private final String pathTest = "/v1/plate/status";
+
         @Test
         void setStatusPlateSuccessful() throws Exception {
-            String jsonBody = """
-                {
-                    "id": 12,
-                    "isActive": false
-                 }
-            """;
+            StatusPlateRequestDto statusPlateRequestDto = DataApplicationFactory.createStatusPlateRequestDto();
+            String jsonBody = objectMapper.writeValueAsString(statusPlateRequestDto);
 
             doNothing().when(plateHandler).setStatus(any(StatusPlateRequestDto.class));
-            MockHttpServletRequestBuilder request = patch("/v1/plate/status")
+            MockHttpServletRequestBuilder request = patch(pathTest)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonBody);
             mockMvc.perform(request)
@@ -162,14 +141,10 @@ class PlateRestControllerTest {
 
         @Test
         void setStatusPlateFail() throws Exception {
-            String jsonBody = """
-                {
-                    "id": 12,
-                    "isActive": false
-                 }
-            """;
+            StatusPlateRequestDto statusPlateRequestDto = DataApplicationFactory.createStatusPlateRequestDto();
+            String jsonBody = objectMapper.writeValueAsString(statusPlateRequestDto);
             doThrow(new DomainException("fail domain validation data")).when(plateHandler).setStatus(any(StatusPlateRequestDto.class));
-            MockHttpServletRequestBuilder request = patch("/v1/plate/status")
+            MockHttpServletRequestBuilder request = patch(pathTest)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonBody);
             mockMvc.perform(request)

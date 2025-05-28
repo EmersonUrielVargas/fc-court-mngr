@@ -26,6 +26,7 @@ public class Constants {
     /*Params Name*/
     public static final String  PAGE_NAME = "page";
     public static final String  PAGE_SIZE_NAME = "pageSize";
+    public static final String  CATEGORY_ID_PARAM_NAME = "categoryId";
 
     /*Templates*/
     public static final String  NEGATIVE_VALUE_PARAM_TEMPLATE = "El parametro %s no puede tener valores negativos";

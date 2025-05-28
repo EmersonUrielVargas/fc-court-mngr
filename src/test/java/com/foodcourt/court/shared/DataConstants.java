@@ -16,6 +16,9 @@ public class DataConstants {
     public static final String DEFAULT_PLATE_NAME = "Pizza Margarita Especial";
     public static final String DEFAULT_PLATE_DESCRIPTION = "Pizza vegetariana con pepinillos";
     public static final Integer DEFAULT_PLATE_PRICE = 12550;
+    public static final String DEFAULT_PLATE_URL_IMAGE = "www.best_plate_online.com";
+    public static final Boolean DEFAULT_PLATE_IS_ACTIVE = true;
+
 
     /*CATEGORY CONSTANTS*/
     public static final Long DEFAULT_CATEGORY_ID = 10L;
