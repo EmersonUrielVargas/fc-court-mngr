@@ -1,11 +1,11 @@
 package com.foodcourt.court.application;
 
-import com.foodcourt.court.application.dto.request.CreatePlateRequestDto;
-import com.foodcourt.court.application.dto.request.RestaurantRequestDto;
-import com.foodcourt.court.application.dto.request.StatusPlateRequestDto;
-import com.foodcourt.court.application.dto.request.UpdatePlateRequestDto;
+import com.foodcourt.court.application.dto.request.*;
 import com.foodcourt.court.application.dto.response.ListRestaurantsResponseDto;
 import com.foodcourt.court.shared.DataConstants;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DataApplicationFactory {
 
@@ -50,6 +50,26 @@ public class DataApplicationFactory {
         statusPlateRequestDto.setId(DataConstants.DEFAULT_PLATE_ID);
         statusPlateRequestDto.setIsActive(DataConstants.DEFAULT_PLATE_IS_ACTIVE);
         return statusPlateRequestDto;
+    }
+
+    public static CreateOrderRequestDto createOrderRequestDto(){
+        CreateOrderRequestDto orderRequestDto = new CreateOrderRequestDto();
+        orderRequestDto.setRestaurantId(DataConstants.DEFAULT_RESTAURANT_ID);
+        orderRequestDto.setOrderPlates(createListItemOrderRequestDto());
+        return orderRequestDto;
+    }
+
+    public static CreateItemOrderRequestDto createItemOrderRequestDto(){
+        CreateItemOrderRequestDto createItemOrderRequestDto = new CreateItemOrderRequestDto();
+        createItemOrderRequestDto.setPlateId(DataConstants.DEFAULT_ORDER_PLATE_PLATE_ID);
+        createItemOrderRequestDto.setQuantity(DataConstants.DEFAULT_QUANTITY);
+        return createItemOrderRequestDto;
+    }
+
+    public static List<CreateItemOrderRequestDto> createListItemOrderRequestDto(){
+        List<CreateItemOrderRequestDto> listItems = new ArrayList<>();
+        listItems.add(createItemOrderRequestDto());
+        return listItems;
     }
 
 
