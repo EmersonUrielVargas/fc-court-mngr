@@ -37,6 +37,10 @@ public class GeneralConstants {
     public static final String SUMMARY_RESPONSE_OK_GET_PLATES_BY_RESTAURANT = "List of plates in a restaurant with filters applied";
     public static final String SUMMARY_RESPONSE_BAD_REQUEST_GET_PLATES_BY_RESTAURANT = "Invalid params value";
 
+    public static final String SUMMARY_CREATE_ORDER = "Create a new order in a restaurant";
+    public static final String SUMMARY_RESPONSE_CREATED_ORDER = "Order created successful";
+    public static final String SUMMARY_RESPONSE_CONFLICT_ORDER = "Information order invalid";
+
     /*Repository*/
     public static final String FIELD_NAME = "nombre";
     public static final String FIELD_CATEGORY_ID_IN_PLATE = "categoria";

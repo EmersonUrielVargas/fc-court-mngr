@@ -19,14 +19,23 @@ public class Constants {
     public static final String RESTAURANT_NO_FOUND = "Ningun restaurante coincide con el id ingresado";
     public static final String PLATE_NO_FOUND = "Ningun plato coincide con el id ingresado";
     public static final String OWNER_NOT_ALLOWED = "El propietario no corresponde al restaurante ingresado";
-
+    public static final String CLIENT_HAS_ORDERS_ACTIVE = "Ya cuenta con un pedido en proceso, debe finalizarlo para crear uno nuevo";
     public static final String PARAM_REQUIRED_NOT_FOUND = "Los parametros requeridos no pueden ser nulos ";
+    public static final String ORDER_EMPTY = "El pedido debe contener al menos un plato";
+    public static final String PLATE_NO_FOUND_IN_ORDER = "Algunos de los platos no se encontraron en el listado de el restaurante";
 
 
     /*Params Name*/
     public static final String  PAGE_NAME = "page";
     public static final String  PAGE_SIZE_NAME = "pageSize";
     public static final String  CATEGORY_ID_PARAM_NAME = "categoryId";
+
+    /*Order status description*/
+    public static final String  ORDER_STATUS_PENDING = "PENDIENTE";
+    public static final String  ORDER_STATUS_CANCELED = "CANCELADO";
+    public static final String  ORDER_STATUS_IN_PREPARATION = "EN_PREPARACION";
+    public static final String  ORDER_STATUS_PREPARED = "LISTO";
+    public static final String  ORDER_STATUS_DELIVERED = "ENTREGADO";
 
     /*Templates*/
     public static final String  NEGATIVE_VALUE_PARAM_TEMPLATE = "El parametro %s no puede tener valores negativos";
