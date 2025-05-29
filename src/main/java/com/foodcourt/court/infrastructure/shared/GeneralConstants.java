@@ -45,6 +45,11 @@ public class GeneralConstants {
     public static final String FIELD_NAME = "nombre";
     public static final String FIELD_CATEGORY_ID_IN_PLATE = "categoria";
 
+    public static final String AUTH_HEADER_NAME = "Authorization";
+    public static final String AUTH_TOKEN_PREFIX = "Bearer ";
+    public static final String ROL_KEY_TOKEN = "role";
+    public static final String USER_ID_KEY_TOKEN = "userID";
+
 
 
 }

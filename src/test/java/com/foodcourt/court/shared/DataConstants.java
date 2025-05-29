@@ -25,7 +25,17 @@ public class DataConstants {
     public static final String DEFAULT_CATEGORY_NAME = "Platos Fuertes";
     public static final String DEFAULT_CATEGORY_DESCRIPTION = "Platos principales para cualquier ocasion";
 
+    /*ORDER PLATE CONSTANTS*/
+    public static final Long DEFAULT_ORDER_PLATE_ORDER_ID = 1L;
+    public static final Long DEFAULT_ORDER_PLATE_PLATE_ID = 9L;
+    public static final Integer DEFAULT_QUANTITY = 2;
+
     public static final Integer DEFAULT_PAGE_SIZE = 5;
     public static final Integer DEFAULT_PAGE = 0;
+
+    public static final String DEFAULT_USER_EMAIL = "test01@test.com.co";
+    public static final Long DEFAULT_USER_ID = 12L;
+    public static final String DEFAULT_USER_ROLE = "ADMIN";
+
 
 }

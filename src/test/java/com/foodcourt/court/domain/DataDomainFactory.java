@@ -1,9 +1,10 @@
 package com.foodcourt.court.domain;
 
-import com.foodcourt.court.domain.model.Category;
-import com.foodcourt.court.domain.model.Plate;
-import com.foodcourt.court.domain.model.Restaurant;
+import com.foodcourt.court.domain.model.*;
 import com.foodcourt.court.shared.DataConstants;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DataDomainFactory {
     public static Plate createPlate(){
@@ -34,6 +35,27 @@ public class DataDomainFactory {
                 .id(DataConstants.DEFAULT_CATEGORY_ID)
                 .name(DataConstants.DEFAULT_CATEGORY_NAME)
                 .description(DataConstants.DEFAULT_CATEGORY_DESCRIPTION)
+                .build();
+    }
+
+    public static OrderPlate createOrderPlate(){
+        return OrderPlate.builder()
+                .orderId(DataConstants.DEFAULT_ORDER_PLATE_ORDER_ID)
+                .plateId(DataConstants.DEFAULT_ORDER_PLATE_PLATE_ID)
+                .quantity(DataConstants.DEFAULT_QUANTITY)
+                .build();
+    }
+
+    public static List<OrderPlate> createListOrderPlate(){
+        List<OrderPlate> orderPlates = new ArrayList<>();
+        orderPlates.add(createOrderPlate());
+        return orderPlates;
+    }
+
+    public static Order createOrder(){
+        return Order.builder()
+                .restaurantId(DataConstants.DEFAULT_RESTAURANT_ID)
+                .orderPlates(createListOrderPlate())
                 .build();
     }
 }

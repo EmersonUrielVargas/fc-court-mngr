@@ -1,9 +1,11 @@
 package com.foodcourt.court.infrastructure.out.jpa.adapter;
 
+import com.foodcourt.court.domain.DataDomainFactory;
 import com.foodcourt.court.domain.model.Plate;
 import com.foodcourt.court.infrastructure.out.jpa.entity.PlateEntity;
 import com.foodcourt.court.infrastructure.out.jpa.mapper.IPlateEntityMapper;
 import com.foodcourt.court.infrastructure.out.jpa.repository.IPlateRepository;
+import com.foodcourt.court.shared.DataConstants;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,7 +29,7 @@ class PlateJpaAdapterTest {
 
     @Test
     void createPlateSuccessful() {
-        Plate plate = new Plate();
+        Plate plate = DataDomainFactory.createPlate();
         PlateEntity plateEntity = new PlateEntity();
 
         when(plateEntityMapper.toPlateEntity(plate)).thenReturn(plateEntity);
@@ -39,9 +41,8 @@ class PlateJpaAdapterTest {
 
     @Test
     void upsertPlateSuccessful() {
-        Long idPlate = 12L;
-        Plate plate = new Plate();
-        plate.setId(idPlate);
+        Long idPlate = DataConstants.DEFAULT_PLATE_ID;
+        Plate plate = DataDomainFactory.createPlate();
         PlateEntity plateEntity = new PlateEntity();
         plateEntity.setId(idPlate);
 

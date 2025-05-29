@@ -4,6 +4,7 @@ import com.foodcourt.court.domain.model.Plate;
 import com.foodcourt.court.infrastructure.out.jpa.entity.CategoryEntity;
 import com.foodcourt.court.infrastructure.out.jpa.entity.PlateEntity;
 import com.foodcourt.court.infrastructure.out.jpa.entity.RestaurantEntity;
+import com.foodcourt.court.shared.DataConstants;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -78,7 +79,7 @@ class IPlateEntityMapperTest {
 
     @Test
     void mapIdToCategoriaEntityShouldReturnCategoryEntity() {
-        Long categoryId = 5L;
+        Long categoryId = DataConstants.DEFAULT_CATEGORY_ID;
         CategoryEntity categoryEntity = plateEntityMapper.mapIdToCategoriaEntity(categoryId);
 
         assertNotNull(categoryEntity);
@@ -96,7 +97,7 @@ class IPlateEntityMapperTest {
 
     @Test
     void mapIdToRestaurantEntityShouldReturnRestaurantEntity() {
-        Long restaurantId = 15L;
+        Long restaurantId = DataConstants.DEFAULT_RESTAURANT_ID;
         RestaurantEntity restaurantEntity = plateEntityMapper.mapIdToRestaurantEntity(restaurantId);
 
         assertNotNull(restaurantEntity);
