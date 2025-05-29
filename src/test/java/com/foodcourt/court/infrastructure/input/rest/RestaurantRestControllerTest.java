@@ -9,6 +9,7 @@ import com.foodcourt.court.domain.constants.Constants;
 import com.foodcourt.court.domain.exception.DomainException;
 import com.foodcourt.court.domain.exception.NotAllowedValueException;
 import com.foodcourt.court.infrastructure.exceptionhandler.ControllerAdvisor;
+import com.foodcourt.court.shared.DataConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -97,8 +98,8 @@ class RestaurantRestControllerTest {
 
             when(restaurantHandler.getRestaurants(anyInt(), anyInt())).thenReturn(listRestaurants);
             MockHttpServletRequestBuilder request = get(pathTest)
-                    .param(Constants.PAGE_SIZE_NAME, "1")
-                    .param(Constants.PAGE_NAME, "0")
+                    .param(Constants.PAGE_SIZE_NAME, String.valueOf(DataConstants.DEFAULT_PAGE_SIZE))
+                    .param(Constants.PAGE_NAME, String.valueOf(DataConstants.DEFAULT_PAGE))
                     .contentType(MediaType.APPLICATION_JSON);
             mockMvc.perform(request)
                     .andDo(print())
@@ -111,8 +112,8 @@ class RestaurantRestControllerTest {
         void getRestaurantFailInvalidParams() throws Exception {
             doThrow(new NotAllowedValueException("invalid Params")).when(restaurantHandler).getRestaurants(anyInt(), anyInt());
             MockHttpServletRequestBuilder request = get(pathTest)
-                    .param(Constants.PAGE_SIZE_NAME, "1")
-                    .param(Constants.PAGE_NAME, "0")
+                    .param(Constants.PAGE_SIZE_NAME, String.valueOf(DataConstants.DEFAULT_PAGE_SIZE))
+                    .param(Constants.PAGE_NAME, String.valueOf(DataConstants.DEFAULT_PAGE))
                     .contentType(MediaType.APPLICATION_JSON);
             mockMvc.perform(request)
                     .andDo(print())

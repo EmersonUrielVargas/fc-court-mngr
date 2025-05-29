@@ -52,4 +52,9 @@ public class PlateJpaAdapter implements IPlatePersistencePort {
                 .map(plateEntityMapper::toPlate)
                 .toList();
     }
+
+    @Override
+    public List<Long> findExistingPlateIdsInRestaurant(Long restaurantId, List<Long> plateIds) {
+        return plateRepository.findExistingPlateIdsInRestaurant(restaurantId, plateIds);
+    }
 }

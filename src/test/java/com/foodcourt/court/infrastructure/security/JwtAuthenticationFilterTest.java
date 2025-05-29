@@ -2,6 +2,8 @@ package com.foodcourt.court.infrastructure.security;
 
 import com.foodcourt.court.infrastructure.security.dto.UserDetailsDto;
 import com.foodcourt.court.infrastructure.security.service.JwtService;
+import com.foodcourt.court.infrastructure.shared.GeneralConstants;
+import com.foodcourt.court.shared.DataConstants;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -61,7 +63,7 @@ class JwtAuthenticationFilterTest {
     @Test
     @DisplayName("GIVEN Chain arrive WHEN no found authorization header THEN should doFilterInternal continue to next chain")
     void doFilterInternalNoAuthorizationHeader() throws ServletException, IOException {
-        when(request.getHeader(JwtAuthenticationFilter.AUTH_HEADER_NAME)).thenReturn(null);
+        when(request.getHeader(GeneralConstants.AUTH_HEADER_NAME)).thenReturn(null);
 
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
@@ -73,7 +75,7 @@ class JwtAuthenticationFilterTest {
     @Test
     @DisplayName("GIVEN Chain arrive WHEN authorization header not start with bearer THEN should doFilterInternal continue to next chain")
     void doFilterInternalAuthHeaderNotStartingWithBearer() throws ServletException, IOException {
-        when(request.getHeader(JwtAuthenticationFilter.AUTH_HEADER_NAME)).thenReturn("InvalidPrefix token");
+        when(request.getHeader(GeneralConstants.AUTH_HEADER_NAME)).thenReturn("InvalidPrefix token");
 
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
@@ -86,7 +88,7 @@ class JwtAuthenticationFilterTest {
     @DisplayName("GIVEN Chain arrive WHEN email extracted is empty THEN should doFilterInternal continue to next chain")
     void doFilterInternalNullUserEmail() throws ServletException, IOException {
         String token = "someValidToken";
-        when(request.getHeader(JwtAuthenticationFilter.AUTH_HEADER_NAME)).thenReturn(JwtAuthenticationFilter.AUTH_TOKEN_PREFIX + token);
+        when(request.getHeader(GeneralConstants.AUTH_HEADER_NAME)).thenReturn(GeneralConstants.AUTH_TOKEN_PREFIX + token);
         when(jwtService.extractUserEmail(token)).thenReturn(null);
 
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
@@ -100,11 +102,11 @@ class JwtAuthenticationFilterTest {
     @DisplayName("GIVEN Chain arrive WHEN authentication already exist THEN should doFilterInternal continue to next chain")
     void doFilterInternalAuthenticationAlreadyExists() throws ServletException, IOException {
         String token = "someValidToken";
-        String userEmail = "test@example.com";
+        String userEmail = DataConstants.DEFAULT_USER_EMAIL;
         SecurityContextHolder.setContext(securityContext);
         when(securityContext.getAuthentication()).thenReturn(authentication);
 
-        when(request.getHeader(JwtAuthenticationFilter.AUTH_HEADER_NAME)).thenReturn(JwtAuthenticationFilter.AUTH_TOKEN_PREFIX + token);
+        when(request.getHeader(GeneralConstants.AUTH_HEADER_NAME)).thenReturn(GeneralConstants.AUTH_TOKEN_PREFIX + token);
         when(jwtService.extractUserEmail(token)).thenReturn(userEmail);
 
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
@@ -119,11 +121,11 @@ class JwtAuthenticationFilterTest {
     @DisplayName("GIVEN Chain arrive WHEN token is invalid THEN should doFilterInternal continue to next chain")
     void doFilterInternalInvalidToken() throws ServletException, IOException {
         String token = "invalidOrExpiredToken";
-        String userEmail = "test@example.com";
+        String userEmail = DataConstants.DEFAULT_USER_EMAIL;
         Long userId = 1L;
-        String roleString = "OWNER";
+        String roleString = DataConstants.DEFAULT_USER_ROLE;
 
-        when(request.getHeader(JwtAuthenticationFilter.AUTH_HEADER_NAME)).thenReturn(JwtAuthenticationFilter.AUTH_TOKEN_PREFIX + token);
+        when(request.getHeader(GeneralConstants.AUTH_HEADER_NAME)).thenReturn(GeneralConstants.AUTH_TOKEN_PREFIX + token);
         when(jwtService.extractUserEmail(token)).thenReturn(userEmail);
         when(jwtService.isTokenValid(token)).thenReturn(false);
 
@@ -144,11 +146,11 @@ class JwtAuthenticationFilterTest {
     @DisplayName("GIVEN Chain arrive WHEN token is valid THEN should doFilterInternal authenticate")
     void doFilterInternalAllowAuthentication() throws ServletException, IOException {
         String token = "validToken123";
-        String userEmail = "user@example.com";
-        Long userId = 1L;
-        String roleString = "OWNER";
+        String userEmail = DataConstants.DEFAULT_USER_EMAIL;
+        Long userId = DataConstants.DEFAULT_USER_ID;
+        String roleString = DataConstants.DEFAULT_USER_ROLE;
 
-        when(request.getHeader(JwtAuthenticationFilter.AUTH_HEADER_NAME)).thenReturn(JwtAuthenticationFilter.AUTH_TOKEN_PREFIX + token);
+        when(request.getHeader(GeneralConstants.AUTH_HEADER_NAME)).thenReturn(GeneralConstants.AUTH_TOKEN_PREFIX + token);
         when(jwtService.extractUserEmail(token)).thenReturn(userEmail);
         when(jwtService.isTokenValid(token)).thenReturn(true);
 

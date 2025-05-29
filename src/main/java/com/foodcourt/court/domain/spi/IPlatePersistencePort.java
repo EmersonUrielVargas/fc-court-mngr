@@ -15,4 +15,6 @@ public interface IPlatePersistencePort {
 
     List<Plate> getPlatesByRestaurantId(Long restaurantId, Integer pageSize, Integer page, Long categoryId);
 
+    List<Long> findExistingPlateIdsInRestaurant(Long restaurantId, List<Long> plateIds);
+
 }

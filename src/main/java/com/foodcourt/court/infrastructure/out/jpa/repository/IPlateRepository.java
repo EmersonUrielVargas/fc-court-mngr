@@ -20,4 +20,11 @@ public interface IPlateRepository extends JpaRepository<PlateEntity, Long> {
             " WHERE pl.restaurante.id = :restaurantId" +
             " AND pl.categoria.id = :categoryId")
     List<PlateEntity> findByRestaurantAndCategory(Long restaurantId, Long categoryId, Pageable pageable);
+
+    @Query(
+            "SELECT pl.id " +
+            " FROM PlateEntity pl" +
+            " WHERE pl.restaurante.id = :restaurantId" +
+            " AND pl.id IN (:plateIds)")
+    List<Long> findExistingPlateIdsInRestaurant(Long restaurantId, List<Long> plateIds);
 }
