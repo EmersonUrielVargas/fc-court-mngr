@@ -26,6 +26,7 @@ public class SecurityConfig {
                 authorizeHttpRequests
                     .requestMatchers("/public/**", "/swagger-ui/**", "/swagger-ui.**", "/v3/api-docs/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/v1/restaurant", "/v1/restaurant/*/plates").hasAuthority(UserRole.CLIENT.name())
+                    .requestMatchers(HttpMethod.GET, "/v1/restaurant/*/orders").permitAll()
                     .requestMatchers("/v1/plate/**").hasAuthority(UserRole.OWNER.name())
                     .requestMatchers("/v1/restaurant/**").hasAuthority(UserRole.ADMIN.name())
                     .anyRequest()

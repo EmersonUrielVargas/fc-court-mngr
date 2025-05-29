@@ -23,12 +23,15 @@ public class Constants {
     public static final String PARAM_REQUIRED_NOT_FOUND = "Los parametros requeridos no pueden ser nulos ";
     public static final String ORDER_EMPTY = "El pedido debe contener al menos un plato";
     public static final String PLATE_NO_FOUND_IN_ORDER = "Algunos de los platos no se encontraron en el listado de el restaurante";
+    public static final String ORDER_STATUS_NOT_FOUND = "El estado de la orden ingresado no corresponde a ninguno existente";
 
 
     /*Params Name*/
     public static final String  PAGE_NAME = "page";
     public static final String  PAGE_SIZE_NAME = "pageSize";
     public static final String  CATEGORY_ID_PARAM_NAME = "categoryId";
+    public static final String  ORDER_STATUS_PARAM_NAME = "orderStatus";
+
 
     /*Order status description*/
     public static final String  ORDER_STATUS_PENDING = "PENDIENTE";
