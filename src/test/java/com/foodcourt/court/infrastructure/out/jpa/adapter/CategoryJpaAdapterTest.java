@@ -1,9 +1,11 @@
 package com.foodcourt.court.infrastructure.out.jpa.adapter;
 
+import com.foodcourt.court.domain.DataDomainFactory;
 import com.foodcourt.court.domain.model.Category;
 import com.foodcourt.court.infrastructure.out.jpa.entity.CategoryEntity;
 import com.foodcourt.court.infrastructure.out.jpa.mapper.ICategoryEntityMapper;
 import com.foodcourt.court.infrastructure.out.jpa.repository.ICategoryRepository;
+import com.foodcourt.court.shared.DataConstants;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,8 +32,8 @@ class CategoryJpaAdapterTest {
 
     @Test
     void getCategorySuccessful() {
-        Long categoryId = 19L;
-        Category category = Category.builder().build();
+        Long categoryId = DataConstants.DEFAULT_CATEGORY_ID;
+        Category category = DataDomainFactory.createCategory();
         CategoryEntity categoryEntity = new CategoryEntity();
 
         when(categoryEntityMapper.toCategory(categoryEntity)).thenReturn(category);

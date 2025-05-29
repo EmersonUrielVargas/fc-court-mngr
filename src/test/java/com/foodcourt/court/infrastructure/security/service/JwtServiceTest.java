@@ -1,5 +1,7 @@
 package com.foodcourt.court.infrastructure.security.service;
 
+import com.foodcourt.court.infrastructure.shared.GeneralConstants;
+import com.foodcourt.court.shared.DataConstants;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -52,10 +54,10 @@ class JwtServiceTest {
 
     @Test
     void extractUserEmail() {
-        String userEmail = "test@example.com";
+        String userEmail = DataConstants.DEFAULT_USER_EMAIL;
         Map<String, Object> claims = new HashMap<>();
-        claims.put("userId", 12L);
-        claims.put("role","ADMIN");
+        claims.put(GeneralConstants.USER_ID_KEY_TOKEN, DataConstants.DEFAULT_USER_ID);
+        claims.put(GeneralConstants.ROL_KEY_TOKEN,DataConstants.DEFAULT_USER_ROLE);
         String token = generateTestToken(userEmail, TimeUnit.MINUTES.toMillis(5), claims);
 
         String extractedEmail = jwtService.extractUserEmail(token);
@@ -65,7 +67,7 @@ class JwtServiceTest {
 
     @Test
     void isTokenValidAndNotExpired() {
-        String userEmail = "test@example.com";
+        String userEmail = DataConstants.DEFAULT_USER_EMAIL;
         String token = generateTestToken(userEmail, TimeUnit.MINUTES.toMillis(5), new HashMap<>());
 
         boolean isValid = jwtService.isTokenValid(token);
@@ -75,7 +77,7 @@ class JwtServiceTest {
 
     @Test
     void isTokenValidAndExpired() {
-        String userEmail = "test@example.com";
+        String userEmail = DataConstants.DEFAULT_USER_EMAIL;
         String token = generateTestToken(userEmail, -TimeUnit.MINUTES.toMillis(5), new HashMap<>());
 
         assertThrows(ExpiredJwtException.class, ()-> jwtService.isTokenValid(token));
@@ -83,9 +85,9 @@ class JwtServiceTest {
 
     @Test
     void extractClaim() {
-        String userEmail = "user@example.com";
-        String customClaimKey = "userId";
-        Long expectedUserId = 123L;
+        String userEmail = DataConstants.DEFAULT_USER_EMAIL;
+        String customClaimKey = GeneralConstants.USER_ID_KEY_TOKEN;
+        Long expectedUserId = DataConstants.DEFAULT_USER_ID;
         Map<String, Object> claims = new HashMap<>();
         claims.put(customClaimKey, expectedUserId);
 

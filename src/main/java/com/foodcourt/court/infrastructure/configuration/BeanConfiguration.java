@@ -1,17 +1,22 @@
 package com.foodcourt.court.infrastructure.configuration;
 
+import com.foodcourt.court.domain.api.IOrderServicePort;
 import com.foodcourt.court.domain.api.IPlateServicePort;
 import com.foodcourt.court.domain.api.IRestaurantServicePort;
 import com.foodcourt.court.domain.spi.*;
+import com.foodcourt.court.domain.usecase.OrderUseCases;
 import com.foodcourt.court.domain.usecase.PlateUseCases;
 import com.foodcourt.court.domain.usecase.RestaurantUseCase;
 import com.foodcourt.court.infrastructure.out.jpa.adapter.CategoryJpaAdapter;
+import com.foodcourt.court.infrastructure.out.jpa.adapter.OrderJpaAdapter;
 import com.foodcourt.court.infrastructure.out.jpa.adapter.PlateJpaAdapter;
 import com.foodcourt.court.infrastructure.out.jpa.adapter.RestaurantJpaAdapter;
 import com.foodcourt.court.infrastructure.out.jpa.mapper.ICategoryEntityMapper;
+import com.foodcourt.court.infrastructure.out.jpa.mapper.IOrderEntityMapper;
 import com.foodcourt.court.infrastructure.out.jpa.mapper.IPlateEntityMapper;
 import com.foodcourt.court.infrastructure.out.jpa.mapper.IRestaurantEntityMapper;
 import com.foodcourt.court.infrastructure.out.jpa.repository.ICategoryRepository;
+import com.foodcourt.court.infrastructure.out.jpa.repository.IOrderRepository;
 import com.foodcourt.court.infrastructure.out.jpa.repository.IPlateRepository;
 import com.foodcourt.court.infrastructure.out.jpa.repository.IRestaurantRepository;
 import com.foodcourt.court.infrastructure.out.rest.adapter.UserVerificationRestAdapter;
@@ -34,6 +39,8 @@ public class BeanConfiguration {
     private final AutheticationService autheticationService;
     private final ICategoryRepository categoryRepository;
     private final ICategoryEntityMapper categoryEntityMapper;
+    private final IOrderRepository orderRepository;
+    private final IOrderEntityMapper orderEntityMapper;
     private final IUserRestClient userRestClient;
     private final JwtService jwtService;
 
@@ -64,6 +71,11 @@ public class BeanConfiguration {
     }
 
     @Bean
+    public IOrderPersistencePort orderPersistencePort() {
+        return new OrderJpaAdapter(orderRepository, orderEntityMapper);
+    }
+
+    @Bean
     public IAuthenticationPort authenticationPort() {
         return new AuthenticationAdapter(autheticationService);
     }
@@ -76,6 +88,11 @@ public class BeanConfiguration {
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter(){
         return new JwtAuthenticationFilter(jwtService);
+    }
+
+    @Bean
+    public IOrderServicePort orderServicePort() {
+        return new OrderUseCases(platePersistencePort(), orderPersistencePort(), authenticationPort(),restaurantPersistencePort());
     }
 
 }
