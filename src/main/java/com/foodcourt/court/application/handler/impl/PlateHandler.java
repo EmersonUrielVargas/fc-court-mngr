@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -41,7 +40,7 @@ public class PlateHandler implements IPlateHandler {
     }
 
     @Override
-    public List<PlatesByRestaurantResponseDto> getPlatesByRestaurant(Long restaurantId, Integer pageSize, Integer page, Optional<Long> categoryId) {
+    public List<PlatesByRestaurantResponseDto> getPlatesByRestaurant(Long restaurantId, Integer pageSize, Integer page, Long categoryId) {
         return plateServicePort.getPlatesByRestaurant(restaurantId, pageSize, page, categoryId)
                 .stream().map(plateRequestMapper::toPlatesByRestaurantResponseDto)
                 .toList();

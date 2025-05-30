@@ -23,5 +23,6 @@ public interface IOrderEntityMapper {
 
     @InheritInverseConfiguration
     Order toOrder(OrderEntity orderEntity);
+    List<Order> toOrder(List<OrderEntity> orderEntity);
 
 }

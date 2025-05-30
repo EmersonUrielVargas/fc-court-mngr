@@ -7,6 +7,7 @@ import com.foodcourt.court.domain.exception.*;
 import com.foodcourt.court.domain.model.Order;
 import com.foodcourt.court.domain.model.OrderPlate;
 import com.foodcourt.court.domain.spi.*;
+import com.foodcourt.court.domain.utilities.CustomPage;
 import com.foodcourt.court.domain.validators.UtilitiesValidator;
 
 import java.time.LocalDateTime;
@@ -59,5 +60,18 @@ public class OrderUseCases implements IOrderServicePort {
         }
         newOrder.setDate(LocalDateTime.now());
         orderPersistencePort.upsertOrder(newOrder);
+    }
+
+    @Override
+    public CustomPage<Order> getOrdersByStatus(Long restaurantId, Integer pageSize, Integer page, String status) {
+        UtilitiesValidator.validateIsNull(restaurantId);
+        UtilitiesValidator.validateIsNull(pageSize);
+        UtilitiesValidator.validateIsNull(page);
+        UtilitiesValidator.validateNotNegativeNumber(pageSize, Constants.PAGE_SIZE_NAME);
+        UtilitiesValidator.validateNotNegativeNumber(page, Constants.PAGE_NAME);
+        UtilitiesValidator.getOrderStatus(status);
+        restaurantPersistencePort.getById(restaurantId)
+                .orElseThrow(RestaurantNotFoundException::new);
+        return orderPersistencePort.getOrdersByStatus(restaurantId, pageSize, page, status);
     }
 }

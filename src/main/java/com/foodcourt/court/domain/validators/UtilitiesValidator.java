@@ -1,6 +1,7 @@
 package com.foodcourt.court.domain.validators;
 
 import com.foodcourt.court.domain.constants.Constants;
+import com.foodcourt.court.domain.enums.OrderStatus;
 import com.foodcourt.court.domain.enums.UserRole;
 import com.foodcourt.court.domain.exception.DomainException;
 import com.foodcourt.court.domain.exception.MissingParamRequiredException;
@@ -48,6 +49,15 @@ public class UtilitiesValidator {
         Optional.ofNullable(value)
                 .filter(valueFiltered -> !(valueFiltered instanceof String stringValue) || !stringValue.isBlank())
                 .orElseThrow(MissingParamRequiredException::new);
+    }
+
+    public static OrderStatus getOrderStatus(String value){
+        for (OrderStatus status : OrderStatus.values()) {
+            if (status.getMessage().equalsIgnoreCase(value.trim())) {
+                return status;
+            }
+        }
+        throw new NotAllowedValueException(Constants.ORDER_STATUS_NOT_FOUND);
     }
 
 }

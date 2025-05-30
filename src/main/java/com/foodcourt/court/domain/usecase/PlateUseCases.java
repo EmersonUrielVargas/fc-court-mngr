@@ -15,7 +15,7 @@ import com.foodcourt.court.domain.spi.IRestaurantPersistencePort;
 import com.foodcourt.court.domain.validators.UtilitiesValidator;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 public class PlateUseCases implements IPlateServicePort {
 
@@ -67,7 +67,7 @@ public class PlateUseCases implements IPlateServicePort {
     }
 
     @Override
-    public List<Plate> getPlatesByRestaurant(Long restaurantId, Integer pageSize, Integer page, Optional<Long> categoryId) {
+    public List<Plate> getPlatesByRestaurant(Long restaurantId, Integer pageSize, Integer page, Long categoryId) {
         UtilitiesValidator.validateIsNull(restaurantId);
         UtilitiesValidator.validateIsNull(pageSize);
         UtilitiesValidator.validateIsNull(page);
@@ -75,10 +75,10 @@ public class PlateUseCases implements IPlateServicePort {
         UtilitiesValidator.validateNotNegativeNumber(page, Constants.PAGE_NAME);
         restaurantPersistencePort.getById(restaurantId)
                 .orElseThrow(RestaurantNotFoundException::new);
-        if (categoryId.isPresent()){
-            categoryPersistencePort.getCategoryById(categoryId.get())
+        if (!Objects.isNull(categoryId)){
+            categoryPersistencePort.getCategoryById(categoryId)
                     .orElseThrow(CategoryNotFoundException::new);
-            return platePersistencePort.getPlatesByRestaurantId(restaurantId, pageSize, page, categoryId.get());
+            return platePersistencePort.getPlatesByRestaurantId(restaurantId, pageSize, page, categoryId);
         }else{
             return platePersistencePort.getPlatesByRestaurantId(restaurantId, pageSize, page);
         }
