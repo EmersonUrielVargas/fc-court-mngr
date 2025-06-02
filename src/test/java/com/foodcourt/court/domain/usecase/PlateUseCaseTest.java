@@ -287,7 +287,7 @@ class PlateUseCaseTest {
                     DataConstants.DEFAULT_RESTAURANT_ID,
                     DataConstants.DEFAULT_PAGE_SIZE,
                     DataConstants.DEFAULT_PAGE,
-                    Optional.of(DataConstants.DEFAULT_CATEGORY_ID));
+                    DataConstants.DEFAULT_CATEGORY_ID);
 
             verify(platePersistencePort).getPlatesByRestaurantId(anyLong(), anyInt(), anyInt(), anyLong());
             assertEquals(listPlates.size(), listPlatesFound.size());
@@ -310,8 +310,7 @@ class PlateUseCaseTest {
             List<Plate> listPlatesFound = plateUseCases.getPlatesByRestaurant(
                     DataConstants.DEFAULT_RESTAURANT_ID,
                     DataConstants.DEFAULT_PAGE_SIZE,
-                    DataConstants.DEFAULT_PAGE,
-                    Optional.empty());
+                    DataConstants.DEFAULT_PAGE, null);
 
             verify(platePersistencePort).getPlatesByRestaurantId(anyLong(), anyInt(), anyInt());
             assertEquals(listPlates.size(), listPlatesFound.size());

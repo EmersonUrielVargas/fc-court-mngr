@@ -19,6 +19,10 @@ public class GeneralConstants {
     public static final String SUMMARY_RESPONSE_CREATED_RESTAURANT = "restaurant created successful";
     public static final String SUMMARY_RESPONSE_CONFLICT_RESTAURANT = "restaurant already exists or information invalid";
 
+    public static final String SUMMARY_ASSIGNMENT_EMPLOYEE_RESTAURANT = "Assign new employee in a restaurant";
+    public static final String SUMMARY_RESPONSE_CREATED_ASSIGNMENT_EMPLOYEE = "Assign created successful";
+    public static final String SUMMARY_RESPONSE_CONFLICT_ASSIGNMENT_EMPLOYEE = "restaurant not found or information invalid";
+
     public static final String SUMMARY_CREATE_PLATE = "Create a new plate in a restaurant";
     public static final String SUMMARY_RESPONSE_CREATED_PLATE = "Plate created successful";
     public static final String SUMMARY_RESPONSE_CONFLICT_PLATE = "Information plate invalid";

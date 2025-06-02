@@ -7,18 +7,9 @@ import com.foodcourt.court.domain.spi.*;
 import com.foodcourt.court.domain.usecase.OrderUseCases;
 import com.foodcourt.court.domain.usecase.PlateUseCases;
 import com.foodcourt.court.domain.usecase.RestaurantUseCase;
-import com.foodcourt.court.infrastructure.out.jpa.adapter.CategoryJpaAdapter;
-import com.foodcourt.court.infrastructure.out.jpa.adapter.OrderJpaAdapter;
-import com.foodcourt.court.infrastructure.out.jpa.adapter.PlateJpaAdapter;
-import com.foodcourt.court.infrastructure.out.jpa.adapter.RestaurantJpaAdapter;
-import com.foodcourt.court.infrastructure.out.jpa.mapper.ICategoryEntityMapper;
-import com.foodcourt.court.infrastructure.out.jpa.mapper.IOrderEntityMapper;
-import com.foodcourt.court.infrastructure.out.jpa.mapper.IPlateEntityMapper;
-import com.foodcourt.court.infrastructure.out.jpa.mapper.IRestaurantEntityMapper;
-import com.foodcourt.court.infrastructure.out.jpa.repository.ICategoryRepository;
-import com.foodcourt.court.infrastructure.out.jpa.repository.IOrderRepository;
-import com.foodcourt.court.infrastructure.out.jpa.repository.IPlateRepository;
-import com.foodcourt.court.infrastructure.out.jpa.repository.IRestaurantRepository;
+import com.foodcourt.court.infrastructure.out.jpa.adapter.*;
+import com.foodcourt.court.infrastructure.out.jpa.mapper.*;
+import com.foodcourt.court.infrastructure.out.jpa.repository.*;
 import com.foodcourt.court.infrastructure.out.rest.adapter.UserVerificationRestAdapter;
 import com.foodcourt.court.infrastructure.out.rest.client.IUserRestClient;
 import com.foodcourt.court.infrastructure.security.JwtAuthenticationFilter;
@@ -39,6 +30,8 @@ public class BeanConfiguration {
     private final AutheticationService autheticationService;
     private final ICategoryRepository categoryRepository;
     private final ICategoryEntityMapper categoryEntityMapper;
+    private final IAssignmentEmployeeRepository assignmentEmployeeRepository;
+    private final IAssignmentEmployeeEntityMapper assignmentEmployeeEntityMapper;
     private final IOrderRepository orderRepository;
     private final IOrderEntityMapper orderEntityMapper;
     private final IUserRestClient userRestClient;
@@ -57,7 +50,7 @@ public class BeanConfiguration {
 
     @Bean
     public IRestaurantServicePort restaurantServicePort() {
-        return new RestaurantUseCase(userPersistencePort(), restaurantPersistencePort());
+        return new RestaurantUseCase(userPersistencePort(), restaurantPersistencePort(), authenticationPort(), assignmentEmployeePort());
     }
 
     @Bean
@@ -68,6 +61,11 @@ public class BeanConfiguration {
     @Bean
     public ICategoryPersistencePort categoryPersistencePort() {
         return new CategoryJpaAdapter(categoryRepository, categoryEntityMapper);
+    }
+
+    @Bean
+    public IAssignmentEmployeePort assignmentEmployeePort() {
+        return new AssignmentEmployeeJpaAdapter(assignmentEmployeeRepository, assignmentEmployeeEntityMapper);
     }
 
     @Bean
@@ -92,7 +90,7 @@ public class BeanConfiguration {
 
     @Bean
     public IOrderServicePort orderServicePort() {
-        return new OrderUseCases(platePersistencePort(), orderPersistencePort(), authenticationPort(),restaurantPersistencePort());
+        return new OrderUseCases(platePersistencePort(), orderPersistencePort(), authenticationPort(),restaurantPersistencePort(), assignmentEmployeePort());
     }
 
 }

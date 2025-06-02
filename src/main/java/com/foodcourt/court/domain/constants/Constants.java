@@ -17,18 +17,24 @@ public class Constants {
     public static final String PRICE_NOT_ALLOWED = "El precio no es valido, debe ser mayor a 0";
     public static final String CATEGORY_NO_FOUND = "No se encontro categoria con el id ingresado";
     public static final String RESTAURANT_NO_FOUND = "Ningun restaurante coincide con el id ingresado";
+    public static final String RESTAURANT_OWNER_NO_FOUND = "Ningun restaurante coincide con el id del propietario";
     public static final String PLATE_NO_FOUND = "Ningun plato coincide con el id ingresado";
     public static final String OWNER_NOT_ALLOWED = "El propietario no corresponde al restaurante ingresado";
     public static final String CLIENT_HAS_ORDERS_ACTIVE = "Ya cuenta con un pedido en proceso, debe finalizarlo para crear uno nuevo";
     public static final String PARAM_REQUIRED_NOT_FOUND = "Los parametros requeridos no pueden ser nulos ";
     public static final String ORDER_EMPTY = "El pedido debe contener al menos un plato";
     public static final String PLATE_NO_FOUND_IN_ORDER = "Algunos de los platos no se encontraron en el listado de el restaurante";
+    public static final String ORDER_STATUS_NOT_FOUND = "El estado de la orden ingresado no corresponde a ninguno existente";
+    public static final String EMPLOYEE_NOT_ALLOWED = "El empleado no tiene permisos para realizar esta accion";
+
 
 
     /*Params Name*/
     public static final String  PAGE_NAME = "page";
     public static final String  PAGE_SIZE_NAME = "pageSize";
     public static final String  CATEGORY_ID_PARAM_NAME = "categoryId";
+    public static final String  ORDER_STATUS_PARAM_NAME = "orderStatus";
+
 
     /*Order status description*/
     public static final String  ORDER_STATUS_PENDING = "PENDIENTE";
