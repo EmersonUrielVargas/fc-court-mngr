@@ -1,5 +1,6 @@
 package com.foodcourt.court.application.handler.impl;
 
+import com.foodcourt.court.application.dto.request.AssignEmployeeRequestDto;
 import com.foodcourt.court.application.dto.request.RestaurantRequestDto;
 import com.foodcourt.court.application.dto.response.ListRestaurantsResponseDto;
 import com.foodcourt.court.application.handler.IRestaurantHandler;
@@ -30,5 +31,10 @@ public class RestaurantHandler implements IRestaurantHandler {
         return restaurantServicePort.getRestaurants(pageSize, page)
                 .stream().map(restaurantRequestMapper::toListRestaurantsResponseDto)
                 .toList();
+    }
+
+    @Override
+    public void assignEmployee(AssignEmployeeRequestDto employeeData) {
+        restaurantServicePort.assignEmployee(employeeData.getIdEmployee());
     }
 }

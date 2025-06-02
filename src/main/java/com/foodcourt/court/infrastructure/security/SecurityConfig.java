@@ -19,16 +19,36 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
 
+    private static final String[] PATHS_ALL_ALLOW = {
+            "/public/**", "/swagger-ui/**", "/swagger-ui.**", "/v3/api-docs/**"
+    };
+
+    private static final String[] PATHS_GET_CLIENT = {
+            "/v1/restaurant", "/v1/restaurant/*/plates"
+    };
+
+    private static final String[] PATHS_EMPLOYEE = {
+            "/v1/restaurant/*/orders"
+    };
+
+    private static final String[] PATHS_OWNER = {
+            "/v1/plate/**", "/v1/restaurant/assignment"
+    };
+
+    private static final String[] PATHS_ADMIN = {
+            "/v1/restaurant/**"
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorizeHttpRequests ->
                 authorizeHttpRequests
-                    .requestMatchers("/public/**", "/swagger-ui/**", "/swagger-ui.**", "/v3/api-docs/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/v1/restaurant", "/v1/restaurant/*/plates").hasAuthority(UserRole.CLIENT.name())
-                    .requestMatchers(HttpMethod.GET, "/v1/restaurant/*/orders").permitAll()
-                    .requestMatchers("/v1/plate/**").hasAuthority(UserRole.OWNER.name())
-                    .requestMatchers("/v1/restaurant/**").hasAuthority(UserRole.ADMIN.name())
+                    .requestMatchers(PATHS_ALL_ALLOW).permitAll()
+                    .requestMatchers(HttpMethod.GET, PATHS_GET_CLIENT).hasAuthority(UserRole.CLIENT.name())
+                    .requestMatchers(HttpMethod.GET, PATHS_EMPLOYEE).hasAuthority(UserRole.EMPLOYEE.name())
+                    .requestMatchers(PATHS_OWNER).hasAuthority(UserRole.OWNER.name())
+                    .requestMatchers(PATHS_ADMIN).hasAuthority(UserRole.ADMIN.name())
                     .anyRequest()
                     .authenticated()
             ).sessionManagement(sessionManageConfig ->

@@ -1,5 +1,6 @@
 package com.foodcourt.court.infrastructure.input.rest;
 
+import com.foodcourt.court.application.dto.request.AssignEmployeeRequestDto;
 import com.foodcourt.court.application.dto.request.RestaurantRequestDto;
 import com.foodcourt.court.application.dto.response.GetOrderResponseDto;
 import com.foodcourt.court.application.dto.response.ListRestaurantsResponseDto;
@@ -73,14 +74,23 @@ public class RestaurantRestController {
         return new ResponseEntity<>(ordersByStatus, HttpStatus.OK);
     }
 
+    @Operation(summary = GeneralConstants.SUMMARY_ASSIGNMENT_EMPLOYEE_RESTAURANT)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CREATED, description = GeneralConstants.SUMMARY_RESPONSE_CREATED_ASSIGNMENT_EMPLOYEE, content = @Content),
+            @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CONFLICT, description = GeneralConstants.SUMMARY_RESPONSE_CONFLICT_ASSIGNMENT_EMPLOYEE, content = @Content)
+    })
+    @PostMapping("/assignment")
+    public ResponseEntity<Void> assignmentEmployee(@Valid @RequestBody AssignEmployeeRequestDto assignEmployeeRequestDto) {
+        restaurantHandler.assignEmployee(assignEmployeeRequestDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
 
     @Operation(summary = GeneralConstants.SUMMARY_CREATE_RESTAURANT)
     @ApiResponses(value = {
             @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CREATED, description = GeneralConstants.SUMMARY_RESPONSE_CREATED_RESTAURANT, content = @Content),
             @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CONFLICT, description = GeneralConstants.SUMMARY_RESPONSE_CONFLICT_RESTAURANT, content = @Content)
     })
-
-
     @PostMapping("")
     public ResponseEntity<Void> createRestaurant(@Valid @RequestBody RestaurantRequestDto restaurantRequestDto) {
         restaurantHandler.create(restaurantRequestDto);

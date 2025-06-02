@@ -19,16 +19,19 @@ public class OrderUseCases implements IOrderServicePort {
     private final IOrderPersistencePort orderPersistencePort;
     private final IAuthenticationPort authenticationPort;
     private final IRestaurantPersistencePort restaurantPersistencePort;
+    private final IAssignmentEmployeePort assignmentEmployeePort;
 
 
     public OrderUseCases(IPlatePersistencePort platePersistencePort,
                          IOrderPersistencePort orderPersistencePort,
                          IAuthenticationPort authenticationPort,
-                         IRestaurantPersistencePort restaurantPersistencePort) {
+                         IRestaurantPersistencePort restaurantPersistencePort,
+                         IAssignmentEmployeePort assignmentEmployeePort) {
         this.platePersistencePort = platePersistencePort;
         this.orderPersistencePort = orderPersistencePort;
         this.authenticationPort = authenticationPort;
         this.restaurantPersistencePort = restaurantPersistencePort;
+        this.assignmentEmployeePort = assignmentEmployeePort;
     }
 
 
@@ -72,6 +75,10 @@ public class OrderUseCases implements IOrderServicePort {
         UtilitiesValidator.getOrderStatus(status);
         restaurantPersistencePort.getById(restaurantId)
                 .orElseThrow(RestaurantNotFoundException::new);
+        Long userIdAuthenticated =  authenticationPort.getAuthenticateUserId();
+        if (assignmentEmployeePort.getAssignment(restaurantId, userIdAuthenticated).isEmpty()){
+            throw new ActionNotAllowedException(Constants.EMPLOYEE_NOT_ALLOWED);
+        }
         return orderPersistencePort.getOrdersByStatus(restaurantId, pageSize, page, status);
     }
 }

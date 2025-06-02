@@ -7,4 +7,5 @@ import java.util.List;
 public interface IRestaurantServicePort {
     void create(Restaurant restaurant);
     List<Restaurant> getRestaurants(Integer pageSize,Integer page);
+    void assignEmployee(Long employeeId);
 }
