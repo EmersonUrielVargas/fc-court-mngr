@@ -4,7 +4,11 @@ import com.foodcourt.court.domain.api.IRestaurantServicePort;
 import com.foodcourt.court.domain.constants.Constants;
 import com.foodcourt.court.domain.enums.UserRole;
 import com.foodcourt.court.domain.exception.DomainException;
+import com.foodcourt.court.domain.exception.RestaurantNotFoundException;
+import com.foodcourt.court.domain.model.AssignmentEmployee;
 import com.foodcourt.court.domain.model.Restaurant;
+import com.foodcourt.court.domain.spi.IAssignmentEmployeePort;
+import com.foodcourt.court.domain.spi.IAuthenticationPort;
 import com.foodcourt.court.domain.spi.IRestaurantPersistencePort;
 import com.foodcourt.court.domain.spi.IUserVerificationPort;
 import com.foodcourt.court.domain.validators.UtilitiesValidator;
@@ -15,12 +19,17 @@ public class RestaurantUseCase implements IRestaurantServicePort {
 
     private final IUserVerificationPort userVerificationPort;
     private final IRestaurantPersistencePort restaurantPersistencePort;
+    private final IAuthenticationPort authenticationPort;
+    private final IAssignmentEmployeePort assignmentEmployeePort;
 
 
     public RestaurantUseCase(IUserVerificationPort userVerificationPort,
-                             IRestaurantPersistencePort restaurantPersistencePort) {
+                             IRestaurantPersistencePort restaurantPersistencePort,
+                             IAuthenticationPort authenticationPort, IAssignmentEmployeePort assignmentEmployeePort) {
         this.userVerificationPort = userVerificationPort;
         this.restaurantPersistencePort = restaurantPersistencePort;
+        this.authenticationPort = authenticationPort;
+        this.assignmentEmployeePort = assignmentEmployeePort;
     }
 
 
@@ -44,4 +53,18 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         UtilitiesValidator.validateNotNegativeNumber(page, Constants.PAGE_NAME);
         return restaurantPersistencePort.getRestaurants(pageSize, page);
     }
+
+    @Override
+    public void assignEmployee(Long employeeId) {
+        Long userIdAuthenticated =  authenticationPort.getAuthenticateUserId();
+        Restaurant ownerRestaurant = restaurantPersistencePort.getByOwnerId(userIdAuthenticated)
+                .orElseThrow(()->new RestaurantNotFoundException(Constants.RESTAURANT_OWNER_NO_FOUND));
+        AssignmentEmployee assignment = AssignmentEmployee.builder()
+                .restaurantId(ownerRestaurant.getId())
+                .employeeId(employeeId)
+                .build();
+        assignmentEmployeePort.createAssignment(assignment);
+    }
+
+
 }
