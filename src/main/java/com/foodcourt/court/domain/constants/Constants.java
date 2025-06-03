@@ -14,6 +14,7 @@ public class Constants {
     public static final String OWNER_NO_FOUND = "El propietario no fue encontrado ";
     public static final String USER_NO_AUTHORIZED = "El id no corresponde a un propietario";
     public static final String USER_ROLE_NO_FOUND = "El rol es invalido";
+    public static final String USER_NO_FOUND = "No se encontro un usuario con el id suministrado";
     public static final String PRICE_NOT_ALLOWED = "El precio no es valido, debe ser mayor a 0";
     public static final String CATEGORY_NO_FOUND = "No se encontro categoria con el id ingresado";
     public static final String ORDER_NO_FOUND = "No se encontro pedido con el id ingresado";
@@ -46,6 +47,7 @@ public class Constants {
 
     /*Templates*/
     public static final String  NEGATIVE_VALUE_PARAM_TEMPLATE = "El parametro %s no puede tener valores negativos";
+    public static final String  MESSAGE_PIN_CODE_CLIENT_TEMPLATE = "Hola %s, tu pedido %s esta listo. Para reclamar tu pedido indica ese codigo al empleado : %s";
 
     /*Patterns properties*/
     public static final String NAME_RESTAURANT_PATTERN = "^(?!\\d+$)[\\p{L}\\d\\s]+$";

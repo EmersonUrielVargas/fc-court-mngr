@@ -68,7 +68,7 @@ class ControllerAdvisorTest {
 
         Map<String, String> body = responseEntity.getBody();
         assertNotNull(body);
-        assertEquals(ExceptionResponse.DATABASE_ERROR.getMessage(), body.get("message"));
+        assertEquals(ExceptionResponse.INFORMATION_ERROR.getMessage(), body.get("message"));
     }
 
     @Test

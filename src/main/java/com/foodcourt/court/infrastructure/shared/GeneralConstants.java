@@ -11,6 +11,8 @@ public class GeneralConstants {
     public static final String STATUS_CODE_CONFLICT= "409";
     public static final String STATUS_CODE_BAD_REQUEST= "400";
     public static final String STATUS_CODE_OK= "200";
+    public static final String STATUS_CODE_NOT_FOUND= "404";
+
 
     public static final String MEDIA_TYPE_JSON= "application/json";
 
@@ -53,6 +55,8 @@ public class GeneralConstants {
     public static final String AUTH_TOKEN_PREFIX = "Bearer ";
     public static final String ROL_KEY_TOKEN = "role";
     public static final String USER_ID_KEY_TOKEN = "userID";
+    public static final String DEFAULT_PARAM_EXCEPTION_RESPONSE = "message";
+
 
 
 

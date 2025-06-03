@@ -12,6 +12,8 @@ import com.foodcourt.court.infrastructure.out.jpa.mapper.*;
 import com.foodcourt.court.infrastructure.out.jpa.repository.*;
 import com.foodcourt.court.infrastructure.out.rest.adapter.UserVerificationRestAdapter;
 import com.foodcourt.court.infrastructure.out.rest.client.IUserRestClient;
+import com.foodcourt.court.infrastructure.out.twilio.adapter.NotificationTwilioAdapter;
+import com.foodcourt.court.infrastructure.out.twilio.service.NotificationService;
 import com.foodcourt.court.infrastructure.security.JwtAuthenticationFilter;
 import com.foodcourt.court.infrastructure.security.adapter.AuthenticationAdapter;
 import com.foodcourt.court.infrastructure.security.service.AutheticationService;
@@ -35,6 +37,7 @@ public class BeanConfiguration {
     private final IOrderRepository orderRepository;
     private final IOrderEntityMapper orderEntityMapper;
     private final IUserRestClient userRestClient;
+    private final NotificationService notificationService;
     private final JwtService jwtService;
 
 
@@ -90,7 +93,19 @@ public class BeanConfiguration {
 
     @Bean
     public IOrderServicePort orderServicePort() {
-        return new OrderUseCases(platePersistencePort(), orderPersistencePort(), authenticationPort(),restaurantPersistencePort(), assignmentEmployeePort());
+        return new OrderUseCases(
+                platePersistencePort(),
+                orderPersistencePort(),
+                authenticationPort(),
+                restaurantPersistencePort(),
+                assignmentEmployeePort(),
+                notificationPort(),
+                userPersistencePort());
+    }
+
+    @Bean
+    public INotificationPort notificationPort() {
+        return new NotificationTwilioAdapter(notificationService);
     }
 
 }
