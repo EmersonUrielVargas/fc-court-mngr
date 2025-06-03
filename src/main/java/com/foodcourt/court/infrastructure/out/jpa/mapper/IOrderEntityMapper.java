@@ -18,6 +18,7 @@ public interface IOrderEntityMapper {
     @Mapping(source = "restaurantId", target = "restaurante.id")
     @Mapping(source = "codeValidation", target = "codigo")
     @Mapping(source = "orderPlates", target = "platos")
+    @Mapping(source = "status", target = "estado")
     OrderEntity toOrderEntity(Order order);
     List<OrderEntity> toOrderEntity(List<Order> order);
 

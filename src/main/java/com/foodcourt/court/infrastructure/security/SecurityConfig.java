@@ -20,11 +20,11 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
 
     private static final String[] PATHS_ALL_ALLOW = {
-            "/public/**", "/swagger-ui/**", "/swagger-ui.**", "/v3/api-docs/**"
+            "/public/**", "/swagger-ui/**", "/swagger-ui.**", "/v3/api-docs/**", "/v1/order/status"
     };
 
     private static final String[] PATHS_GET_CLIENT = {
-            "/v1/restaurant", "/v1/restaurant/*/plates"
+            "/v1/restaurant", "/v1/restaurant/*/plates", "/v1/order/**"
     };
 
     private static final String[] PATHS_EMPLOYEE = {

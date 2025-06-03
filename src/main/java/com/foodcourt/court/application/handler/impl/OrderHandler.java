@@ -1,6 +1,7 @@
 package com.foodcourt.court.application.handler.impl;
 
 import com.foodcourt.court.application.dto.request.CreateOrderRequestDto;
+import com.foodcourt.court.application.dto.request.UpdateStatusOrderRequestDto;
 import com.foodcourt.court.application.dto.response.GetOrderResponseDto;
 import com.foodcourt.court.application.handler.IOrderHandler;
 import com.foodcourt.court.application.mapper.IOrderRequestMapper;
@@ -28,5 +29,13 @@ public class OrderHandler implements IOrderHandler {
     public CustomPage<GetOrderResponseDto> getOrdersByStatus(Long restaurantId, Integer pageSize, Integer page, String status) {
         CustomPage<Order> pageOrders = orderServicePort.getOrdersByStatus(restaurantId, pageSize, page, status);
         return new CustomPage<>(orderRequestMapper.toGetOrderResponseDto(pageOrders.getData()), pageOrders);
+    }
+
+    @Override
+    public void updateStatusOrder(UpdateStatusOrderRequestDto updateStatusOrderRequestDto) {
+        orderServicePort.updateStatusOrder(
+                updateStatusOrderRequestDto.getId(),
+                updateStatusOrderRequestDto.getStatus(),
+                updateStatusOrderRequestDto.getClientCode());
     }
 }

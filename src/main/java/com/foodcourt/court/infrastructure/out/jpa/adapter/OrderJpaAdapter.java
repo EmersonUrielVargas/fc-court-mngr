@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class OrderJpaAdapter implements IOrderPersistencePort {
@@ -41,5 +42,10 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
         orders.setTotalItems(ordersEntity.getTotalElements());
         orders.setIsLastPage(ordersEntity.isLast());
         return orders;
+    }
+
+    @Override
+    public Optional<Order> findById(Long orderId) {
+        return orderRepository.findById(orderId).map(orderEntityMapper::toOrder);
     }
 }
