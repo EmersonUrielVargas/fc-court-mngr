@@ -8,6 +8,8 @@ import com.foodcourt.court.domain.model.Plate;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
@@ -17,4 +19,5 @@ public interface IPlateRequestMapper {
     Plate toPlate(UpdatePlateRequestDto updatePlateRequestDto);
     Plate toPlate(StatusPlateRequestDto statusPlateRequestDto);
     PlatesByRestaurantResponseDto toPlatesByRestaurantResponseDto(Plate plate);
+    List<PlatesByRestaurantResponseDto> toPlatesByRestaurantResponseDto(List<Plate> plates);
 }

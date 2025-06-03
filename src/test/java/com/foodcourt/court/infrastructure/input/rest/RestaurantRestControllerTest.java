@@ -2,12 +2,21 @@ package com.foodcourt.court.infrastructure.input.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodcourt.court.application.DataApplicationFactory;
+import com.foodcourt.court.application.dto.request.AssignEmployeeRequestDto;
 import com.foodcourt.court.application.dto.request.RestaurantRequestDto;
-import com.foodcourt.court.application.dto.response.ListRestaurantsResponseDto;
+import com.foodcourt.court.application.dto.response.GetOrderResponseDto;
+import com.foodcourt.court.application.dto.response.PlatesByRestaurantResponseDto;
+import com.foodcourt.court.application.dto.response.RestaurantItemResponseDto;
+import com.foodcourt.court.application.handler.IOrderHandler;
+import com.foodcourt.court.application.handler.IPlateHandler;
 import com.foodcourt.court.application.handler.IRestaurantHandler;
+import com.foodcourt.court.domain.DataDomainFactory;
 import com.foodcourt.court.domain.constants.Constants;
+import com.foodcourt.court.domain.enums.OrderStatus;
 import com.foodcourt.court.domain.exception.DomainException;
 import com.foodcourt.court.domain.exception.NotAllowedValueException;
+import com.foodcourt.court.domain.exception.RestaurantNotFoundException;
+import com.foodcourt.court.domain.utilities.CustomPage;
 import com.foodcourt.court.infrastructure.exceptionhandler.ControllerAdvisor;
 import com.foodcourt.court.shared.DataConstants;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +52,12 @@ class RestaurantRestControllerTest {
 
     @Mock
     private IRestaurantHandler restaurantHandler;
+
+    @Mock
+    private IPlateHandler plateHandler;
+
+    @Mock
+    private IOrderHandler orderHandler;
     private MockMvc mockMvc;
 
     @BeforeEach
@@ -92,14 +107,17 @@ class RestaurantRestControllerTest {
         private final String pathTest ="/v1/restaurant";
         @Test
         void getRestaurantSuccessful() throws Exception {
-            ListRestaurantsResponseDto restaurantsResponseDto = DataApplicationFactory.createListRestaurantDtoRs();
-            List<ListRestaurantsResponseDto> listRestaurants = List.of(restaurantsResponseDto);
-            String jsonBodyResponse = objectMapper.writeValueAsString(listRestaurants);
+            RestaurantItemResponseDto restaurantsResponseDto = DataApplicationFactory.createListRestaurantDtoRs();
+            List<RestaurantItemResponseDto> listRestaurants = List.of(restaurantsResponseDto);
+            CustomPage<RestaurantItemResponseDto> pageRestaurants = DataDomainFactory.createEmptyCustomPage();
+            pageRestaurants.setData(listRestaurants);
+            String jsonBodyResponse = objectMapper.writeValueAsString(pageRestaurants);
 
-            when(restaurantHandler.getRestaurants(anyInt(), anyInt())).thenReturn(listRestaurants);
+            when(restaurantHandler.getRestaurants(anyInt(), anyInt())).thenReturn(pageRestaurants);
             MockHttpServletRequestBuilder request = get(pathTest)
                     .param(Constants.PAGE_SIZE_NAME, String.valueOf(DataConstants.DEFAULT_PAGE_SIZE))
                     .param(Constants.PAGE_NAME, String.valueOf(DataConstants.DEFAULT_PAGE))
+                    .accept(MediaType.APPLICATION_JSON)
                     .contentType(MediaType.APPLICATION_JSON);
             mockMvc.perform(request)
                     .andDo(print())
@@ -118,6 +136,129 @@ class RestaurantRestControllerTest {
             mockMvc.perform(request)
                     .andDo(print())
                     .andExpect(status().isBadRequest());
+        }
+    }
+
+    @Nested
+    @DisplayName("GET v1/restaurant/{restaurantId}/plates")
+    class getPlatesByRestaurantsTests {
+        private final String pathTest ="/v1/restaurant/1/plates";
+        @Test
+        void getPlatesByRestaurant_Successful_withoutCategory() throws Exception {
+            List<PlatesByRestaurantResponseDto> plates = DataApplicationFactory.createListPlatesByRestaurantResponseDto();
+            CustomPage<PlatesByRestaurantResponseDto> pagePlates = DataDomainFactory.createCustomPage(plates);
+            String jsonBodyResponse = objectMapper.writeValueAsString(pagePlates);
+
+            when(plateHandler.getPlatesByRestaurant(anyLong(),anyInt(), anyInt(), eq(null))).thenReturn(pagePlates);
+            MockHttpServletRequestBuilder request = get(pathTest)
+                    .param(Constants.PAGE_SIZE_NAME, String.valueOf(DataConstants.DEFAULT_PAGE_SIZE))
+                    .param(Constants.PAGE_NAME, String.valueOf(DataConstants.DEFAULT_PAGE))
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON);
+            mockMvc.perform(request)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(content().json(jsonBodyResponse));
+
+        }
+
+        @Test
+        void getPlatesByRestaurant_Successful_withCategory() throws Exception {
+            List<PlatesByRestaurantResponseDto> plates = DataApplicationFactory.createListPlatesByRestaurantResponseDto();
+            CustomPage<PlatesByRestaurantResponseDto> pagePlates = DataDomainFactory.createCustomPage(plates);
+            String jsonBodyResponse = objectMapper.writeValueAsString(pagePlates);
+
+            when(plateHandler.getPlatesByRestaurant(anyLong(),anyInt(), anyInt(), anyLong())).thenReturn(pagePlates);
+            MockHttpServletRequestBuilder request = get(pathTest)
+                    .param(Constants.PAGE_SIZE_NAME, String.valueOf(DataConstants.DEFAULT_PAGE_SIZE))
+                    .param(Constants.PAGE_NAME, String.valueOf(DataConstants.DEFAULT_PAGE))
+                    .param(Constants.CATEGORY_ID_PARAM_NAME, String.valueOf(DataConstants.DEFAULT_CATEGORY_ID))
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON);
+            mockMvc.perform(request)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(content().json(jsonBodyResponse));
+
+        }
+
+        @Test
+        void getPlatesByRestaurant_Fail_InvalidParams() throws Exception {
+            doThrow(new NotAllowedValueException("invalid Params")).when(plateHandler).getPlatesByRestaurant(anyLong(),anyInt(), anyInt(), eq(null));
+            MockHttpServletRequestBuilder request = get(pathTest)
+                    .param(Constants.PAGE_SIZE_NAME, String.valueOf(DataConstants.DEFAULT_PAGE_SIZE))
+                    .param(Constants.PAGE_NAME, String.valueOf(DataConstants.DEFAULT_PAGE))
+                    .contentType(MediaType.APPLICATION_JSON);
+            mockMvc.perform(request)
+                    .andDo(print())
+                    .andExpect(status().isBadRequest());
+        }
+    }
+
+    @Nested
+    @DisplayName("GET v1/restaurant/{restaurantId}/orders")
+    class getOrdersByRestaurantsTests {
+        private final String pathTest ="/v1/restaurant/1/orders";
+        @Test
+        void getOrdersByRestaurant_Successful() throws Exception {
+            List<GetOrderResponseDto> orders = DataApplicationFactory.createListGetOrderResponseDto();
+            CustomPage<GetOrderResponseDto> pageOrders = DataDomainFactory.createCustomPage(orders);
+            String jsonBodyResponse = objectMapper.writeValueAsString(pageOrders);
+
+            when(orderHandler.getOrdersByStatus(anyLong(),anyInt(), anyInt(), anyString())).thenReturn(pageOrders);
+            MockHttpServletRequestBuilder request = get(pathTest)
+                    .param(Constants.PAGE_SIZE_NAME, String.valueOf(DataConstants.DEFAULT_PAGE_SIZE))
+                    .param(Constants.PAGE_NAME, String.valueOf(DataConstants.DEFAULT_PAGE))
+                    .param(Constants.ORDER_STATUS_PARAM_NAME, String.valueOf(OrderStatus.PENDING.getMessage()))
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON);
+            mockMvc.perform(request)
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(content().json(jsonBodyResponse));
+
+        }
+
+        @Test
+        void getOrdersByRestaurant_Fail_InvalidParams() throws Exception {
+            MockHttpServletRequestBuilder request = get(pathTest)
+                    .param(Constants.PAGE_SIZE_NAME, String.valueOf(DataConstants.DEFAULT_PAGE_SIZE))
+                    .param(Constants.PAGE_NAME, String.valueOf(DataConstants.DEFAULT_PAGE))
+                    .contentType(MediaType.APPLICATION_JSON);
+            mockMvc.perform(request)
+                    .andDo(print())
+                    .andExpect(status().isBadRequest());
+        }
+    }
+
+    @Nested
+    @DisplayName("POST v1/restaurant/assignment")
+    class createEmployeeAssignmentTests {
+        private final String pathTest ="/v1/restaurant/assignment";
+
+        @Test
+        void createEmployeeAssignmentSuccessful() throws Exception {
+            String jsonBody = objectMapper.writeValueAsString(DataApplicationFactory.createAssignEmployeeRequestDto());
+
+            doNothing().when(restaurantHandler).assignEmployee(any(AssignEmployeeRequestDto.class));
+            MockHttpServletRequestBuilder request = post(pathTest)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonBody);
+            mockMvc.perform(request)
+                    .andDo(print())
+                    .andExpect(status().isCreated());
+        }
+
+        @Test
+        void createEmployeeAssignmentFail() throws Exception {
+            String jsonBody = objectMapper.writeValueAsString(DataApplicationFactory.createAssignEmployeeRequestDto());
+            doThrow(new RestaurantNotFoundException(Constants.RESTAURANT_OWNER_NO_FOUND)).when(restaurantHandler).assignEmployee(any(AssignEmployeeRequestDto.class));
+            MockHttpServletRequestBuilder request = post(pathTest)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonBody);
+            mockMvc.perform(request)
+                    .andDo(print())
+                    .andExpect(status().isConflict());
         }
     }
 }

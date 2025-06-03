@@ -1,11 +1,10 @@
 package com.foodcourt.court.domain.api;
 
 import com.foodcourt.court.domain.model.Restaurant;
-
-import java.util.List;
+import com.foodcourt.court.domain.utilities.CustomPage;
 
 public interface IRestaurantServicePort {
     void create(Restaurant restaurant);
-    List<Restaurant> getRestaurants(Integer pageSize,Integer page);
+    CustomPage<Restaurant> getRestaurants(Integer pageSize, Integer page);
     void assignEmployee(Long employeeId);
 }

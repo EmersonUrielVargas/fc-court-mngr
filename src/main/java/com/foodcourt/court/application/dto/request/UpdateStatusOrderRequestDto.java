@@ -13,6 +13,5 @@ public class UpdateStatusOrderRequestDto {
 
     @NotNull
     private String status;
-
     private String clientCode;
 }

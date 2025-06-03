@@ -83,11 +83,15 @@ jacocoTestReport {
 							  '**/*Configuration.*',
 							  '**/entity/**/*',
 							  '**/security/service/**/*',
+							  '**/security/dto/**/*',
+							  '**/twilio/service/**/*',
 							  '**/*Application.*',
 							  '**/*Constants.*',
 							  '**/*Mapper.*',
+							  '**/*Dto.*',
 							  '**/*Handler.*',
 							  '**/*Adapter.*',
+							  '**/*Exception.*',
 							  '**/*MapperImpl.*'])
 		})
 	}

@@ -11,9 +11,8 @@ import com.foodcourt.court.domain.spi.IAssignmentEmployeePort;
 import com.foodcourt.court.domain.spi.IAuthenticationPort;
 import com.foodcourt.court.domain.spi.IRestaurantPersistencePort;
 import com.foodcourt.court.domain.spi.IUserVerificationPort;
+import com.foodcourt.court.domain.utilities.CustomPage;
 import com.foodcourt.court.domain.validators.UtilitiesValidator;
-
-import java.util.List;
 
 public class RestaurantUseCase implements IRestaurantServicePort {
 
@@ -46,7 +45,7 @@ public class RestaurantUseCase implements IRestaurantServicePort {
     }
 
     @Override
-    public List<Restaurant> getRestaurants(Integer pageSize, Integer page) {
+    public CustomPage<Restaurant> getRestaurants(Integer pageSize, Integer page) {
         UtilitiesValidator.validateIsNull(pageSize);
         UtilitiesValidator.validateIsNull(page);
         UtilitiesValidator.validateNotNegativeNumber(pageSize, Constants.PAGE_SIZE_NAME);
@@ -56,6 +55,7 @@ public class RestaurantUseCase implements IRestaurantServicePort {
 
     @Override
     public void assignEmployee(Long employeeId) {
+        UtilitiesValidator.validateIsNull(employeeId);
         Long userIdAuthenticated =  authenticationPort.getAuthenticateUserId();
         Restaurant ownerRestaurant = restaurantPersistencePort.getByOwnerId(userIdAuthenticated)
                 .orElseThrow(()->new RestaurantNotFoundException(Constants.RESTAURANT_OWNER_NO_FOUND));

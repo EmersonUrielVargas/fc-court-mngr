@@ -1,8 +1,8 @@
 package com.foodcourt.court.domain.spi;
 
 import com.foodcourt.court.domain.model.Restaurant;
+import com.foodcourt.court.domain.utilities.CustomPage;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface IRestaurantPersistencePort {
@@ -10,7 +10,7 @@ public interface IRestaurantPersistencePort {
 
     Optional<Restaurant> getById(Long restaurantID);
 
-    List<Restaurant> getRestaurants(Integer pageSize,Integer page);
+    CustomPage<Restaurant> getRestaurants(Integer pageSize, Integer page);
 
     Optional<Restaurant> getByOwnerId(Long ownerId);
 }
