@@ -2,7 +2,9 @@ package com.foodcourt.court.infrastructure.out.jpa.entity;
 
 import com.foodcourt.court.domain.enums.OrderStatus;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,9 +28,10 @@ public class OrderEntity {
     @JoinColumn(name = "id_restaurante")
     private RestaurantEntity restaurante;
 
-    private Integer codigo;
+    private String codigo;
 
-    private String estado = OrderStatus.PENDING.getMessage();
+    @Enumerated(EnumType.STRING)
+    private OrderStatus estado = OrderStatus.PENDING;
 
     @Column(name = "id_cliente")
     private Long idCliente;

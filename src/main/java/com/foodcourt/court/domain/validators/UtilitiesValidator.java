@@ -3,6 +3,7 @@ package com.foodcourt.court.domain.validators;
 import com.foodcourt.court.domain.constants.Constants;
 import com.foodcourt.court.domain.enums.OrderStatus;
 import com.foodcourt.court.domain.enums.UserRole;
+import com.foodcourt.court.domain.exception.ActionNotAllowedException;
 import com.foodcourt.court.domain.exception.DomainException;
 import com.foodcourt.court.domain.exception.MissingParamRequiredException;
 import com.foodcourt.court.domain.exception.NotAllowedValueException;
@@ -58,6 +59,12 @@ public class UtilitiesValidator {
             }
         }
         throw new NotAllowedValueException(Constants.ORDER_STATUS_NOT_FOUND);
+    }
+
+    public static void validateCorrectOrderStatus(OrderStatus currentStatus, OrderStatus statusRequired){
+        if (currentStatus != statusRequired){
+            throw new ActionNotAllowedException(Constants.ORDER_STATUS_ACTION_NOT_ALLOWED);
+        }
     }
 
 }

@@ -16,7 +16,7 @@ public class Order {
     private LocalDateTime date;
     private Long chefId;
     private Long restaurantId;
-    private Integer codeValidation;
+    private String codeValidation;
     private List<OrderPlate> orderPlates;
 
     @Builder.Default

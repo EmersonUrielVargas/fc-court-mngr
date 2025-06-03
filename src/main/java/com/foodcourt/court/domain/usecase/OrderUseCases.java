@@ -8,10 +8,12 @@ import com.foodcourt.court.domain.model.Order;
 import com.foodcourt.court.domain.model.OrderPlate;
 import com.foodcourt.court.domain.spi.*;
 import com.foodcourt.court.domain.utilities.CustomPage;
+import com.foodcourt.court.domain.utilities.Utilities;
 import com.foodcourt.court.domain.validators.UtilitiesValidator;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public class OrderUseCases implements IOrderServicePort {
 
@@ -80,5 +82,50 @@ public class OrderUseCases implements IOrderServicePort {
             throw new ActionNotAllowedException(Constants.EMPLOYEE_NOT_ALLOWED);
         }
         return orderPersistencePort.getOrdersByStatus(restaurantId, pageSize, page, status);
+    }
+
+    @Override
+    public void updateStatusOrder(Long idOrder, String status, String clientCode) {
+        UtilitiesValidator.validateIsNull(idOrder);
+        UtilitiesValidator.getOrderStatus(status);
+        Order orderFound =  orderPersistencePort.findById(idOrder)
+                .orElseThrow(OrderNotFoundException::new);
+        Long userIdAuthenticated =  authenticationPort.getAuthenticateUserId();
+        if (assignmentEmployeePort.getAssignment(orderFound.getRestaurantId(), userIdAuthenticated).isEmpty()){
+            throw new ActionNotAllowedException(Constants.EMPLOYEE_NOT_ALLOWED);
+        }
+        orderFound = switch (orderFound.getStatus()) {
+            case PENDING -> assignOrder(orderFound, userIdAuthenticated);
+            case IN_PREPARATION -> notifyReadyOrder(orderFound);
+            case PREPARED -> finalizeOrder(orderFound, clientCode);
+            default -> throw new ActionNotAllowedException(Constants.ORDER_STATUS_ACTION_NOT_ALLOWED);
+        };
+        orderPersistencePort.upsertOrder(orderFound);
+    }
+
+    private Order assignOrder(Order order, Long chefId){
+        UtilitiesValidator.validateCorrectOrderStatus(order.getStatus(), OrderStatus.PENDING);
+        order.setStatus(OrderStatus.IN_PREPARATION);
+        order.setChefId(chefId);
+        return order;
+    }
+
+    private Order notifyReadyOrder(Order order){
+        UtilitiesValidator.validateCorrectOrderStatus(order.getStatus(), OrderStatus.IN_PREPARATION);
+        order.setStatus(OrderStatus.PREPARED);
+        String pinCode = Utilities.generateRandomPin();
+        order.setCodeValidation(pinCode);
+        return order;
+    }
+
+    private Order finalizeOrder(Order order, String pinCode){
+        UtilitiesValidator.validateCorrectOrderStatus(order.getStatus(), OrderStatus.PREPARED);
+        UtilitiesValidator.validateIsNull(pinCode);
+        UtilitiesValidator.validateStringPattern(pinCode, Constants.ID_NUMBER_PATTERN, Constants.CLIENT_PIN_CODE_INCORRECT);
+        if (!Objects.equals(pinCode, order.getCodeValidation())){
+            throw new NotAllowedValueException(Constants.CLIENT_PIN_CODE_INCORRECT);
+        }
+        order.setStatus(OrderStatus.DELIVERED);
+        return order;
     }
 }
