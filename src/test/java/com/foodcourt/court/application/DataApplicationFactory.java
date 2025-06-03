@@ -1,7 +1,11 @@
 package com.foodcourt.court.application;
 
 import com.foodcourt.court.application.dto.request.*;
-import com.foodcourt.court.application.dto.response.ListRestaurantsResponseDto;
+import com.foodcourt.court.application.dto.response.GetOrderResponseDto;
+import com.foodcourt.court.application.dto.response.PlatesByRestaurantResponseDto;
+import com.foodcourt.court.application.dto.response.RestaurantItemResponseDto;
+import com.foodcourt.court.domain.DataDomainFactory;
+import com.foodcourt.court.domain.enums.OrderStatus;
 import com.foodcourt.court.shared.DataConstants;
 
 import java.util.ArrayList;
@@ -9,8 +13,8 @@ import java.util.List;
 
 public class DataApplicationFactory {
 
-    public static ListRestaurantsResponseDto createListRestaurantDtoRs(){
-        return ListRestaurantsResponseDto.builder()
+    public static RestaurantItemResponseDto createListRestaurantDtoRs(){
+        return RestaurantItemResponseDto.builder()
                 .name(DataConstants.DEFAULT_RESTAURANT_NAME)
                 .urlLogo(DataConstants.DEFAULT_RESTAURANT_URL_LOGO)
                 .build();
@@ -24,6 +28,10 @@ public class DataApplicationFactory {
         restaurantRq.setPhoneNumber(DataConstants.DEFAULT_RESTAURANT_PHONE_NUMBER);
         restaurantRq.setUrlLogo(DataConstants.DEFAULT_RESTAURANT_URL_LOGO);
         return restaurantRq;
+    }
+
+    public static AssignEmployeeRequestDto createAssignEmployeeRequestDto(){
+        return new AssignEmployeeRequestDto(DataConstants.DEFAULT_USER_ID);
     }
 
     public static CreatePlateRequestDto createPlateRequestDto(){
@@ -58,6 +66,12 @@ public class DataApplicationFactory {
         orderRequestDto.setOrderPlates(createListItemOrderRequestDto());
         return orderRequestDto;
     }
+    public static UpdateStatusOrderRequestDto createUpdateStatusOrderRequestDto(){
+        UpdateStatusOrderRequestDto updateStatusOrderRequestDto = new UpdateStatusOrderRequestDto();
+        updateStatusOrderRequestDto.setStatus(OrderStatus.PENDING.getMessage());
+        updateStatusOrderRequestDto.setId(DataConstants.DEFAULT_ORDER_ID);
+        return updateStatusOrderRequestDto;
+    }
 
     public static CreateItemOrderRequestDto createItemOrderRequestDto(){
         CreateItemOrderRequestDto createItemOrderRequestDto = new CreateItemOrderRequestDto();
@@ -69,6 +83,38 @@ public class DataApplicationFactory {
     public static List<CreateItemOrderRequestDto> createListItemOrderRequestDto(){
         List<CreateItemOrderRequestDto> listItems = new ArrayList<>();
         listItems.add(createItemOrderRequestDto());
+        return listItems;
+    }
+
+    public static PlatesByRestaurantResponseDto createPlatesByRestaurantResponseDto(){
+        return PlatesByRestaurantResponseDto.builder()
+                .price(DataConstants.DEFAULT_PLATE_PRICE)
+                .categoryId(DataConstants.DEFAULT_CATEGORY_ID)
+                .description(DataConstants.DEFAULT_PLATE_DESCRIPTION)
+                .urlImage(DataConstants.DEFAULT_PLATE_URL_IMAGE)
+                .name(DataConstants.DEFAULT_PLATE_NAME)
+                .build();
+    }
+
+    public static GetOrderResponseDto createGetOrderResponseDto(){
+        GetOrderResponseDto orderItem = new GetOrderResponseDto();
+        orderItem.setOrderPlates(DataDomainFactory.createListOrderPlate());
+        orderItem.setId(DataConstants.DEFAULT_ORDER_ID);
+        orderItem.setStatus(OrderStatus.PENDING.getMessage());
+        orderItem.setRestaurantId(DataConstants.DEFAULT_RESTAURANT_ID);
+        orderItem.setClientId(DataConstants.DEFAULT_ORDER_CLIENT_ID);
+        return orderItem;
+    }
+
+    public static List<GetOrderResponseDto> createListGetOrderResponseDto(){
+        List<GetOrderResponseDto> listItems = new ArrayList<>();
+        listItems.add(createGetOrderResponseDto());
+        return listItems;
+    }
+
+    public static List<PlatesByRestaurantResponseDto> createListPlatesByRestaurantResponseDto(){
+        List<PlatesByRestaurantResponseDto> listItems = new ArrayList<>();
+        listItems.add(createPlatesByRestaurantResponseDto());
         return listItems;
     }
 

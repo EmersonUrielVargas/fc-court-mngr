@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ListRestaurantsResponseDto {
+public class RestaurantItemResponseDto {
     @NotNull
     private String name;
     @NotNull

@@ -2,16 +2,19 @@ package com.foodcourt.court.domain.usecase;
 
 import com.foodcourt.court.domain.api.IPlateServicePort;
 import com.foodcourt.court.domain.constants.Constants;
-import com.foodcourt.court.domain.exception.*;
+import com.foodcourt.court.domain.exception.ActionNotAllowedException;
+import com.foodcourt.court.domain.exception.CategoryNotFoundException;
+import com.foodcourt.court.domain.exception.PlateNotFoundException;
+import com.foodcourt.court.domain.exception.RestaurantNotFoundException;
 import com.foodcourt.court.domain.model.Plate;
 import com.foodcourt.court.domain.model.Restaurant;
 import com.foodcourt.court.domain.spi.IAuthenticationPort;
 import com.foodcourt.court.domain.spi.ICategoryPersistencePort;
 import com.foodcourt.court.domain.spi.IPlatePersistencePort;
 import com.foodcourt.court.domain.spi.IRestaurantPersistencePort;
+import com.foodcourt.court.domain.utilities.CustomPage;
 import com.foodcourt.court.domain.validators.UtilitiesValidator;
 
-import java.util.List;
 import java.util.Objects;
 
 public class PlateUseCases implements IPlateServicePort {
@@ -64,7 +67,7 @@ public class PlateUseCases implements IPlateServicePort {
     }
 
     @Override
-    public List<Plate> getPlatesByRestaurant(Long restaurantId, Integer pageSize, Integer page, Long categoryId) {
+    public CustomPage<Plate> getPlatesByRestaurant(Long restaurantId, Integer pageSize, Integer page, Long categoryId) {
         UtilitiesValidator.validateIsNull(restaurantId);
         UtilitiesValidator.validateIsNull(pageSize);
         UtilitiesValidator.validateIsNull(page);

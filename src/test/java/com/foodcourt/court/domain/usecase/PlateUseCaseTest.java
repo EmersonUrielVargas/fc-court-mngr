@@ -8,6 +8,7 @@ import com.foodcourt.court.domain.spi.IAuthenticationPort;
 import com.foodcourt.court.domain.spi.ICategoryPersistencePort;
 import com.foodcourt.court.domain.spi.IPlatePersistencePort;
 import com.foodcourt.court.domain.spi.IRestaurantPersistencePort;
+import com.foodcourt.court.domain.utilities.CustomPage;
 import com.foodcourt.court.shared.DataConstants;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -269,6 +270,8 @@ class PlateUseCaseTest {
         void getPlatesByRestaurantWithCategorySuccessful() {
             Plate plate = DataDomainFactory.createPlate();
             List<Plate> listPlates = List.of(plate, plate, plate);
+            CustomPage<Plate> pagePlate = DataDomainFactory.createCustomPage(listPlates);
+
 
             when(categoryPersistencePort.getCategoryById(DataConstants.DEFAULT_CATEGORY_ID))
                     .thenReturn(Optional.of(DataDomainFactory.createCategory()));
@@ -281,22 +284,23 @@ class PlateUseCaseTest {
                     DataConstants.DEFAULT_PAGE_SIZE,
                     DataConstants.DEFAULT_PAGE,
                     DataConstants.DEFAULT_CATEGORY_ID
-            )).thenReturn(listPlates);
+            )).thenReturn(pagePlate);
 
-            List<Plate> listPlatesFound = plateUseCases.getPlatesByRestaurant(
+            CustomPage<Plate> listPlatesFound = plateUseCases.getPlatesByRestaurant(
                     DataConstants.DEFAULT_RESTAURANT_ID,
                     DataConstants.DEFAULT_PAGE_SIZE,
                     DataConstants.DEFAULT_PAGE,
                     DataConstants.DEFAULT_CATEGORY_ID);
 
             verify(platePersistencePort).getPlatesByRestaurantId(anyLong(), anyInt(), anyInt(), anyLong());
-            assertEquals(listPlates.size(), listPlatesFound.size());
+            assertEquals(listPlates.size(), listPlatesFound.getData().size());
         }
 
         @Test
         void getPlatesByRestaurantWithoutCategorySuccessful() {
             Plate plate = DataDomainFactory.createPlate();
             List<Plate> listPlates = List.of(plate, plate, plate);
+            CustomPage<Plate> pagePlate = DataDomainFactory.createCustomPage(listPlates);
 
             when(restaurantPersistencePort.getById(DataConstants.DEFAULT_RESTAURANT_ID))
                     .thenReturn(Optional.of(DataDomainFactory.createRestaurant()));
@@ -305,15 +309,15 @@ class PlateUseCaseTest {
                     DataConstants.DEFAULT_RESTAURANT_ID,
                     DataConstants.DEFAULT_PAGE_SIZE,
                     DataConstants.DEFAULT_PAGE
-            )).thenReturn(listPlates);
+            )).thenReturn(pagePlate);
 
-            List<Plate> listPlatesFound = plateUseCases.getPlatesByRestaurant(
+            CustomPage<Plate> listPlatesFound = plateUseCases.getPlatesByRestaurant(
                     DataConstants.DEFAULT_RESTAURANT_ID,
                     DataConstants.DEFAULT_PAGE_SIZE,
                     DataConstants.DEFAULT_PAGE, null);
 
             verify(platePersistencePort).getPlatesByRestaurantId(anyLong(), anyInt(), anyInt());
-            assertEquals(listPlates.size(), listPlatesFound.size());
+            assertEquals(listPlates.size(), listPlatesFound.getData().size());
         }
     }
 }

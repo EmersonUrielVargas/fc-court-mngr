@@ -6,6 +6,8 @@ import com.foodcourt.court.infrastructure.out.jpa.entity.PlateEntity;
 import com.foodcourt.court.infrastructure.out.jpa.entity.RestaurantEntity;
 import org.mapstruct.*;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE
@@ -26,6 +28,8 @@ public interface IPlateEntityMapper {
     @Mapping(source = "categoria.id", target = "categoryId")
     @Mapping(source = "restaurante.id", target = "restaurantId")
     Plate toPlate(PlateEntity plateEntity);
+    List<Plate> toPlate(List<PlateEntity> plateEntity);
+
 
     @Named("mapIdToCategoriaEntity")
     default CategoryEntity mapIdToCategoriaEntity(Long categoryId){
