@@ -28,6 +28,7 @@ ext {
 	openApiVersion = "2.8.8"
 	feignVersion = "4.2.1"
 	jjwtApiVersion = "0.12.6"
+	twilioSdk = "10.9.1"
 }
 
 dependencies {
@@ -56,6 +57,8 @@ dependencies {
 	runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtApiVersion}"
 
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign:${feignVersion}")
+
+	implementation("com.twilio.sdk:twilio:${twilioSdk}")
 
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${openApiVersion}")
 }

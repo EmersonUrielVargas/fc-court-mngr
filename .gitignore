@@ -4,7 +4,6 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !gradle/wrapper/gradle-wrapper.properties
 
-
 ### Java ###
 *.class
 *.jar
@@ -33,3 +32,6 @@ Thumbs.db
 ### Logs ###
 *.log
 logs/
+
+#local
+application-dev.yml

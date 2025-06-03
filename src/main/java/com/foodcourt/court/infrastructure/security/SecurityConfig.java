@@ -19,36 +19,16 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
 
-    private static final String[] PATHS_ALL_ALLOW = {
-            "/public/**", "/swagger-ui/**", "/swagger-ui.**", "/v3/api-docs/**", "/v1/order/status"
-    };
-
-    private static final String[] PATHS_GET_CLIENT = {
-            "/v1/restaurant", "/v1/restaurant/*/plates", "/v1/order/**"
-    };
-
-    private static final String[] PATHS_EMPLOYEE = {
-            "/v1/restaurant/*/orders"
-    };
-
-    private static final String[] PATHS_OWNER = {
-            "/v1/plate/**", "/v1/restaurant/assignment"
-    };
-
-    private static final String[] PATHS_ADMIN = {
-            "/v1/restaurant/**"
-    };
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorizeHttpRequests ->
                 authorizeHttpRequests
-                    .requestMatchers(PATHS_ALL_ALLOW).permitAll()
-                    .requestMatchers(HttpMethod.GET, PATHS_GET_CLIENT).hasAuthority(UserRole.CLIENT.name())
-                    .requestMatchers(HttpMethod.GET, PATHS_EMPLOYEE).hasAuthority(UserRole.EMPLOYEE.name())
-                    .requestMatchers(PATHS_OWNER).hasAuthority(UserRole.OWNER.name())
-                    .requestMatchers(PATHS_ADMIN).hasAuthority(UserRole.ADMIN.name())
+                    .requestMatchers(PathsConstants.PATHS_ALL_ALLOW).permitAll()
+                    .requestMatchers(HttpMethod.GET, PathsConstants.PATHS_GET_CLIENT).hasAuthority(UserRole.CLIENT.name())
+                    .requestMatchers(HttpMethod.GET, PathsConstants.PATHS_EMPLOYEE).hasAuthority(UserRole.EMPLOYEE.name())
+                    .requestMatchers(PathsConstants.PATHS_OWNER).hasAuthority(UserRole.OWNER.name())
+                    .requestMatchers(PathsConstants.PATHS_ADMIN).hasAuthority(UserRole.ADMIN.name())
                     .anyRequest()
                     .authenticated()
             ).sessionManagement(sessionManageConfig ->

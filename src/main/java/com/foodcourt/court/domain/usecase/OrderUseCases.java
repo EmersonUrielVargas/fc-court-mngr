@@ -6,6 +6,7 @@ import com.foodcourt.court.domain.enums.OrderStatus;
 import com.foodcourt.court.domain.exception.*;
 import com.foodcourt.court.domain.model.Order;
 import com.foodcourt.court.domain.model.OrderPlate;
+import com.foodcourt.court.domain.model.User;
 import com.foodcourt.court.domain.spi.*;
 import com.foodcourt.court.domain.utilities.CustomPage;
 import com.foodcourt.court.domain.utilities.Utilities;
@@ -22,18 +23,25 @@ public class OrderUseCases implements IOrderServicePort {
     private final IAuthenticationPort authenticationPort;
     private final IRestaurantPersistencePort restaurantPersistencePort;
     private final IAssignmentEmployeePort assignmentEmployeePort;
+    private final INotificationPort notificationPort;
+    private final IUserVerificationPort userVerificationPort;
+
 
 
     public OrderUseCases(IPlatePersistencePort platePersistencePort,
                          IOrderPersistencePort orderPersistencePort,
                          IAuthenticationPort authenticationPort,
                          IRestaurantPersistencePort restaurantPersistencePort,
-                         IAssignmentEmployeePort assignmentEmployeePort) {
+                         IAssignmentEmployeePort assignmentEmployeePort,
+                         INotificationPort notificationPort,
+                         IUserVerificationPort userVerificationPort) {
         this.platePersistencePort = platePersistencePort;
         this.orderPersistencePort = orderPersistencePort;
         this.authenticationPort = authenticationPort;
         this.restaurantPersistencePort = restaurantPersistencePort;
         this.assignmentEmployeePort = assignmentEmployeePort;
+        this.notificationPort = notificationPort;
+        this.userVerificationPort = userVerificationPort;
     }
 
 
@@ -51,7 +59,7 @@ public class OrderUseCases implements IOrderServicePort {
                 OrderStatus.IN_PREPARATION.getMessage(),
                 OrderStatus.PREPARED.getMessage());
         if (orderPersistencePort.hasActiveOrdersByClientId(userIdAuthenticated, statusActive).booleanValue()){
-            throw new DomainException(Constants.CLIENT_HAS_ORDERS_ACTIVE);
+            throw new ActionNotAllowedException(Constants.CLIENT_HAS_ORDERS_ACTIVE);
         }
         restaurantPersistencePort.getById(newOrder.getRestaurantId())
                 .orElseThrow(RestaurantNotFoundException::new);
@@ -114,6 +122,10 @@ public class OrderUseCases implements IOrderServicePort {
         UtilitiesValidator.validateCorrectOrderStatus(order.getStatus(), OrderStatus.IN_PREPARATION);
         order.setStatus(OrderStatus.PREPARED);
         String pinCode = Utilities.generateRandomPin();
+        User user = userVerificationPort.getUserInfo(order.getClientId())
+                .orElseThrow(UserNotFoundException::new);
+        String messageNotify = generateCodeMessage(user.getName(), order.getId(), pinCode);
+        notificationPort.sendTextMessage(messageNotify, user.getPhoneNumber());
         order.setCodeValidation(pinCode);
         return order;
     }
@@ -127,5 +139,9 @@ public class OrderUseCases implements IOrderServicePort {
         }
         order.setStatus(OrderStatus.DELIVERED);
         return order;
+    }
+
+    private String generateCodeMessage(String clientName, Long orderId, String pinCode){
+        return String.format(Constants.MESSAGE_PIN_CODE_CLIENT_TEMPLATE, clientName, orderId, pinCode);
     }
 }
