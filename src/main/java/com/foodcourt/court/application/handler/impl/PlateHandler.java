@@ -8,11 +8,10 @@ import com.foodcourt.court.application.handler.IPlateHandler;
 import com.foodcourt.court.application.mapper.IPlateRequestMapper;
 import com.foodcourt.court.domain.api.IPlateServicePort;
 import com.foodcourt.court.domain.model.Plate;
+import com.foodcourt.court.domain.utilities.CustomPage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -40,9 +39,8 @@ public class PlateHandler implements IPlateHandler {
     }
 
     @Override
-    public List<PlatesByRestaurantResponseDto> getPlatesByRestaurant(Long restaurantId, Integer pageSize, Integer page, Long categoryId) {
-        return plateServicePort.getPlatesByRestaurant(restaurantId, pageSize, page, categoryId)
-                .stream().map(plateRequestMapper::toPlatesByRestaurantResponseDto)
-                .toList();
+    public CustomPage<PlatesByRestaurantResponseDto> getPlatesByRestaurant(Long restaurantId, Integer pageSize, Integer page, Long categoryId) {
+        CustomPage<Plate> pagePlates = plateServicePort.getPlatesByRestaurant(restaurantId, pageSize, page, categoryId);
+        return new CustomPage<>(plateRequestMapper.toPlatesByRestaurantResponseDto(pagePlates.getData()), pagePlates);
     }
 }

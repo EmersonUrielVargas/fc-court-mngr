@@ -30,12 +30,30 @@ public class DataConstants {
     public static final Long DEFAULT_ORDER_PLATE_PLATE_ID = 9L;
     public static final Integer DEFAULT_QUANTITY = 2;
 
+
+    /*CUSTOM PAGE CONSTANTS*/
+    public static final Integer DEFAULT_CUSTOM_PAGE_CURRENT_PAGE = 1;
+    public static final Boolean DEFAULT_CUSTOM_PAGE_IS_LAST_PAGE = false;
+    public static final Integer DEFAULT_CUSTOM_PAGE_SIZE_PAGE = 5;
+    public static final Integer DEFAULT_CUSTOM_PAGE_TOTAL_PAGES = 2;
+    public static final Long DEFAULT_CUSTOM_PAGE_TOTAL_ITEMS = 10L;
+
     public static final Integer DEFAULT_PAGE_SIZE = 5;
     public static final Integer DEFAULT_PAGE = 0;
 
+    /* USER */
     public static final String DEFAULT_USER_EMAIL = "test01@test.com.co";
+    public static final String DEFAULT_USER_CLIENT_EMAIL = "test@client.com.co";
     public static final Long DEFAULT_USER_ID = 12L;
     public static final String DEFAULT_USER_ROLE = "ADMIN";
+    public static final String DEFAULT_USER_NAME = "test";
+    public static final String USER_ROLE_CLIENT = "client";
+    public static final String DEFAULT_USER_PHONE_NUMBER = "+573158000111";
+
+    /*ORDER*/
+    public static final Long DEFAULT_ORDER_ID = 100L;
+    public static final Long DEFAULT_ORDER_CLIENT_ID = 11L;
+    public static final String DEFAULT_ORDER_CLIENT_PIN_CODE = "234678";
 
 
 }

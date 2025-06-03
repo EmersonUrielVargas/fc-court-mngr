@@ -4,6 +4,8 @@ import com.foodcourt.court.domain.model.Restaurant;
 import com.foodcourt.court.infrastructure.out.jpa.entity.RestaurantEntity;
 import org.mapstruct.*;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE
@@ -21,4 +23,5 @@ public interface IRestaurantEntityMapper {
 
     @InheritInverseConfiguration
     Restaurant toRestaurant(RestaurantEntity restaurantEntity);
+    List<Restaurant> toRestaurant(List<RestaurantEntity> restaurantEntity);
 }

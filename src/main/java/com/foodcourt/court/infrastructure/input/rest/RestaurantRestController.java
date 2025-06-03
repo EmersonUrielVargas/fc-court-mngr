@@ -3,8 +3,8 @@ package com.foodcourt.court.infrastructure.input.rest;
 import com.foodcourt.court.application.dto.request.AssignEmployeeRequestDto;
 import com.foodcourt.court.application.dto.request.RestaurantRequestDto;
 import com.foodcourt.court.application.dto.response.GetOrderResponseDto;
-import com.foodcourt.court.application.dto.response.ListRestaurantsResponseDto;
 import com.foodcourt.court.application.dto.response.PlatesByRestaurantResponseDto;
+import com.foodcourt.court.application.dto.response.RestaurantItemResponseDto;
 import com.foodcourt.court.application.handler.IOrderHandler;
 import com.foodcourt.court.application.handler.IPlateHandler;
 import com.foodcourt.court.application.handler.IRestaurantHandler;
@@ -22,8 +22,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/v1/restaurant")
@@ -47,11 +45,11 @@ public class RestaurantRestController {
             @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_BAD_REQUEST, description = GeneralConstants.SUMMARY_RESPONSE_BAD_REQUEST_GET_PLATES_BY_RESTAURANT, content = @Content)
     })
     @GetMapping("/{restaurantId}/plates")
-    public ResponseEntity<List<PlatesByRestaurantResponseDto>> getPlatesByRestaurant(@PathVariable Long restaurantId,
+    public ResponseEntity<CustomPage<PlatesByRestaurantResponseDto>> getPlatesByRestaurant(@PathVariable Long restaurantId,
                                                                                       @RequestParam(Constants.PAGE_SIZE_NAME) Integer pageSize,
                                                                                       @RequestParam(Constants.PAGE_NAME) Integer page,
                                                                                      @RequestParam(value = Constants.CATEGORY_ID_PARAM_NAME, required = false) Long categoryId) {
-        List<PlatesByRestaurantResponseDto> listPlatesByRestaurant = plateHandler.getPlatesByRestaurant(restaurantId, pageSize, page, categoryId);
+        CustomPage<PlatesByRestaurantResponseDto> listPlatesByRestaurant = plateHandler.getPlatesByRestaurant(restaurantId, pageSize, page, categoryId);
         return new ResponseEntity<>(listPlatesByRestaurant, HttpStatus.OK);
     }
 
@@ -102,15 +100,15 @@ public class RestaurantRestController {
             @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CREATED, description = GeneralConstants.SUMMARY_RESPONSE_OK_GET_RESTAURANT,
                     content = @Content(mediaType = GeneralConstants.MEDIA_TYPE_JSON,
                             array = @ArraySchema(
-                                    schema = @Schema(implementation = ListRestaurantsResponseDto.class)
+                                    schema = @Schema(implementation = RestaurantItemResponseDto.class)
                             )
                     )),
             @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_BAD_REQUEST, description = GeneralConstants.SUMMARY_RESPONSE_BAD_REQUEST_GET_RESTAURANT, content = @Content)
     })
     @GetMapping("")
-    public ResponseEntity<List<ListRestaurantsResponseDto>> getRestaurants( @RequestParam(Constants.PAGE_SIZE_NAME) Integer pageSize,
-                                                                            @RequestParam(Constants.PAGE_NAME) Integer page) {
-        List<ListRestaurantsResponseDto> listRestaurantsResponseDto = restaurantHandler.getRestaurants(pageSize, page);
-        return new ResponseEntity<>(listRestaurantsResponseDto, HttpStatus.OK);
+    public ResponseEntity<CustomPage<RestaurantItemResponseDto>> getRestaurants(@RequestParam(Constants.PAGE_SIZE_NAME) Integer pageSize,
+                                                                          @RequestParam(Constants.PAGE_NAME) Integer page) {
+        CustomPage<RestaurantItemResponseDto> restaurantItemResponseDto = restaurantHandler.getRestaurants(pageSize, page);
+        return new ResponseEntity<>(restaurantItemResponseDto, HttpStatus.OK);
     }
 }
