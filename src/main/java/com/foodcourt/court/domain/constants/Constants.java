@@ -16,6 +16,7 @@ public class Constants {
     public static final String USER_ROLE_NO_FOUND = "El rol es invalido";
     public static final String PRICE_NOT_ALLOWED = "El precio no es valido, debe ser mayor a 0";
     public static final String CATEGORY_NO_FOUND = "No se encontro categoria con el id ingresado";
+    public static final String ORDER_NO_FOUND = "No se encontro pedido con el id ingresado";
     public static final String RESTAURANT_NO_FOUND = "Ningun restaurante coincide con el id ingresado";
     public static final String RESTAURANT_OWNER_NO_FOUND = "Ningun restaurante coincide con el id del propietario";
     public static final String PLATE_NO_FOUND = "Ningun plato coincide con el id ingresado";
@@ -26,8 +27,8 @@ public class Constants {
     public static final String PLATE_NO_FOUND_IN_ORDER = "Algunos de los platos no se encontraron en el listado de el restaurante";
     public static final String ORDER_STATUS_NOT_FOUND = "El estado de la orden ingresado no corresponde a ninguno existente";
     public static final String EMPLOYEE_NOT_ALLOWED = "El empleado no tiene permisos para realizar esta accion";
-
-
+    public static final String ORDER_STATUS_ACTION_NOT_ALLOWED = "El estado del pedido no permite realizar esta accion";
+    public static final String CLIENT_PIN_CODE_INCORRECT = "El codigo del pedido es incorrecto";
 
     /*Params Name*/
     public static final String  PAGE_NAME = "page";
@@ -52,4 +53,8 @@ public class Constants {
     public static final String ID_NUMBER_PATTERN = "^[0-9]+$";
     public static final Integer MIN_PRICE_ALLOW = 0;
     public static final Integer MIN_PAGE_ALLOW = 0;
+    public static final Integer MAX_RANGE_CLIENT_PIN = 10;
+    public static final Integer DIGIT_NUMBER_CLIENT_PIN = 6;
+    public static final String EMPTY_STRING = "";
+
 }
