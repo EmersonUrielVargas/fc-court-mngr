@@ -40,7 +40,7 @@ public class ControllerAdvisor {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleInvalidParamException(MethodArgumentNotValidException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(Collections.singletonMap(MESSAGE, ExceptionResponse.DATABASE_ERROR.getMessage()));
+                .body(Collections.singletonMap(MESSAGE, ExceptionResponse.INFORMATION_ERROR.getMessage()));
     }
 
     @ExceptionHandler(MissingRequestValueException.class)

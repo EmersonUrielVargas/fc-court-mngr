@@ -3,8 +3,8 @@ package com.foodcourt.court.domain.usecase;
 import com.foodcourt.court.domain.api.IRestaurantServicePort;
 import com.foodcourt.court.domain.constants.Constants;
 import com.foodcourt.court.domain.enums.UserRole;
-import com.foodcourt.court.domain.exception.DomainException;
 import com.foodcourt.court.domain.exception.RestaurantNotFoundException;
+import com.foodcourt.court.domain.exception.UserNotFoundException;
 import com.foodcourt.court.domain.model.AssignmentEmployee;
 import com.foodcourt.court.domain.model.Restaurant;
 import com.foodcourt.court.domain.spi.IAssignmentEmployeePort;
@@ -40,7 +40,7 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         UtilitiesValidator.validateStringPattern(restaurant.getPhoneNumber(), Constants.PHONE_NUMBER_PATTERN, Constants.INVALID_PHONE_NUMBER);
         UtilitiesValidator.validateStringPattern(restaurant.getNit(), Constants.ID_NUMBER_PATTERN, Constants.INVALID_ID_NUMBER);
         UserRole roleUser = userVerificationPort.getRolUser(restaurant.getOwnerId())
-                .orElseThrow(()-> new DomainException(Constants.OWNER_NO_FOUND));
+                .orElseThrow(()-> new UserNotFoundException(Constants.OWNER_NO_FOUND));
         UtilitiesValidator.validateOwner(roleUser);
         restaurantPersistencePort.upsertRestaurant(restaurant);
     }

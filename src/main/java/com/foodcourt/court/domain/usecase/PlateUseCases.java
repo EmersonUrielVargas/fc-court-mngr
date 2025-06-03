@@ -2,10 +2,7 @@ package com.foodcourt.court.domain.usecase;
 
 import com.foodcourt.court.domain.api.IPlateServicePort;
 import com.foodcourt.court.domain.constants.Constants;
-import com.foodcourt.court.domain.exception.CategoryNotFoundException;
-import com.foodcourt.court.domain.exception.DomainException;
-import com.foodcourt.court.domain.exception.PlateNotFoundException;
-import com.foodcourt.court.domain.exception.RestaurantNotFoundException;
+import com.foodcourt.court.domain.exception.*;
 import com.foodcourt.court.domain.model.Plate;
 import com.foodcourt.court.domain.model.Restaurant;
 import com.foodcourt.court.domain.spi.IAuthenticationPort;
@@ -89,7 +86,7 @@ public class PlateUseCases implements IPlateServicePort {
         Restaurant restaurant = restaurantPersistencePort.getById(restaurantId)
                 .orElseThrow(RestaurantNotFoundException::new);
         if (!restaurant.getOwnerId().equals(userIdAuthenticated)){
-            throw new DomainException(Constants.OWNER_NOT_ALLOWED);
+            throw new ActionNotAllowedException(Constants.OWNER_NOT_ALLOWED);
         }
     }
 }

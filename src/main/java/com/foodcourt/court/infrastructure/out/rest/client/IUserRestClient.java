@@ -1,5 +1,6 @@
 package com.foodcourt.court.infrastructure.out.rest.client;
 
+import com.foodcourt.court.domain.model.User;
 import com.foodcourt.court.infrastructure.configuration.FeignClientConfig;
 import com.foodcourt.court.infrastructure.out.rest.dto.response.UserRoleResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -13,5 +14,8 @@ public interface IUserRestClient {
 
     @GetMapping(value = "/role/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     UserRoleResponseDto getUserRole(@PathVariable Long id);
+
+    @GetMapping(value = "/contact/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    User getUserInfo(@PathVariable Long id);
 
 }
