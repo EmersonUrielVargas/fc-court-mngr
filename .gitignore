@@ -4,7 +4,6 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !gradle/wrapper/gradle-wrapper.properties
 
-
 ### Java ###
 *.class
 *.jar
@@ -36,4 +35,3 @@ logs/
 
 #local
 application-dev.yml
-
