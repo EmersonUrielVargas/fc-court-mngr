@@ -28,7 +28,9 @@ public class Constants {
     public static final String PLATE_NO_FOUND_IN_ORDER = "Algunos de los platos no se encontraron en el listado de el restaurante";
     public static final String ORDER_STATUS_NOT_FOUND = "El estado de la orden ingresado no corresponde a ninguno existente";
     public static final String EMPLOYEE_NOT_ALLOWED = "El empleado no tiene permisos para realizar esta accion";
+    public static final String CLIENT_NOT_ALLOWED = "El cliente no tiene permisos para realizar esta accion";
     public static final String ORDER_STATUS_ACTION_NOT_ALLOWED = "El estado del pedido no permite realizar esta accion";
+    public static final String ORDER_STATUS_NOT_ALLOWED_MESSAGE_CLIENT = "Lo sentimos, tu pedido ya está en preparación y no puede cancelarse";
     public static final String CLIENT_PIN_CODE_INCORRECT = "El codigo del pedido es incorrecto";
 
     /*Params Name*/

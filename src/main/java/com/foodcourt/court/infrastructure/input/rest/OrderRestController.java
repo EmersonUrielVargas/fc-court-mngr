@@ -1,5 +1,6 @@
 package com.foodcourt.court.infrastructure.input.rest;
 
+import com.foodcourt.court.application.dto.request.CancelOrderRequestDto;
 import com.foodcourt.court.application.dto.request.CreateOrderRequestDto;
 import com.foodcourt.court.application.dto.request.UpdateStatusOrderRequestDto;
 import com.foodcourt.court.application.handler.IOrderHandler;
@@ -40,6 +41,17 @@ public class OrderRestController {
     @PatchMapping("/status")
     public ResponseEntity<Void> updateStatusOrder(@Valid @RequestBody UpdateStatusOrderRequestDto updateStatusOrderRequestDto) {
         orderHandler.updateStatusOrder(updateStatusOrderRequestDto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = GeneralConstants.SUMMARY_CREATE_ORDER)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_OK, description = GeneralConstants.SUMMARY_RESPONSE_CREATED_ORDER, content = @Content),
+            @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CONFLICT, description = GeneralConstants.SUMMARY_RESPONSE_CONFLICT_ORDER, content = @Content)
+    })
+    @PatchMapping("/cancel")
+    public ResponseEntity<Void> cancelOrder(@Valid @RequestBody CancelOrderRequestDto cancelOrderRequestDto) {
+        orderHandler.cancelOrder(cancelOrderRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
