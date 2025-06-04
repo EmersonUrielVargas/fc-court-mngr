@@ -8,6 +8,7 @@ import com.foodcourt.court.domain.exception.DomainException;
 import com.foodcourt.court.domain.exception.MissingParamRequiredException;
 import com.foodcourt.court.domain.exception.NotAllowedValueException;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class UtilitiesValidator {
@@ -61,9 +62,9 @@ public class UtilitiesValidator {
         throw new NotAllowedValueException(Constants.ORDER_STATUS_NOT_FOUND);
     }
 
-    public static void validateCorrectOrderStatus(OrderStatus currentStatus, OrderStatus statusRequired){
+    public static void validateCorrectOrderStatus(OrderStatus currentStatus, OrderStatus statusRequired,String errorMessage){
         if (currentStatus != statusRequired){
-            throw new ActionNotAllowedException(Constants.ORDER_STATUS_ACTION_NOT_ALLOWED);
+            throw new ActionNotAllowedException(Objects.nonNull(errorMessage)? errorMessage : Constants.ORDER_STATUS_ACTION_NOT_ALLOWED);
         }
     }
 

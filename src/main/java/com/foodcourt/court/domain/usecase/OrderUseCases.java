@@ -111,15 +111,29 @@ public class OrderUseCases implements IOrderServicePort {
         orderPersistencePort.upsertOrder(orderFound);
     }
 
+    @Override
+    public void cancelOrder(Long idOrder) {
+        UtilitiesValidator.validateIsNull(idOrder);
+        Order orderFound =  orderPersistencePort.findById(idOrder)
+                .orElseThrow(OrderNotFoundException::new);
+        Long userIdAuthenticated =  authenticationPort.getAuthenticateUserId();
+        if (!orderFound.getClientId().equals(userIdAuthenticated)){
+            throw new ActionNotAllowedException(Constants.CLIENT_NOT_ALLOWED);
+        }
+        UtilitiesValidator.validateCorrectOrderStatus(orderFound.getStatus(), OrderStatus.PENDING, Constants.ORDER_STATUS_NOT_ALLOWED_MESSAGE_CLIENT);
+        orderFound.setStatus(OrderStatus.CANCELED);
+        orderPersistencePort.upsertOrder(orderFound);
+    }
+
     private Order assignOrder(Order order, Long chefId){
-        UtilitiesValidator.validateCorrectOrderStatus(order.getStatus(), OrderStatus.PENDING);
+        UtilitiesValidator.validateCorrectOrderStatus(order.getStatus(), OrderStatus.PENDING, null);
         order.setStatus(OrderStatus.IN_PREPARATION);
         order.setChefId(chefId);
         return order;
     }
 
     private Order notifyReadyOrder(Order order){
-        UtilitiesValidator.validateCorrectOrderStatus(order.getStatus(), OrderStatus.IN_PREPARATION);
+        UtilitiesValidator.validateCorrectOrderStatus(order.getStatus(), OrderStatus.IN_PREPARATION, null);
         order.setStatus(OrderStatus.PREPARED);
         String pinCode = Utilities.generateRandomPin();
         User user = userVerificationPort.getUserInfo(order.getClientId())
@@ -131,7 +145,7 @@ public class OrderUseCases implements IOrderServicePort {
     }
 
     private Order finalizeOrder(Order order, String pinCode){
-        UtilitiesValidator.validateCorrectOrderStatus(order.getStatus(), OrderStatus.PREPARED);
+        UtilitiesValidator.validateCorrectOrderStatus(order.getStatus(), OrderStatus.PREPARED, null);
         UtilitiesValidator.validateIsNull(pinCode);
         UtilitiesValidator.validateStringPattern(pinCode, Constants.ID_NUMBER_PATTERN, Constants.CLIENT_PIN_CODE_INCORRECT);
         if (!Objects.equals(pinCode, order.getCodeValidation())){

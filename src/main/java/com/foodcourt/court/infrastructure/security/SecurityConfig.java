@@ -26,7 +26,8 @@ public class SecurityConfig {
                 authorizeHttpRequests
                     .requestMatchers(PathsConstants.PATHS_ALL_ALLOW).permitAll()
                     .requestMatchers(HttpMethod.GET, PathsConstants.PATHS_GET_CLIENT).hasAuthority(UserRole.CLIENT.name())
-                    .requestMatchers(HttpMethod.GET, PathsConstants.PATHS_EMPLOYEE).hasAuthority(UserRole.EMPLOYEE.name())
+                    .requestMatchers(PathsConstants.PATHS_CLIENT).hasAuthority(UserRole.CLIENT.name())
+                    .requestMatchers(PathsConstants.PATHS_EMPLOYEE).hasAuthority(UserRole.EMPLOYEE.name())
                     .requestMatchers(PathsConstants.PATHS_OWNER).hasAuthority(UserRole.OWNER.name())
                     .requestMatchers(PathsConstants.PATHS_ADMIN).hasAuthority(UserRole.ADMIN.name())
                     .anyRequest()

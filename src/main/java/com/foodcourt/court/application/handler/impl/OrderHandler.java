@@ -1,5 +1,6 @@
 package com.foodcourt.court.application.handler.impl;
 
+import com.foodcourt.court.application.dto.request.CancelOrderRequestDto;
 import com.foodcourt.court.application.dto.request.CreateOrderRequestDto;
 import com.foodcourt.court.application.dto.request.UpdateStatusOrderRequestDto;
 import com.foodcourt.court.application.dto.response.GetOrderResponseDto;
@@ -37,5 +38,10 @@ public class OrderHandler implements IOrderHandler {
                 updateStatusOrderRequestDto.getId(),
                 updateStatusOrderRequestDto.getStatus(),
                 updateStatusOrderRequestDto.getClientCode());
+    }
+
+    @Override
+    public void cancelOrder(CancelOrderRequestDto cancelOrderRequestDto) {
+        orderServicePort.cancelOrder(cancelOrderRequestDto.getId());
     }
 }
