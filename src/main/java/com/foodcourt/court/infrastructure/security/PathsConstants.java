@@ -9,15 +9,19 @@ public class PathsConstants {
 
 
     protected static final String[] PATHS_ALL_ALLOW = {
-            "/public/**", "/swagger-ui/**", "/swagger-ui.**", "/v3/api-docs/**", "/v1/order/status"
+            "/public/**", "/swagger-ui/**", "/swagger-ui.**", "/v3/api-docs/**"
     };
 
     protected static final String[] PATHS_GET_CLIENT = {
             "/v1/restaurant", "/v1/restaurant/*/plates", "/v1/order/**"
     };
 
+    protected static final String[] PATHS_CLIENT = {
+            "/v1/order/cancel"
+    };
+
     protected static final String[] PATHS_EMPLOYEE = {
-            "/v1/restaurant/*/orders"
+            "/v1/restaurant/*/orders", "/v1/order/status"
     };
 
     protected static final String[] PATHS_OWNER = {
