@@ -6,6 +6,7 @@ import com.foodcourt.court.domain.enums.OrderStatus;
 import com.foodcourt.court.domain.exception.*;
 import com.foodcourt.court.domain.model.Order;
 import com.foodcourt.court.domain.model.OrderPlate;
+import com.foodcourt.court.domain.model.TrackingOrder;
 import com.foodcourt.court.domain.model.User;
 import com.foodcourt.court.domain.spi.*;
 import com.foodcourt.court.domain.utilities.CustomPage;
@@ -25,6 +26,7 @@ public class OrderUseCases implements IOrderServicePort {
     private final IAssignmentEmployeePort assignmentEmployeePort;
     private final INotificationPort notificationPort;
     private final IUserVerificationPort userVerificationPort;
+    private final ITrackingOrderPersistencePort trackingOrderPersistencePort;
 
 
 
@@ -34,7 +36,8 @@ public class OrderUseCases implements IOrderServicePort {
                          IRestaurantPersistencePort restaurantPersistencePort,
                          IAssignmentEmployeePort assignmentEmployeePort,
                          INotificationPort notificationPort,
-                         IUserVerificationPort userVerificationPort) {
+                         IUserVerificationPort userVerificationPort,
+                         ITrackingOrderPersistencePort trackingOrderPersistencePort) {
         this.platePersistencePort = platePersistencePort;
         this.orderPersistencePort = orderPersistencePort;
         this.authenticationPort = authenticationPort;
@@ -42,6 +45,7 @@ public class OrderUseCases implements IOrderServicePort {
         this.assignmentEmployeePort = assignmentEmployeePort;
         this.notificationPort = notificationPort;
         this.userVerificationPort = userVerificationPort;
+        this.trackingOrderPersistencePort = trackingOrderPersistencePort;
     }
 
 
@@ -50,14 +54,15 @@ public class OrderUseCases implements IOrderServicePort {
         UtilitiesValidator.validateIsNull(newOrder.getRestaurantId());
         UtilitiesValidator.validateIsNull(newOrder.getOrderPlates());
         if (newOrder.getOrderPlates().isEmpty()){
-            throw  new OrderIsEmptyException();
+            throw new OrderIsEmptyException();
         }
         Long userIdAuthenticated =  authenticationPort.getAuthenticateUserId();
+        String userEmailAuthenticated =  authenticationPort.getAuthenticateUserEmail();
         newOrder.setClientId(userIdAuthenticated);
         List<String> statusActive = List.of(
-                OrderStatus.PENDING.getMessage(),
-                OrderStatus.IN_PREPARATION.getMessage(),
-                OrderStatus.PREPARED.getMessage());
+                OrderStatus.PENDING.name(),
+                OrderStatus.IN_PREPARATION.name(),
+                OrderStatus.PREPARED.name());
         if (orderPersistencePort.hasActiveOrdersByClientId(userIdAuthenticated, statusActive).booleanValue()){
             throw new ActionNotAllowedException(Constants.CLIENT_HAS_ORDERS_ACTIVE);
         }
@@ -72,7 +77,9 @@ public class OrderUseCases implements IOrderServicePort {
             throw new PlateNotFoundException(Constants.PLATE_NO_FOUND_IN_ORDER);
         }
         newOrder.setDate(LocalDateTime.now());
-        orderPersistencePort.upsertOrder(newOrder);
+        Order orderSaved = orderPersistencePort.upsertOrder(newOrder);
+        TrackingOrder trackingOrder =  generateTrackingOrder(orderSaved, null, userEmailAuthenticated, null);
+        trackingOrderPersistencePort.createTrackingOrder(trackingOrder);
     }
 
     @Override
@@ -98,17 +105,24 @@ public class OrderUseCases implements IOrderServicePort {
         UtilitiesValidator.getOrderStatus(status);
         Order orderFound =  orderPersistencePort.findById(idOrder)
                 .orElseThrow(OrderNotFoundException::new);
-        Long userIdAuthenticated =  authenticationPort.getAuthenticateUserId();
-        if (assignmentEmployeePort.getAssignment(orderFound.getRestaurantId(), userIdAuthenticated).isEmpty()){
+        OrderStatus previousStatus =  orderFound.getStatus();
+        Long employeeIdAuth =  authenticationPort.getAuthenticateUserId();
+        String employeeEmailAuth =  authenticationPort.getAuthenticateUserEmail();
+        User clientInfo = userVerificationPort.getUserInfo(orderFound.getClientId())
+                .orElseThrow(UserNotFoundException::new);
+        if (assignmentEmployeePort.getAssignment(orderFound.getRestaurantId(), employeeIdAuth).isEmpty()){
             throw new ActionNotAllowedException(Constants.EMPLOYEE_NOT_ALLOWED);
         }
-        orderFound = switch (orderFound.getStatus()) {
-            case PENDING -> assignOrder(orderFound, userIdAuthenticated);
-            case IN_PREPARATION -> notifyReadyOrder(orderFound);
+        switch (orderFound.getStatus()) {
+            case PENDING -> assignOrder(orderFound, employeeIdAuth);
+            case IN_PREPARATION -> notifyReadyOrder(orderFound, clientInfo);
             case PREPARED -> finalizeOrder(orderFound, clientCode);
             default -> throw new ActionNotAllowedException(Constants.ORDER_STATUS_ACTION_NOT_ALLOWED);
-        };
-        orderPersistencePort.upsertOrder(orderFound);
+        }
+
+        Order orderSaved = orderPersistencePort.upsertOrder(orderFound);
+        TrackingOrder trackingOrder =  generateTrackingOrder(orderSaved, previousStatus, clientInfo.getEmail(), employeeEmailAuth);
+        trackingOrderPersistencePort.createTrackingOrder(trackingOrder);
     }
 
     @Override
@@ -116,35 +130,38 @@ public class OrderUseCases implements IOrderServicePort {
         UtilitiesValidator.validateIsNull(idOrder);
         Order orderFound =  orderPersistencePort.findById(idOrder)
                 .orElseThrow(OrderNotFoundException::new);
-        Long userIdAuthenticated =  authenticationPort.getAuthenticateUserId();
-        if (!orderFound.getClientId().equals(userIdAuthenticated)){
+        OrderStatus previousStatus =  orderFound.getStatus();
+        Long clientIdAuth =  authenticationPort.getAuthenticateUserId();
+        String clientEmailAuth =  authenticationPort.getAuthenticateUserEmail();
+        if (!orderFound.getClientId().equals(clientIdAuth)){
             throw new ActionNotAllowedException(Constants.CLIENT_NOT_ALLOWED);
+        }
+        if (orderFound.getStatus() == OrderStatus.CANCELED){
+            throw new ActionNotAllowedException(Constants.ORDER_STATUS_ACTION_NOT_ALLOWED);
         }
         UtilitiesValidator.validateCorrectOrderStatus(orderFound.getStatus(), OrderStatus.PENDING, Constants.ORDER_STATUS_NOT_ALLOWED_MESSAGE_CLIENT);
         orderFound.setStatus(OrderStatus.CANCELED);
-        orderPersistencePort.upsertOrder(orderFound);
+        Order orderSaved = orderPersistencePort.upsertOrder(orderFound);
+        TrackingOrder trackingOrder =  generateTrackingOrder(orderSaved, previousStatus, clientEmailAuth, null);
+        trackingOrderPersistencePort.createTrackingOrder(trackingOrder);
     }
 
-    private Order assignOrder(Order order, Long chefId){
+    private void assignOrder(Order order, Long chefId){
         UtilitiesValidator.validateCorrectOrderStatus(order.getStatus(), OrderStatus.PENDING, null);
         order.setStatus(OrderStatus.IN_PREPARATION);
         order.setChefId(chefId);
-        return order;
     }
 
-    private Order notifyReadyOrder(Order order){
+    private void notifyReadyOrder(Order order, User client){
         UtilitiesValidator.validateCorrectOrderStatus(order.getStatus(), OrderStatus.IN_PREPARATION, null);
         order.setStatus(OrderStatus.PREPARED);
         String pinCode = Utilities.generateRandomPin();
-        User user = userVerificationPort.getUserInfo(order.getClientId())
-                .orElseThrow(UserNotFoundException::new);
-        String messageNotify = generateCodeMessage(user.getName(), order.getId(), pinCode);
-        notificationPort.sendTextMessage(messageNotify, user.getPhoneNumber());
+        String messageNotify = generateCodeMessage(client.getName(), order.getId(), pinCode);
+        notificationPort.sendTextMessage(messageNotify, client.getPhoneNumber());
         order.setCodeValidation(pinCode);
-        return order;
     }
 
-    private Order finalizeOrder(Order order, String pinCode){
+    private void finalizeOrder(Order order, String pinCode){
         UtilitiesValidator.validateCorrectOrderStatus(order.getStatus(), OrderStatus.PREPARED, null);
         UtilitiesValidator.validateIsNull(pinCode);
         UtilitiesValidator.validateStringPattern(pinCode, Constants.ID_NUMBER_PATTERN, Constants.CLIENT_PIN_CODE_INCORRECT);
@@ -152,10 +169,22 @@ public class OrderUseCases implements IOrderServicePort {
             throw new NotAllowedValueException(Constants.CLIENT_PIN_CODE_INCORRECT);
         }
         order.setStatus(OrderStatus.DELIVERED);
-        return order;
     }
 
     private String generateCodeMessage(String clientName, Long orderId, String pinCode){
         return String.format(Constants.MESSAGE_PIN_CODE_CLIENT_TEMPLATE, clientName, orderId, pinCode);
+    }
+
+    private TrackingOrder generateTrackingOrder(Order order, OrderStatus previousStatus,String clientEmail, String employeeEmail){
+        return TrackingOrder.builder()
+                .orderId(order.getId())
+                .date(LocalDateTime.now())
+                .employeeId(order.getChefId())
+                .employeeEmail(employeeEmail)
+                .clientEmail(clientEmail)
+                .clientId(order.getClientId())
+                .nextStatus(order.getStatus().getMessage())
+                .previousStatus(Objects.nonNull(previousStatus)? previousStatus.getMessage(): null)
+                .build();
     }
 }

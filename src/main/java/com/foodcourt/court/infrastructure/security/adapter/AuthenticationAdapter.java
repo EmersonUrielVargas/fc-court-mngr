@@ -13,4 +13,9 @@ public class AuthenticationAdapter implements IAuthenticationPort {
     public Long getAuthenticateUserId() {
         return autheticationService.getUserId();
     }
+
+    @Override
+    public String getAuthenticateUserEmail() {
+        return autheticationService.getUserEmail();
+    }
 }
