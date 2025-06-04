@@ -57,6 +57,9 @@ public class GeneralConstants {
     public static final String USER_ID_KEY_TOKEN = "userID";
     public static final String DEFAULT_PARAM_EXCEPTION_RESPONSE = "message";
 
+    public static final String DEFAULT_TIME_ZONE_APP =  "America/Bogota";
+
+
 
 
 

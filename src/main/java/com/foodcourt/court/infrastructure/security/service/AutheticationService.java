@@ -9,7 +9,15 @@ import org.springframework.stereotype.Service;
 public class AutheticationService {
 
     public Long getUserId(){
+        return getUserAuthenticate().getIdUser();
+    }
+
+    public String getUserEmail(){
+        return getUserAuthenticate().getEmail();
+    }
+
+    private UserDetailsDto getUserAuthenticate(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return ((UserDetailsDto)auth.getPrincipal()).getIdUser();
+        return ((UserDetailsDto)auth.getPrincipal());
     }
 }
