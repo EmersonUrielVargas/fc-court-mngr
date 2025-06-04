@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface IOrderPersistencePort {
     Boolean hasActiveOrdersByClientId(Long clientId, List<String> statusActive);
-    void upsertOrder(Order order);
+    Order upsertOrder(Order order);
     CustomPage<Order> getOrdersByStatus(Long restaurantId, Integer pageSize, Integer page, String status);
     Optional<Order> findById(Long orderId);
 

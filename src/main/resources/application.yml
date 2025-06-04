@@ -28,6 +28,8 @@ external:
   api:
     users-mngr:
       url: "localhost:8081/api/v1/mngr/users/"
+    tracking-mngr:
+      url: "localhost:8083/api/mngr/v1/tracking"
     notification-mngr:
       url: "localhost:8081/api/v1/mngr/users/"
       account-sid: "ACCOUNT_SID_SECRET"

@@ -10,7 +10,9 @@ import com.foodcourt.court.domain.usecase.RestaurantUseCase;
 import com.foodcourt.court.infrastructure.out.jpa.adapter.*;
 import com.foodcourt.court.infrastructure.out.jpa.mapper.*;
 import com.foodcourt.court.infrastructure.out.jpa.repository.*;
+import com.foodcourt.court.infrastructure.out.rest.adapter.TrackingOrderRestAdapter;
 import com.foodcourt.court.infrastructure.out.rest.adapter.UserVerificationRestAdapter;
+import com.foodcourt.court.infrastructure.out.rest.client.ITrackingRestClient;
 import com.foodcourt.court.infrastructure.out.rest.client.IUserRestClient;
 import com.foodcourt.court.infrastructure.out.twilio.adapter.NotificationTwilioAdapter;
 import com.foodcourt.court.infrastructure.out.twilio.service.NotificationService;
@@ -37,6 +39,7 @@ public class BeanConfiguration {
     private final IOrderRepository orderRepository;
     private final IOrderEntityMapper orderEntityMapper;
     private final IUserRestClient userRestClient;
+    private final ITrackingRestClient trackingRestClient;
     private final NotificationService notificationService;
     private final JwtService jwtService;
 
@@ -100,12 +103,18 @@ public class BeanConfiguration {
                 restaurantPersistencePort(),
                 assignmentEmployeePort(),
                 notificationPort(),
-                userPersistencePort());
+                userPersistencePort(),
+                trackingOrderPersistencePort());
     }
 
     @Bean
     public INotificationPort notificationPort() {
         return new NotificationTwilioAdapter(notificationService);
+    }
+
+    @Bean
+    public ITrackingOrderPersistencePort trackingOrderPersistencePort() {
+        return new TrackingOrderRestAdapter(trackingRestClient);
     }
 
 }
