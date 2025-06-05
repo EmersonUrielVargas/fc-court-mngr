@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -34,5 +36,10 @@ public class RestaurantHandler implements IRestaurantHandler {
     @Override
     public void assignEmployee(AssignEmployeeRequestDto employeeData) {
         restaurantServicePort.assignEmployee(employeeData.getIdEmployee());
+    }
+
+    @Override
+    public List<Long> getEmployeesIdByOwnerId(Long ownerId) {
+        return restaurantServicePort.getEmployeesIdByOwnerId(ownerId);
     }
 }

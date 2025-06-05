@@ -25,7 +25,7 @@ public class PathsConstants {
     };
 
     protected static final String[] PATHS_OWNER = {
-            "/v1/plate/**", "/v1/restaurant/assignment"
+            "/v1/plate/**", "/v1/restaurant/assignment", "/v1/restaurant/employee/id", "/v1/restaurant/order/id"
     };
 
     protected static final String[] PATHS_ADMIN = {

@@ -38,6 +38,7 @@ public class Constants {
     public static final String  PAGE_SIZE_NAME = "pageSize";
     public static final String  CATEGORY_ID_PARAM_NAME = "categoryId";
     public static final String  ORDER_STATUS_PARAM_NAME = "orderStatus";
+    public static final String  OWNER_ID_PARAM_NAME = "ownerId";
 
 
     /*Order status description*/

@@ -5,6 +5,8 @@ import com.foodcourt.court.application.dto.request.RestaurantRequestDto;
 import com.foodcourt.court.application.dto.response.RestaurantItemResponseDto;
 import com.foodcourt.court.domain.utilities.CustomPage;
 
+import java.util.List;
+
 public interface IRestaurantHandler {
 
     void create(RestaurantRequestDto restaurantRq);
@@ -12,5 +14,7 @@ public interface IRestaurantHandler {
     CustomPage<RestaurantItemResponseDto> getRestaurants(Integer pageSize, Integer page);
 
     void assignEmployee(AssignEmployeeRequestDto employeeData);
+
+    List<Long> getEmployeesIdByOwnerId(Long ownerId);
 
 }

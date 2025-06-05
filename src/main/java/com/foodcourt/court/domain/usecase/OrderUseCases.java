@@ -4,10 +4,7 @@ import com.foodcourt.court.domain.api.IOrderServicePort;
 import com.foodcourt.court.domain.constants.Constants;
 import com.foodcourt.court.domain.enums.OrderStatus;
 import com.foodcourt.court.domain.exception.*;
-import com.foodcourt.court.domain.model.Order;
-import com.foodcourt.court.domain.model.OrderPlate;
-import com.foodcourt.court.domain.model.TrackingOrder;
-import com.foodcourt.court.domain.model.User;
+import com.foodcourt.court.domain.model.*;
 import com.foodcourt.court.domain.spi.*;
 import com.foodcourt.court.domain.utilities.CustomPage;
 import com.foodcourt.court.domain.utilities.Utilities;
@@ -144,6 +141,14 @@ public class OrderUseCases implements IOrderServicePort {
         Order orderSaved = orderPersistencePort.upsertOrder(orderFound);
         TrackingOrder trackingOrder =  generateTrackingOrder(orderSaved, previousStatus, clientEmailAuth, null);
         trackingOrderPersistencePort.createTrackingOrder(trackingOrder);
+    }
+
+    @Override
+    public List<Long> getOrdersIdByOwnerId(Long ownerId) {
+        UtilitiesValidator.validateIsNull(ownerId);
+        Restaurant ownerRestaurant = restaurantPersistencePort.getByOwnerId(ownerId)
+                .orElseThrow(()->new RestaurantNotFoundException(Constants.RESTAURANT_OWNER_NO_FOUND));
+        return orderPersistencePort.getOrdersIdByRestaurantId(ownerRestaurant.getId());
     }
 
     private void assignOrder(Order order, Long chefId){

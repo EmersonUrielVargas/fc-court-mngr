@@ -6,6 +6,8 @@ import com.foodcourt.court.application.dto.request.UpdateStatusOrderRequestDto;
 import com.foodcourt.court.application.dto.response.GetOrderResponseDto;
 import com.foodcourt.court.domain.utilities.CustomPage;
 
+import java.util.List;
+
 public interface IOrderHandler {
 
     void create(CreateOrderRequestDto createOrderRequestDto);
@@ -15,5 +17,7 @@ public interface IOrderHandler {
     void updateStatusOrder(UpdateStatusOrderRequestDto updateStatusOrderRequestDto);
 
     void cancelOrder(CancelOrderRequestDto cancelOrderRequestDto);
+
+    List<Long> getOrdersIdByOwnerId(Long ownerId);
 
 }

@@ -12,7 +12,6 @@ import com.foodcourt.court.domain.constants.Constants;
 import com.foodcourt.court.domain.utilities.CustomPage;
 import com.foodcourt.court.infrastructure.shared.GeneralConstants;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/restaurant")
@@ -38,9 +39,7 @@ public class RestaurantRestController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CREATED, description = GeneralConstants.SUMMARY_RESPONSE_OK_GET_PLATES_BY_RESTAURANT,
                     content = @Content(mediaType = GeneralConstants.MEDIA_TYPE_JSON,
-                            array = @ArraySchema(
-                                    schema = @Schema(implementation = PlatesByRestaurantResponseDto.class)
-                            )
+                            schema = @Schema(implementation = CustomPage.class)
                     )),
             @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_BAD_REQUEST, description = GeneralConstants.SUMMARY_RESPONSE_BAD_REQUEST_GET_PLATES_BY_RESTAURANT, content = @Content)
     })
@@ -53,13 +52,13 @@ public class RestaurantRestController {
         return new ResponseEntity<>(listPlatesByRestaurant, HttpStatus.OK);
     }
 
+
+
     @Operation(summary = GeneralConstants.SUMMARY_GET_PLATES_BY_RESTAURANT)
     @ApiResponses(value = {
             @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CREATED, description = GeneralConstants.SUMMARY_RESPONSE_OK_GET_PLATES_BY_RESTAURANT,
                     content = @Content(mediaType = GeneralConstants.MEDIA_TYPE_JSON,
-                            array = @ArraySchema(
-                                    schema = @Schema(implementation = PlatesByRestaurantResponseDto.class)
-                            )
+                            schema = @Schema(implementation = CustomPage.class)
                     )),
             @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_BAD_REQUEST, description = GeneralConstants.SUMMARY_RESPONSE_BAD_REQUEST_GET_PLATES_BY_RESTAURANT, content = @Content)
     })
@@ -71,6 +70,37 @@ public class RestaurantRestController {
         CustomPage<GetOrderResponseDto> ordersByStatus = orderHandler.getOrdersByStatus(restaurantId, pageSize, page, status);
         return new ResponseEntity<>(ordersByStatus, HttpStatus.OK);
     }
+
+    @Operation(summary = GeneralConstants.SUMMARY_GET_PLATES_BY_RESTAURANT)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CREATED, description = GeneralConstants.SUMMARY_RESPONSE_OK_GET_PLATES_BY_RESTAURANT,
+                    content = @Content(mediaType = GeneralConstants.MEDIA_TYPE_JSON,
+                            schema = @Schema(implementation = CustomPage.class)
+                    )),
+            @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_BAD_REQUEST, description = GeneralConstants.SUMMARY_RESPONSE_BAD_REQUEST_GET_PLATES_BY_RESTAURANT, content = @Content)
+    })
+    @GetMapping("/order/id")
+    public ResponseEntity<List<Long>> getOrdersIdByOwner(@RequestParam(value = Constants.OWNER_ID_PARAM_NAME) Long ownerId) {
+        List<Long> ordersIdByRestaurant = orderHandler.getOrdersIdByOwnerId(ownerId);
+        return new ResponseEntity<>(ordersIdByRestaurant, HttpStatus.OK);
+    }
+
+
+    @Operation(summary = GeneralConstants.SUMMARY_GET_PLATES_BY_RESTAURANT)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CREATED, description = GeneralConstants.SUMMARY_RESPONSE_OK_GET_PLATES_BY_RESTAURANT,
+                    content = @Content(mediaType = GeneralConstants.MEDIA_TYPE_JSON,
+                            schema = @Schema(implementation = CustomPage.class)
+                    )),
+            @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_BAD_REQUEST, description = GeneralConstants.SUMMARY_RESPONSE_BAD_REQUEST_GET_PLATES_BY_RESTAURANT, content = @Content)
+    })
+    @GetMapping("/employee/id")
+    public ResponseEntity<List<Long>> getEmployeeIdByOwner(@RequestParam(value = Constants.OWNER_ID_PARAM_NAME) Long ownerId) {
+        List<Long> ordersIdByRestaurant = restaurantHandler.getEmployeesIdByOwnerId(ownerId);
+        return new ResponseEntity<>(ordersIdByRestaurant, HttpStatus.OK);
+    }
+
+
 
     @Operation(summary = GeneralConstants.SUMMARY_ASSIGNMENT_EMPLOYEE_RESTAURANT)
     @ApiResponses(value = {
@@ -84,6 +114,7 @@ public class RestaurantRestController {
     }
 
 
+
     @Operation(summary = GeneralConstants.SUMMARY_CREATE_RESTAURANT)
     @ApiResponses(value = {
             @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CREATED, description = GeneralConstants.SUMMARY_RESPONSE_CREATED_RESTAURANT, content = @Content),
@@ -95,13 +126,12 @@ public class RestaurantRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+
     @Operation(summary = GeneralConstants.SUMMARY_GET_RESTAURANT)
     @ApiResponses(value = {
             @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_CREATED, description = GeneralConstants.SUMMARY_RESPONSE_OK_GET_RESTAURANT,
                     content = @Content(mediaType = GeneralConstants.MEDIA_TYPE_JSON,
-                            array = @ArraySchema(
-                                    schema = @Schema(implementation = RestaurantItemResponseDto.class)
-                            )
+                            schema = @Schema(implementation = CustomPage.class)
                     )),
             @ApiResponse(responseCode = GeneralConstants.STATUS_CODE_BAD_REQUEST, description = GeneralConstants.SUMMARY_RESPONSE_BAD_REQUEST_GET_RESTAURANT, content = @Content)
     })

@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -43,5 +45,10 @@ public class OrderHandler implements IOrderHandler {
     @Override
     public void cancelOrder(CancelOrderRequestDto cancelOrderRequestDto) {
         orderServicePort.cancelOrder(cancelOrderRequestDto.getId());
+    }
+
+    @Override
+    public List<Long> getOrdersIdByOwnerId(Long ownerId) {
+        return orderServicePort.getOrdersIdByOwnerId(ownerId);
     }
 }

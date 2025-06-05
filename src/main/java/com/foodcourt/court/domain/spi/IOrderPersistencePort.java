@@ -11,5 +11,6 @@ public interface IOrderPersistencePort {
     Order upsertOrder(Order order);
     CustomPage<Order> getOrdersByStatus(Long restaurantId, Integer pageSize, Integer page, String status);
     Optional<Order> findById(Long orderId);
+    List<Long> getOrdersIdByRestaurantId(Long restaurantId);
 
 }

@@ -7,6 +7,7 @@ import com.foodcourt.court.infrastructure.out.jpa.mapper.IAssignmentEmployeeEnti
 import com.foodcourt.court.infrastructure.out.jpa.repository.IAssignmentEmployeeRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -25,5 +26,10 @@ public class AssignmentEmployeeJpaAdapter implements IAssignmentEmployeePort {
     public Optional<AssignmentEmployee> getAssignment(Long restaurantId, Long employeeId) {
         AssignmentEmployeePK assignmentId = new AssignmentEmployeePK(restaurantId, employeeId);
         return assignmentEmployeeRepository.findById(assignmentId).map(assignmentEmployeeEntityMapper::toAssignmentEmployee);
+    }
+
+    @Override
+    public List<Long> getEmployeesIdByRestaurantId(Long restaurantId) {
+        return assignmentEmployeeRepository.findIdsByRestaurantId(restaurantId);
     }
 }

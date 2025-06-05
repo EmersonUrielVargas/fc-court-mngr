@@ -23,4 +23,10 @@ public interface IOrderRepository extends JpaRepository<OrderEntity, Long> {
             " WHERE order.restaurante.id = :restaurantId" +
             " AND order.estado LIKE (:status)")
     Page<OrderEntity> findByStatus(Long restaurantId, String status, Pageable pageable);
+
+    @Query(
+            " SELECT order.id " +
+                    " FROM OrderEntity order" +
+                    " WHERE order.restaurante.id = :restaurantId")
+    List<Long> findIdsByRestaurantId(Long restaurantId);
 }
